@@ -3,17 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Controller,
+  useForm,
   FieldValues,
   SubmitHandler,
-  useForm,
 } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "../ui";
 import { Password } from "@/icons";
-import { useUpdatePasswordMutation } from "@/app/api";
-import { useHandleRequest } from "@/hooks";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 
 export const EditPasswordForm = () => {
@@ -21,8 +17,6 @@ export const EditPasswordForm = () => {
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [updatePassword, { isLoading }] = useUpdatePasswordMutation();
-  const navigate = useNavigate();
 
   const {
     control,
@@ -31,30 +25,11 @@ export const EditPasswordForm = () => {
     reset,
   } = useForm();
 
-  const handleRequest = useHandleRequest();
-
-  const onSubmit: SubmitHandler<FieldValues> = async (formValues) => {
-    await handleRequest({
-      request: async () => {
-        const result = await updatePassword({
-          oldPassword: formValues.oldPassword,
-          newPassword: formValues.newPassword,
-          confirmPassword: formValues.confirmPassword,
-        }).unwrap();
-        return result;
-      },
-      onSuccess: () => {
-        setOpen(false);
-        reset();
-        localStorage.removeItem("ACCESS_TOKEN");
-        navigate("/login");
-      },
-      onError: (error) => {
-        toast.error(
-          "Xatolik yuz berdi. Iltimos, qayta urinib ko’ring." + error
-        );
-      },
-    });
+  const onSubmit: SubmitHandler<FieldValues> = (formValues) => {
+    console.log("Form Values:", formValues);
+    alert("Form submit qilindi! Console logni tekshiring.");
+    reset();
+    setOpen(false);
   };
 
   const inputClass =
@@ -73,6 +48,7 @@ export const EditPasswordForm = () => {
           Profile parolini o’zgartirish
         </h4>
       </div>
+
       <BottomSheet open={open} setOpen={setOpen}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="w-full">
           <div className="w-full py-10 space-y-4">
@@ -184,9 +160,8 @@ export const EditPasswordForm = () => {
             <Button
               type="submit"
               className="mt-6 w-full py-[3px] bg-[#ffcb15] rounded-lg text-[#1b2b56] hover:text-white justify-center items-center"
-              disabled={isLoading}
             >
-              {isLoading ? "Yuklanmoqda..." : "Yuborish"}
+              Yuborish
             </Button>
           </div>
         </form>

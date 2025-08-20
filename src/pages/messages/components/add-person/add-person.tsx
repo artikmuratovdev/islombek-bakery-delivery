@@ -1,5 +1,4 @@
-import { useGetAllUsersQuery } from "@/app/api";
-import { Button } from "@/components";
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -7,14 +6,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Role } from "@/constants";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@/components";
+
+const users = [
+  { _id: "1", fullName: "Ali Vali" },
+  { _id: "2", fullName: "Sara Otabek" },
+  { _id: "3", fullName: "Jasur Mirza" },
+];
 
 export const AddPerson = () => {
-  const { data: users } = useGetAllUsersQuery({ roles: Object.values(Role) });
   const [selectedUserId, setSelectedUserId] = useState("");
-  const navigate = useNavigate();
 
   const handleSelectChange = (value: string) => {
     setSelectedUserId(value);
@@ -22,7 +23,7 @@ export const AddPerson = () => {
 
   const handleButtonClick = () => {
     if (selectedUserId) {
-      navigate(`/chat/${selectedUserId}`);
+      alert(`Tanlangan foydalanuvchi: ${selectedUserId}`);
     }
   };
 
@@ -33,7 +34,7 @@ export const AddPerson = () => {
           <SelectValue placeholder="Xodimni tanglang" />
         </SelectTrigger>
         <SelectContent className="bg-white rounded-lg border border-[#ffcb15] mt-[9px]">
-          {users?.map((item) => (
+          {users.map((item) => (
             <SelectItem
               key={item._id}
               value={item._id}
