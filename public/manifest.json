@@ -1,0 +1,15 @@
+{
+  "name": "Islombek Nonlari Bakery Delivery",
+  "short_name": "Islombek Nonlari Bakery Delivery",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1b2b56",
+  "theme_color": "#1b2b56",
+  "icons": [
+    {
+      "src": "/login_logo.svg",
+      "sizes": "165x165",
+      "type": "image/svg+xml"
+    }
+  ]
+}
