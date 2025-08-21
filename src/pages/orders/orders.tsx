@@ -7,7 +7,7 @@ import { ActiveOrder, OldOrder } from "./components";
 
 export const Orders = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("faol zakazlar");
+  const [activeTab, setActiveTab] = useState("activeOrder");
 
   // const formatTime = (dateString: string) => {
   //   const date = new Date(dateString);
@@ -19,8 +19,8 @@ export const Orders = () => {
   // };
 
   const tabs = [
-    { label: 'Faol zakazlar', value: 'faol zakazlar' },
-    { label: 'Oldingi zakazlar', value: 'oldingi zakazlar' },
+    { label: 'Faol zakazlar', value: 'activeOrder' },
+    { label: 'Oldingi zakazlar', value: 'preOrder' },
   ];
 
   return (
@@ -43,9 +43,9 @@ export const Orders = () => {
           </div>
         </div>
         <div className="mt-[95px] p-5">
-          <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
-          {activeTab === "faol zakazlar" && <ActiveOrder />}
-          {activeTab === "oldingi zakazlar" && <OldOrder />}
+          <Tabs tabs={tabs}  activeTab={activeTab} onTabChange={setActiveTab} />
+          {activeTab === "activeOrder" && <ActiveOrder />}
+          {activeTab === "preOrder" && <OldOrder />}
         </div>
       </div>
     </div>
