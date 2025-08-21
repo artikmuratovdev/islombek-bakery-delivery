@@ -31,7 +31,7 @@ export const HomePage = () => {
           </button>
         </div>
       </div>
-      <div className="mt-[30%] w-[95%] m-auto p-[12px] overflow-y-auto h-auto mb-20">
+      <div className="mt-[100px] w-[95%] m-auto p-[12px] overflow-y-auto h-auto mb-20">
         <div className="flex items-center justify-between">
           <button onClick={() => navigate("/message")}>
             <MessagesIcon className="w-6 h-6 text-[#FFCC15]" />

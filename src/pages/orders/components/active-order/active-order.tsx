@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Checkbox } from "@/icons";
 import { useNavigate } from "react-router-dom";
+import { useGetActiveOrdersQuery } from "@/app/api";
 
 interface Order {
     id: number;
@@ -17,6 +18,10 @@ const orders: Order[] = [
 export const ActiveOrder = () => {
     const navigate = useNavigate();
     const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+
+    const { data: order } = useGetActiveOrdersQuery();
+
+    console.log(order)
 
     const handleCheckboxClick = (e: React.MouseEvent, id: number) => {
         e.stopPropagation();
@@ -43,23 +48,23 @@ export const ActiveOrder = () => {
                     return (
                         <div
                             key={order.id}
-                            className={`w-full h-10 rounded-lg border border-yellow-400 flex justify-between items-center px-4 ${isSelected ? "bg-white" : "bg-yellow-400"
+                            className={`w-full h-10 rounded-lg border border-yellow-400 grid grid-cols-8 justify-between items-center px-4 ${isSelected ? "bg-white" : "bg-yellow-400"
                                 }`}
                             onClick={() => {
                                 navigate("order-map");
                             }}
                         >
-                            <h2 className="text-blue-950 text-base font-bold leading-tight">
+                            <h2 className="text-blue-950 text-base font-bold leading-tight col-span-2">
                                 {order.time}
                             </h2>
-                            <h2 className="text-blue-950 text-base font-bold leading-tight">
+                            <h2 className="text-blue-950 text-base text-center font-bold leading-tight">
                                 {order.amount}
                             </h2>
-                            <h2 className="text-blue-950 text-base font-bold leading-tight">
+                            <h2 className="text-blue-950 text-base text-center font-bold leading-tight col-span-4">
                                 {order.address}
                             </h2>
                             {!isSelected && !isMapOrder && (
-                                <div onClick={(e) => handleCheckboxClick(e, order.id)}>
+                                <div className="flex items-center justify-end" onClick={(e) => handleCheckboxClick(e, order.id)}>
                                     <Checkbox />
                                 </div>
                             )}
