@@ -3,35 +3,56 @@ export interface activeOrder {
   client:
     | {
         _id: string;
-        fullName: string;
-        branch:string;
-        phone:string;
-        address: string | {lat:number,lng:number};
+        branch: string;
+        phone: string;
+        address: {
+          lat: number;
+          lng: number;
+        };
         fullName: string;
       }
     | string;
   branch: string;
   status: number;
-  address: string | {lat:number,lng:number};
+  commit: string;
+  address: string;
   paidAmount: number;
   totalAmount: number;
   debtAmount: number;
-  deliveryTime?: string;
-  acceptedDriver: {
-    _id: string;
-    fullName: string;
-  } | string;
-  acceptedTimeDriver?: string;
-  commit: string;
   phone: string;
+  breadCount: number;
   approval: string;
   deliveryStatus: string;
-  breadsInfo: breadInfo[];
+  breadsInfo: {
+    _id: string;
+    title: string;
+    amount: number;
+    breadPrice: number;
+    breadSoldPrice: number;
+  }[];
   isClient: boolean;
   isChangePrice: boolean;
   type: string;
   fromStaff: string;
-  paymentHistory: Payment[] | [];
+  paymentHistory: Payment[];
   createdAt: Date | string;
   updatedAt: Date | string;
+  acceptedDriver?: {
+    _id: string;
+    fullName: string;
+  };
+  acceptedTimeDriver?: Date | string;
 }
+
+type Payment = {
+  _id: string;
+  amount: number;
+  fromUser: FromUser | null;
+  paymentDate: Date | string;
+};
+
+type FromUser = {
+  _id: string;
+  role: string;
+  fullName: string;
+};

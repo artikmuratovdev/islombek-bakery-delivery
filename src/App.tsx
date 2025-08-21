@@ -64,6 +64,7 @@ const App = () => {
 
         <Route path="/orders" element={<Orders />} />
         <Route path="/order/:id" element={<Order />} />
+        <Route path="/orders/order-map/:id" element={<OrderMap />} />
         
         <Route path="/debtors/:id" element={<Debtors />} />
         <Route path="/drivers" element={<Drivers />} />
@@ -72,7 +73,6 @@ const App = () => {
         <Route path="/debts" element={<Debts />} />
         <Route path="/debts/debts-details" element={<DebtsDetails />} />
         <Route path="/trade/trade-details" element={<TradeDetails />} />
-        <Route path="/orders/order-map" element={<OrderMap />} />
         <Route path="/new-order" element={<NewOrder />} />
         <Route path="/bakery" element={<Bakery />} />
         <Route path="/bakery/bakery-details" element={<BakeryDetails />} />

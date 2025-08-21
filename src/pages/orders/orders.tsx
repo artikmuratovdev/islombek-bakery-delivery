@@ -22,6 +22,7 @@ export const Orders = () => {
     { label: 'Faol zakazlar', value: 'activeOrder' },
     { label: 'Oldingi zakazlar', value: 'preOrder' },
   ];
+  
 
   return (
     <div className="min-h-screen flex justify-center">
