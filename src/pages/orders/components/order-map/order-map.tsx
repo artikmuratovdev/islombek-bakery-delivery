@@ -1,4 +1,4 @@
-import { useGetOneOrderQuery } from '@/app/api';
+import { useAcceptOrderMutation, useGetOneOrderQuery } from '@/app/api';
 import { Button } from '@/components';
 import { ArrowLeft, Notifications } from '@/icons';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -12,6 +12,7 @@ export const OrderMap = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data } = useGetOneOrderQuery(id as string);
+  const [acceptOrder] = useAcceptOrderMutation();
 
   const [currentTime, setCurrentTime] = useState(Date.now());
 
@@ -96,7 +97,7 @@ export const OrderMap = () => {
             Umumiy summa: {data?.totalAmount.toLocaleString('uz')}
           </h1>
           <div className='flex justify-end'>
-            <Button className='w-40 h-8 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-center items-center gap-3 text-[#1B2B56] hover:bg-yellow-400 mt-5'>
+            <Button onClick={() => acceptOrder(id as string)} className='w-40 h-8 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-center items-center gap-3 text-[#1B2B56] hover:bg-yellow-400 mt-5'>
               Qabul qilish
             </Button>
           </div>

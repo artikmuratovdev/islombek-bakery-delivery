@@ -44,6 +44,20 @@ export interface activeOrder {
   acceptedTimeDriver?: Date | string;
 }
 
+export interface preOrder extends activeOrder {
+  deliveryTime: Date;
+}
+
+export interface preOrderPostReq {
+  client:string;
+  paidAmount:number;
+  breadsInfo: breadInfo[];
+  commit:string;
+  deliveryTime: string;
+  address:string;
+  phone:string;
+}
+
 type Payment = {
   _id: string;
   amount: number;
@@ -56,3 +70,29 @@ type FromUser = {
   role: string;
   fullName: string;
 };
+
+export interface breadInfo {
+  _id: string;
+  title: string;
+  amount: number;
+  breadPrice: number;
+  breadSoldPrice: number;
+}
+
+type submitOrder = {
+  paidAmount: number;
+  breadsInfo: breadInfo[];
+};
+
+export interface submitOrderReq {
+  id: string;
+  body: submitOrder;
+}
+
+export interface setupOrderReq {
+  id: string;
+  body: {
+    paidAmount:number;
+    breadsInfo: breadInfo[];
+  };
+}

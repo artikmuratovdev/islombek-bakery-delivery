@@ -1,6 +1,6 @@
 import { Checkbox } from '@/icons';
 import { useNavigate } from 'react-router-dom';
-import { useAcceptOrderMutation, useGetActiveOrdersQuery } from '@/app/api';
+import { useGetActiveOrdersQuery } from '@/app/api';
 import { useEffect, useState } from 'react';
 
 export const getTimes = (date: Date | string, currentTime: number) => {
@@ -18,7 +18,6 @@ export const getTimes = (date: Date | string, currentTime: number) => {
 export const ActiveOrder = () => {
   const navigate = useNavigate();
   const { data, refetch } = useGetActiveOrdersQuery();
-  const [acceptOrder, { isSuccess }] = useAcceptOrderMutation();
 
 
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -29,7 +28,7 @@ export const ActiveOrder = () => {
       }, 1000);
   
       return () => clearInterval(interval);
-    }, [isSuccess,refetch]);
+    }, [refetch]);
 
   
 
@@ -54,16 +53,18 @@ export const ActiveOrder = () => {
             }`}
             onClick={(e) => {
               e.stopPropagation();
-              if (order._id) {
+              if (order._id && !order.acceptedDriver) {
                 navigate(`order-map/${order._id}`);
-              } else {
+              } else if (order._id && order.acceptedDriver) {
+                navigate(`accepted/${order._id}`);
+              }
+              else {
                 console.error('Order ID is missing');
               }
             }}
           >
             <h2 className='text-blue-950 text-base font-bold leading-tight col-span-2'>
               {getTimes(order.createdAt || '',currentTime)}
-              {/* {order.createdAt?.toString()?.slice(11, 16) || 'N/A'} */}
             </h2>
             <h2 className='text-blue-950 text-base text-center font-bold leading-tight'>
               {order.breadCount || 0}
@@ -74,14 +75,6 @@ export const ActiveOrder = () => {
             {!order.acceptedDriver && (
               <div
                 className='flex items-center justify-end'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (order._id) {
-                    acceptOrder(order._id);
-                  } else {
-                    console.error('Order ID is missing for acceptance');
-                  }
-                }}
               >
                 <Checkbox />
               </div>
