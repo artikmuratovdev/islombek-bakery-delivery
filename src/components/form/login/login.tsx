@@ -7,6 +7,7 @@ import { useHandleRequest } from "@/hooks";
 import toast, { Toaster } from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 import { useStorage } from "@/utils";
+
 interface FormData {
   username: string;
   password: string;
@@ -32,7 +33,7 @@ export const LoginForm: React.FC = () => {
   const token = useStorage.getTokens()?.accessToken;
 
   if (token) {
-    navigate("/");
+    navigate("/dashboard");
   }
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -41,15 +42,30 @@ export const LoginForm: React.FC = () => {
         return await login(data).unwrap();
       },
       onSuccess: (response) => {
-        useStorage.setCredentials({
-          accessToken: response?.token,
-          refreshToken: response?.refreshToken,
-        });
-        toast.success("Tizimga muvaffaqiyatli kirdingiz!");
-        setTimeout(() => navigate("/"), 1000);
+        if (response?.role === "DRIVER") {
+          useStorage.setCredentials({
+            accessToken: response?.token,
+            refreshToken: response?.refreshToken,
+          });
+
+          toast.success(" Tizimga muvaffaqiyatli kirdingiz!", {
+            duration: 3000,
+            position: "top-right",
+          });
+
+          setTimeout(() => navigate("/dashboard"), 1200);
+        } else {
+          toast.error("Sizda huquq yo‘q!", {
+            duration: 3000,
+            position: "top-right",
+          });
+        }
       },
       onError: (error) => {
-        toast.error(error?.data?.message || "Login failed");
+        toast.error(error?.data?.message || "Login muvaffaqiyatsiz!", {
+          duration: 3000,
+          position: "top-right",
+        });
         reset();
       },
     });
@@ -57,19 +73,20 @@ export const LoginForm: React.FC = () => {
 
   return (
     <div className="p-5">
-      <div>
-        <Toaster position="top-right" reverseOrder={false} />
-      </div>
+      <Toaster position="top-right" reverseOrder={false} />
+
       <form onSubmit={handleSubmit(onSubmit)} className="pt-5 space-y-5">
         <Controller
           name="username"
           control={control}
-          rules={{ required: "Username is required" }}
+          rules={{
+            required: "⚠️ Username kiritilishi shart",
+          }}
           render={({ field }) => (
             <div>
               <Input
                 {...field}
-                type="username"
+                type="text"
                 placeholder="Username..."
                 className={errors.username ? "border-red-500" : ""}
               />
@@ -81,10 +98,13 @@ export const LoginForm: React.FC = () => {
             </div>
           )}
         />
+
         <Controller
           name="password"
           control={control}
-          rules={{ required: "Password is required" }}
+          rules={{
+            required: "⚠️ Parol kiritilishi shart",
+          }}
           render={({ field }) => (
             <div className="relative">
               <Input
@@ -114,7 +134,7 @@ export const LoginForm: React.FC = () => {
           disabled={isLoading}
           className="w-full py-3 text-xl text-[#1C2C57] font-bold bg-yellow-400"
         >
-          {isLoading ? "Loading..." : "Login"}
+          {isLoading ? "⏳ Yuklanmoqda..." : "Login"}
         </Button>
       </form>
     </div>
