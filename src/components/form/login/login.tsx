@@ -32,7 +32,7 @@ export const LoginForm: React.FC = () => {
   const token = useStorage.getTokens()?.accessToken;
 
   if (token) {
-    navigate("/");
+    navigate("/dashboard");
   }
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
