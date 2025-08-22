@@ -1,10 +1,10 @@
-import { Button, Input } from '@/components';
+import { Button, Input, TextArea } from '@/components';
 import { Label } from '@/components/ui/label';
 import { Notifications, ArrowLeft } from '@/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  // useCreatePreOrderMutation,
+  useCreateActiveOrderMutation,
   useGetBreadPricesQuery,
   useGetClientsQuery,
 } from '@/app/api';
@@ -20,17 +20,10 @@ export const SalePage = () => {
   const navigate = useNavigate();
   const { data: breadPrice } = useGetBreadPricesQuery();
   const { data: clients } = useGetClientsQuery();
-  // const [addPreOrder] = useCreatePreOrderMutation();
+  const [addActive] = useCreateActiveOrderMutation();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
   const [open, setOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<{
-    fullName: string;
-    id: string;
-  }>({
-    fullName: '',
-    id: '',
-  });
 
   const {
     control,
@@ -43,6 +36,7 @@ export const SalePage = () => {
       client: '',
       phone: '',
       address: '',
+      commit: '',
       paidAmount: 0,
       isDebt: false,
     },
@@ -93,6 +87,7 @@ export const SalePage = () => {
       );
     } else {
       sentData.paidAmount = data.paidAmount;
+      sentData.commit = data.commit;
     }
 
     if (sentData.breadsInfo.length === 0) {
@@ -102,18 +97,19 @@ export const SalePage = () => {
 
     console.log('Action:', action, 'Data:', sentData);
 
-    // try {
-    //   await addPreOrder(sentData).unwrap();
-    //   toast.success(action === 'add' ? 'Sotuv qo‘shildi' : 'Qarz yozildi');
-    //   setOpen(false);
-    //   navigate('/dashboard');
-    // } catch (err: any) {
-    //   toast.error('Xatolik yuz berdi');
-    //   console.error(err);
-    // }
+    try {
+      await addActive(sentData).unwrap();
+      toast.success(action === 'add' ? 'Sotuv qo‘shildi' : 'Qarz yozildi');
+      setOpen(false);
+      navigate('/dashboard');
+    } catch (err: any) {
+      toast.error('Xatolik yuz berdi');
+      console.error(err);
+    }
   };
 
   const isDebt = watch('isDebt');
+  const client = watch('client');
 
   return (
     <div className='pt-20'>
@@ -149,7 +145,7 @@ export const SalePage = () => {
                   value={field.value}
                   onChange={field.onChange}
                   setValues={onChangeClient}
-                  changeBreadPrices={(value) => setSelectedClient(value)}
+                  changeBreadPrices={(value) => setValue('client', value.fullName)}
                   clients={[
                     ...(clients?.clients || []),
                     {
@@ -227,7 +223,7 @@ export const SalePage = () => {
         </div>
 
         {/* Bread list */}
-        {selectedClient.fullName === '' ? (
+        {client === '' ? (
           <div className='mt-5 flex flex-col gap-y-2 bg-slate-300 rounded-lg min-h-[135px] items-center justify-center'>
             <p className='text-slate-900 text-lg max-w-[270px] font-bold p-2 text-center'>
               Mijoz tanlangandan so’ng non miqdorini kirita olasiz
@@ -247,7 +243,8 @@ export const SalePage = () => {
               control={control}
               render={({ field }) => (
                 <div className='flex justify-between items-center'>
-                  <div className='flex items-center space-x-2'>
+                  {client && client !== 'Boshqa' && (
+                    <div className='flex items-center space-x-2'>
                     <span className='border-2 flex justify-center items-center border-yellow-500 rounded-full w-7 h-7'>
                       <Checkbox
                         id='qarz'
@@ -263,12 +260,13 @@ export const SalePage = () => {
                       Qarz
                     </Label>
                   </div>
+                  )}
 
                   {/* Qo'shish faqat qarzsiz bo'lsa ishlaydi */}
                   {!isDebt && (
                     <Button
                       type='button'
-                      className='bg-[#FFCC15] text-blue-950 text-sm font-bold px-6 py-1'
+                      className='bg-[#FFCC15] text-blue-950 text-sm font-bold px-6 py-1 ml-auto'
                       onClick={handleSubmit((data) => onSubmit(data, 'add'))}
                     >
                       Qo'shish
@@ -299,7 +297,7 @@ export const SalePage = () => {
                   <Controller
                     name='paidAmount'
                     control={control}
-                    rules={{ required: true }}
+                    rules={{ required: true , min:1}}
                     render={({ field }) => (
                       <>
                         <Input
@@ -311,10 +309,40 @@ export const SalePage = () => {
                             setValue("paidAmount", isNaN(val) ? 0 : val);
                           }}
                           type='text'
-                          className='bg-white appearance-none'
+                          className='bg-white appearance-none border-yellow-500 border-2'
                           id='paidAmount'
                         />
                         {errors.paidAmount && (
+                          <span className='text-red-500'>
+                            Qiymat 0 bo'lishi mumkin emas
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
+                </div>
+
+                <div className='flex flex-col gap-y-1'>
+                  <label htmlFor='commit' className='text-yellow-400'>
+                    Sababi
+                  </label>
+                  <Controller
+                    name='commit'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <>
+                        <TextArea
+                          {...field}
+                          placeholder='Olingan pul'
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                          }} 
+                          className='bg-white rounded-lg border-yellow-500 border-2'
+                        >
+                        </TextArea>
+                        {errors.commit && (
                           <span className='text-red-500'>
                             This field is required
                           </span>
@@ -322,6 +350,7 @@ export const SalePage = () => {
                       </>
                     )}
                   />
+                  {/* TextArea */}
                 </div>
 
                 <div className='flex justify-end'>

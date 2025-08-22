@@ -13,7 +13,9 @@ export enum PATH {
 
   // Other endpoints
 
-  GET_CLIENTS = 'order/client'
+  GET_CLIENTS = 'order/client',
+  CREATE_ACTIVE_ORDER = 'driver-sotuv/create-order/faol-zakaz'
+
 
 
 }
