@@ -20,6 +20,7 @@ import {
   Bakery,
   BakeryDough,
   Delivery,
+  BakeryBread,
 } from "./pages";
 import { Layouts } from "./layouts";
 import { Notifications } from "./pages/notification";
@@ -70,10 +71,11 @@ const App = () => {
         <Route path="/trade/trade-details" element={<TradeDetails />} />
         <Route path="/orders/order-map" element={<OrderMap />} />
         <Route path="/new-order" element={<NewOrder />} />
-        
+
         <Route path="/bakerys" element={<Bakerys />} />
         <Route path="/bakerys/bakery/:id" element={<Bakery />} />
         <Route path="bakerys/bakery/:id/dough" element={<BakeryDough />} />
+        <Route path="bakerys/bakery/:id/bread" element={<BakeryBread />} />
         <Route path="bakerys/bakery/:id/delivery" element={<Delivery />} />
 
         <Route path="new-order/order" element={<OrderPage />} />

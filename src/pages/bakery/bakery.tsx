@@ -66,7 +66,10 @@ export const Bakery = () => {
               Tandirda
             </h3>
           </div>
-          <div className="w-40 h-32 relative bg-white rounded-2xl outline outline-[3px] outline-offset-[-3px] outline-yellow-400 overflow-hidden flex flex-col justify-center items-center">
+          <div
+            className="w-40 h-32 relative bg-white rounded-2xl outline outline-[3px] outline-offset-[-3px] outline-yellow-400 overflow-hidden flex flex-col justify-center items-center"
+            onClick={() => navigate("bread")}
+          >
             <h3 className="text-blue-950 text-3xl font-semibold font-['Inter'] leading-10">
               {formatNumberWithSpaces(bakerRoom?.breadsCount || 0)}
             </h3>

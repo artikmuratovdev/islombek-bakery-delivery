@@ -3,11 +3,15 @@ import { baseApi } from "../base-api";
 import { PATHS } from "./path";
 import {
   GetAllBakery,
+  GetBakeryBreadRequest,
+  GetBakeryBreadResponse,
   GetBakeryDeliveryResponse,
   GetBakeryDoughRequest,
   GetBakeryDoughResponse,
   GetBakeryRequest,
   GetBakeryResponse,
+  UpdateBakeryBreadRequest,
+  UpdateBakeryBreadResponse,
   UpdateBakeryDoughRequest,
   UpdateBakeryDoughResponse,
 } from "./type";
@@ -48,6 +52,17 @@ export const bakeryApi = baseApi.injectEndpoints({
       }),
       providesTags: [API_TAGS.BAKERY],
     }),
+    GetBakeryBread: build.query<
+      GetBakeryBreadResponse[],
+      GetBakeryBreadRequest
+    >({
+      query: ({ id, action }) => ({
+        url: PATHS.BAKERY_DOUGH_START + id + PATHS.BAKERY_BREAD_INFO_END,
+        method: "GET",
+        params: { action },
+      }),
+      providesTags: [API_TAGS.BAKERY],
+    }),
     updateBakeryDough: build.mutation<
       UpdateBakeryDoughResponse,
       UpdateBakeryDoughRequest
@@ -56,6 +71,17 @@ export const bakeryApi = baseApi.injectEndpoints({
         url: PATHS.BAKERY_DOUGH_START + id + PATHS.BAKERY_DOUGH_END,
         method: "PATCH",
         body: { doughs },
+      }),
+      invalidatesTags: [API_TAGS.BAKERY],
+    }),
+    updateBakeryBread: build.mutation<
+      UpdateBakeryBreadResponse,
+      UpdateBakeryBreadRequest
+    >({
+      query: ({ id, breads, action }) => ({
+        url: PATHS.BAKERY_DOUGH_START + id + PATHS.BAKERY_BREAD_END,
+        method: "PATCH",
+        body: { breads, action },
       }),
       invalidatesTags: [API_TAGS.BAKERY],
     }),
@@ -68,4 +94,6 @@ export const {
   useGetBakeryDoughInfoQuery,
   useGetBakeryDeliveryQuery,
   useUpdateBakeryDoughMutation,
+  useGetBakeryBreadQuery,
+  useUpdateBakeryBreadMutation,
 } = bakeryApi;

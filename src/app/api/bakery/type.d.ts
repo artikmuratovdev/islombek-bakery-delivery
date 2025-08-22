@@ -58,12 +58,38 @@ export interface GetBakeryDeliveryResponse {
   breads: Breads[];
 }
 
+export type BreadActionType = "OLISH" | "BERISH";
+
+export interface GetBakeryBreadRequest {
+  id: string;
+  action: BreadActionType;
+}
+
+export interface GetBakeryBreadResponse {
+  doughType: string;
+  breadTitle: string;
+  limitBreadCount: number;
+  amount: number;
+}
+
 export interface UpdateBakeryDoughRequest {
   id: string;
   doughs: GetBakeryDoughResponse[];
 }
 
 export interface UpdateBakeryDoughResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface UpdateBakeryBreadRequest {
+  id: string;
+  breads: GetBakeryBreadResponse[];
+  action: BreadActionType;
+}
+
+export interface UpdateBakeryBreadResponse {
   data: {
     message: string;
   };

@@ -20,3 +20,4 @@ export * from "./customers";
 export * from "./mapPage";
 export * from "./bakery-dough";
 export * from "./delivery";
+export * from "./bakery-bread";
