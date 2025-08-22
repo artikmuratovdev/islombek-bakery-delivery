@@ -65,7 +65,7 @@ export const HomePage = () => {
           </div>
           <div
             className="w-36 h-24 bg-white rounded-lg outline outline-2 outline-yellow-400 flex flex-col items-center justify-center space-y-2 shadow"
-            onClick={() => navigate("/bakery")}
+            onClick={() => navigate("/bakerys")}
           >
             <div className="w-12 h-12">
               <Bakerys />

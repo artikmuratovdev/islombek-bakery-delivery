@@ -13,10 +13,13 @@ import {
   Debtors,
   Profile,
   Balance,
-  Bakery,
+  Bakerys,
   Checkout,
   Customers,
   MapPage,
+  Bakery,
+  BakeryDough,
+  Delivery,
 } from "./pages";
 import { Layouts } from "./layouts";
 import { Notifications } from "./pages/notification";
@@ -35,11 +38,6 @@ import {
   NewOrder,
   OrderPage,
 } from "./pages/orders/components/old-order/components";
-import {
-  BakeryDetails,
-  BakeryDispatcher,
-  DispatcherDetails,
-} from "./pages/bakery/components";
 import { CustomerDetails } from "./pages/customers/components/customer-details";
 import { useStorage } from "./utils";
 
@@ -72,16 +70,12 @@ const App = () => {
         <Route path="/trade/trade-details" element={<TradeDetails />} />
         <Route path="/orders/order-map" element={<OrderMap />} />
         <Route path="/new-order" element={<NewOrder />} />
-        <Route path="/bakery" element={<Bakery />} />
-        <Route path="/bakery/bakery-details" element={<BakeryDetails />} />
-        <Route
-          path="bakery/bakery-details/dispatcher"
-          element={<BakeryDispatcher />}
-        />
-        <Route
-          path="bakery/bakery-details/dispatcher-details"
-          element={<DispatcherDetails />}
-        />
+        
+        <Route path="/bakerys" element={<Bakerys />} />
+        <Route path="/bakerys/bakery/:id" element={<Bakery />} />
+        <Route path="bakerys/bakery/:id/dough" element={<BakeryDough />} />
+        <Route path="bakerys/bakery/:id/delivery" element={<Delivery />} />
+
         <Route path="new-order/order" element={<OrderPage />} />
         <Route path="/sale" element={<SalePage />} />
         <Route path="/checkout" element={<Checkout />} />
