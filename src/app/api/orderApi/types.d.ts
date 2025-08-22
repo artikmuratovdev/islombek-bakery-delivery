@@ -109,5 +109,6 @@ export interface AddActiveOrderReq {
   breadsInfo: breadInfo[];
   address: string;
   phone: string;
+  commit?: string;
   paidAmount: number;
 }
