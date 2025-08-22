@@ -27,7 +27,10 @@ import {
   Income,
   Trade,
 } from "./pages/balance/components";
-import { TradeDetails } from "./pages/balance/components/trade/components";
+import {
+  TradeDetails,
+  TradeEdit,
+} from "./pages/balance/components/trade/components";
 import { Debts } from "./pages/home/components";
 import { DebtsDetails } from "./pages/home/components/debts/components/general-debts/components";
 import { OrderMap } from "./pages/orders/components";
@@ -64,14 +67,15 @@ const App = () => {
 
         <Route path="/orders" element={<Orders />} />
         <Route path="/order/:id" element={<Order />} />
-        
+
         <Route path="/debtors/:id" element={<Debtors />} />
         <Route path="/drivers" element={<Drivers />} />
         <Route path="/trade" element={<Trade />} />
         <Route path="/balance/income" element={<Income />} />
         <Route path="/debts" element={<Debts />} />
         <Route path="/debts/:id" element={<DebtsDetails />} />
-        <Route path="/trade/trade-details" element={<TradeDetails />} />
+        <Route path="/trade/:id" element={<TradeDetails />} />
+        <Route path="/trade/:id/edit" element={<TradeEdit />} />
         <Route path="/orders/order-map" element={<OrderMap />} />
         <Route path="/new-order" element={<NewOrder />} />
         <Route path="/bakery" element={<Bakery />} />
