@@ -9,19 +9,11 @@ export const Orders = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("activeOrder");
 
-  // const formatTime = (dateString: string) => {
-  //   const date = new Date(dateString);
-  //   return date.toLocaleTimeString("en-GB", {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //     second: "2-digit",
-  //   });
-  // };
-
   const tabs = [
     { label: 'Faol zakazlar', value: 'activeOrder' },
     { label: 'Oldingi zakazlar', value: 'preOrder' },
   ];
+  
 
   return (
     <div className="min-h-screen flex justify-center">
