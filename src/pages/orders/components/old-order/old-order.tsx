@@ -49,11 +49,6 @@ export const OldOrder = () => {
 
   return (
     <div>
-      <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] -ml-[20px] fixed top-0 w-full'>
-        <div className='flex justify-center items-center'>
-            <p className='text-[24px] font-semibold text-white mx-auto'>Zakazlar</p>
-        </div>
-      </div>
 
       <div className='flex justify-between items-center text-center font-bold my-4'>
         <p className='bg-[#FFCC15] w-20 h-6 rounded-md text-[#1C2C57] text-[16px]'>

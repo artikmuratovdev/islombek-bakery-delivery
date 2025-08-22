@@ -4,13 +4,11 @@ import { ArrowLeft, Notifications } from '@/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTimes } from '../active-order';
 import { useEffect, useState } from 'react';
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMapEvents,
-} from 'react-leaflet';
+import { useOnline } from '@reactuses/core';
+import { socket } from '@/utils';
+import LeafletMap from './components/LeafletMap';
+
+
 
 export const setPhoneNumber = (number: string) =>
   number.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
@@ -23,6 +21,40 @@ export const OrderMap = () => {
 
   const [currentTime, setCurrentTime] = useState(Date.now());
 
+  const online = useOnline();
+  const setLocation = (driver: {
+    lat: number;
+    lng: number;
+    rot?: number;
+    user: { _id: string };
+  }) => {
+    if (!online) {
+      const rest: Array<typeof driver> = JSON.parse(
+        localStorage.getItem("update") || "[]"
+      );
+      localStorage.setItem("update", JSON.stringify(rest.concat(driver)));
+    } else {
+      socket.emit("location", driver, (res = null) => {
+        console.log(driver, res);
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (online) {
+      const pending: Array<{
+        lat: number;
+        lng: number;
+        rot?: number;
+        user: { _id: string };
+      }> = JSON.parse(localStorage.getItem("update") || "[]");
+      pending.forEach((driver) => {
+        socket.emit("location", driver);
+      });
+      localStorage.removeItem("update");
+    }
+  }, [online]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
@@ -32,23 +64,6 @@ export const OrderMap = () => {
   }, []);
 
   console.log(data);
-
-  const MapClickHandler = ({
-    setPosition,
-  }: {
-    setPosition: (pos: [number, number]) => void;
-  }) => {
-    useMapEvents({
-      click(e) {
-        setPosition([e.latlng.lat, e.latlng.lng]);
-      },
-    });
-    return null;
-  };
-
-  const [position, setPosition] = useState<[number, number]>([
-    37.235588485310316, 67.28402941296861,
-  ]);
   return (
     <div className='w-full max-w-2xl'>
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl mx-auto z-30'>
@@ -66,26 +81,8 @@ export const OrderMap = () => {
         </div>
       </div>
       <div className='mt-[90px] mb-20'>
-        <MapContainer
-          center={position}
-          zoom={15}
-          scrollWheelZoom={false}
-          className='w-full h-[400px] mt-30 z-10'
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          />
-
-          <MapClickHandler setPosition={setPosition} />
-
-          <Marker position={position}>
-            <Popup>
-              Lat: {position[0]} <br /> Lng: {position[1]}
-            </Popup>
-          </Marker>
-        </MapContainer>
         <div className='px-4'>
+            <LeafletMap setLocation={setLocation} />
           <div className='w-full h-24 bg-white rounded-lg border border-yellow-400 mt-2 space-y-2'>
             <div className='w-full flex justify-between px-4 items-center mt-3'>
               <h2 className="text-blue-950 text-base font-bold font-['Inter'] leading-tight">

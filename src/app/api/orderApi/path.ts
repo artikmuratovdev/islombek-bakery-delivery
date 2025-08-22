@@ -9,5 +9,11 @@ export enum PATH {
   SETUP_ORDER = BASE_URL + "oldindan-zakaz/",
   CREATE_PRE_ORDER = BASE_URL + "create-order/oldindan-zakaz",
   SUBMIT_PRE_ORDER = BASE_URL + "zakasni-topshirish/",
-  DELETE_ORDER = BASE_URL + 'orders/'
+  DELETE_ORDER = BASE_URL + 'orders/',
+
+  // Other endpoints
+
+  GET_CLIENTS = 'order/client'
+
+
 }

@@ -1,6 +1,6 @@
 import { baseApi } from '../base-api';
 import { PATH } from './path';
-import { activeOrder, breadInfo, preOrder, preOrderPostReq, setupOrderReq, submitOrderReq } from './types';
+import { activeOrder, breadInfo, client, preOrder, preOrderPostReq, setupOrderReq, submitOrderReq } from './types';
 
 export const orderApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -66,6 +66,12 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body
       }),
+    }),
+    getClients: build.query<{ clients: client[] }, void>({
+      query: () => ({
+        url: PATH.GET_CLIENTS,
+        method: 'GET',
+      }),
     })
   }),
 });
@@ -80,5 +86,6 @@ export const {
   useCreatePreOrderMutation,
   useSubmitPreOrderMutation,
   useDeleteOrderMutation,
-  useSetupOrderMutation
+  useSetupOrderMutation,
+  useGetClientsQuery
 } = orderApi;

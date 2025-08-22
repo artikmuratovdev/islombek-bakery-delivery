@@ -96,3 +96,18 @@ export interface setupOrderReq {
     breadsInfo: breadInfo[];
   };
 }
+
+export interface client {
+  _id: string;
+  fullName: string;
+  hasOrder: boolean;
+  phone?: string;
+  address: string;
+}
+export interface AddActiveOrderReq {
+  client: string;
+  breadsInfo: breadInfo[];
+  address: string;
+  phone: string;
+  paidAmount: number;
+}
