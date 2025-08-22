@@ -8,8 +8,6 @@ import { useOnline } from '@reactuses/core';
 import { socket } from '@/utils';
 import LeafletMap from './components/LeafletMap';
 
-
-
 export const setPhoneNumber = (number: string) =>
   number.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
 
@@ -19,6 +17,7 @@ export const OrderMap = () => {
   const { data } = useGetOneOrderQuery(id as string);
   const [acceptOrder] = useAcceptOrderMutation();
 
+  console.log(data)
   const [currentTime, setCurrentTime] = useState(Date.now());
 
   const online = useOnline();
@@ -30,11 +29,11 @@ export const OrderMap = () => {
   }) => {
     if (!online) {
       const rest: Array<typeof driver> = JSON.parse(
-        localStorage.getItem("update") || "[]"
+        localStorage.getItem('update') || '[]'
       );
-      localStorage.setItem("update", JSON.stringify(rest.concat(driver)));
+      localStorage.setItem('update', JSON.stringify(rest.concat(driver)));
     } else {
-      socket.emit("location", driver, (res = null) => {
+      socket.emit('location', driver, (res = null) => {
         console.log(driver, res);
       });
     }
@@ -47,11 +46,11 @@ export const OrderMap = () => {
         lng: number;
         rot?: number;
         user: { _id: string };
-      }> = JSON.parse(localStorage.getItem("update") || "[]");
+      }> = JSON.parse(localStorage.getItem('update') || '[]');
       pending.forEach((driver) => {
-        socket.emit("location", driver);
+        socket.emit('location', driver);
       });
-      localStorage.removeItem("update");
+      localStorage.removeItem('update');
     }
   }, [online]);
 
@@ -82,7 +81,7 @@ export const OrderMap = () => {
       </div>
       <div className='mt-[90px] mb-20'>
         <div className='px-4'>
-            <LeafletMap setLocation={setLocation} />
+          <LeafletMap setLocation={setLocation} />
           <div className='w-full h-24 bg-white rounded-lg border border-yellow-400 mt-2 space-y-2'>
             <div className='w-full flex justify-between px-4 items-center mt-3'>
               <h2 className="text-blue-950 text-base font-bold font-['Inter'] leading-tight">
@@ -105,7 +104,7 @@ export const OrderMap = () => {
             </h2>
           </div>
           <div className='w-full h-24 bg-white rounded-lg border border-yellow-400 mt-2 space-y-3'>
-            {data?.breadsInfo.map((item) => (
+            {Array.isArray(data?.breadsInfo) && data?.breadsInfo.map((item) => (
               <div
                 key={item._id}
                 className='grid grid-cols-3 px-4 items-center mt-3'
