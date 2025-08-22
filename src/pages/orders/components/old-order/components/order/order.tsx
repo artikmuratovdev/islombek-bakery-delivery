@@ -13,11 +13,12 @@ import {
   useSubmitPreOrderMutation,
 } from '@/app/api';
 import BreadList from '@/components/form/BreadLists/BreadList';
+import { isValid, parse, format } from 'date-fns';
 
 export const OrderPage = () => {
   const { id } = useParams();
   const { data: breadPrice } = useGetBreadPricesQuery();
-  const { data: preOrder } = useGetOneOrderQuery(id as string);
+  const { data: preOrder, refetch } = useGetOneOrderQuery(id as string);
   const [submitPreOrder] = useSubmitPreOrderMutation();
   const [deleteOrder] = useDeleteOrderMutation();
   const navigate = useNavigate();
@@ -61,7 +62,23 @@ export const OrderPage = () => {
         );
       }
     }
-  }, [preOrder, breadPrice, reset]);
+    refetch();
+  }, [id, preOrder, breadPrice, reset, refetch]);
+
+  const parseDate = (date: Date | string): string | null => {
+    try {
+      const dateString = typeof date === 'string' ? date : date.toISOString();
+
+      const formattedDate = dateString.slice(0, 16).replace('T', ' ');
+
+      const parsed = parse(formattedDate, 'yyyy-MM-dd HH:mm', new Date());
+
+      return isValid(parsed) ? format(parsed, 'dd-MM-yyyy HH:mm') : null;
+    } catch (error) {
+      console.error('Error parsing date:', error);
+      return null;
+    }
+  };
 
   const [open, setOpen] = useState(false);
 
@@ -218,14 +235,25 @@ export const OrderPage = () => {
           )}
         </div>
 
-        <div className='w-full h-11 relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 flex justify-between items-center px-4 mt-3'>
-          <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-40">
-            Izzat (Haydovchi) <span className='text-green-700'>500 000</span>
-          </h3>
-          <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-20">
-            29.03.2025 <span>10:30</span>
-          </h3>
-        </div>
+        {preOrder?.paymentHistory &&
+          preOrder?.paymentHistory.length > 0 &&
+          preOrder.paymentHistory.map((p) => (
+            <div
+              key={p._id}
+              className='w-full h-11 relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 flex justify-between items-center px-4 mt-3'
+            >
+              <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-70">
+                {p.fromUser?.fullName} <br /> {p.fromUser?.role}{' '}
+                <span className='text-green-700 ml-3'>
+                  {p.amount.toLocaleString('ru-RU')}
+                </span>
+              </h3>
+              <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-30">
+                <p>{parseDate(p.paymentDate)?.toString().split(' ')[0]}</p>
+                <p className='text-end'>{parseDate(p.paymentDate)?.toString().split(' ')[1]}</p>
+              </h3>
+            </div>
+          ))}
       </div>
 
       <div className=' mt-2 px-4 flex flex-col space-y-2 items-start'>
@@ -260,7 +288,11 @@ export const OrderPage = () => {
       </div>
 
       <BottomSheet open={open} setOpen={setOpen}>
-        <Bottom id={preOrder?._id as string} breads={breads} setBreads={setBreads} />
+        <Bottom
+          id={preOrder?._id as string}
+          breads={breads}
+          setBreads={setBreads}
+        />
       </BottomSheet>
     </div>
   );

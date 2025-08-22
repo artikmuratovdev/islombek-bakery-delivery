@@ -4,6 +4,14 @@ import { ArrowLeft, Notifications } from '@/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTimes } from '../active-order';
 import { useEffect, useState } from 'react';
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMapEvents,
+} from 'react-leaflet';
+import { LatLngExpression } from 'leaflet';
 
 export const setPhoneNumber = (number: string) =>
   number.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
@@ -25,9 +33,26 @@ export const OrderMap = () => {
   }, []);
 
   console.log(data);
+
+  const MapClickHandler = ({
+    setPosition,
+  }: {
+    setPosition: (pos: [number, number]) => void;
+  }) => {
+    useMapEvents({
+      click(e) {
+        setPosition([e.latlng.lat, e.latlng.lng]);
+      },
+    });
+    return null;
+  };
+
+  const [position, setPosition] = useState<[number, number]>([
+    37.235588485310316, 67.28402941296861,
+  ]);
   return (
     <div className='w-full max-w-2xl'>
-      <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl z-10 mx-auto'>
+      <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl mx-auto z-30'>
         <div className='flex w-[95%] m-auto justify-between items-center'>
           <Button
             onClick={() => navigate('/orders')}
@@ -42,17 +67,25 @@ export const OrderMap = () => {
         </div>
       </div>
       <div className='mt-[90px] mb-20'>
-        <div className='w-full'>
-          <iframe
-            src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3158.700525733367!2d67.02991307632635!3d37.65624411897838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f355f135de70163%3A0x753f2c48a26df1ec!2sSherobod%20tumani%20axborot%20kutubxona%20markazi!5e0!3m2!1sen!2s!4v1732282731913!5m2!1sen!2s'
-            width='95%'
-            height='500'
-            loading='lazy'
-            referrerPolicy='no-referrer-when-downgrade'
-            style={{ border: '0px' }}
-            className='mx-auto'
-          ></iframe>
-        </div>
+        <MapContainer
+          center={position}
+          zoom={15}
+          scrollWheelZoom={false}
+          className='w-full h-[400px] mt-30 z-10'
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          />
+
+          <MapClickHandler setPosition={setPosition} />
+
+          <Marker position={position}>
+            <Popup>
+              Lat: {position[0]} <br /> Lng: {position[1]}
+            </Popup>
+          </Marker>
+        </MapContainer>
         <div className='px-4'>
           <div className='w-full h-24 bg-white rounded-lg border border-yellow-400 mt-2 space-y-2'>
             <div className='w-full flex justify-between px-4 items-center mt-3'>
@@ -97,7 +130,10 @@ export const OrderMap = () => {
             Umumiy summa: {data?.totalAmount.toLocaleString('uz')}
           </h1>
           <div className='flex justify-end'>
-            <Button onClick={() => acceptOrder(id as string)} className='w-40 h-8 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-center items-center gap-3 text-[#1B2B56] hover:bg-yellow-400 mt-5'>
+            <Button
+              onClick={() => acceptOrder(id as string)}
+              className='w-40 h-8 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-center items-center gap-3 text-[#1B2B56] hover:bg-yellow-400 mt-5'
+            >
               Qabul qilish
             </Button>
           </div>
