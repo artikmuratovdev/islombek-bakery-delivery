@@ -2,7 +2,7 @@ import { API_TAGS } from "@/constants/api-tags";
 import { baseApi } from "../base-api";
 import { PATHS } from "./path";
 import {
-  GetAllBakery,
+  GetAllBakeryResponse,
   GetBakeryBreadRequest,
   GetBakeryBreadResponse,
   GetBakeryDeliveryResponse,
@@ -18,7 +18,7 @@ import {
 
 export const bakeryApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getAllBakery: build.query<GetAllBakery[], unknown>({
+    getAllBakery: build.query<GetAllBakeryResponse[], unknown>({
       query: () => ({
         url: PATHS.ALL_BAKERY,
         method: "GET",

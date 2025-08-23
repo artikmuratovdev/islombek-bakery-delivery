@@ -21,7 +21,7 @@ export interface BakerRoom {
   soldBreadMoney: number;
 }
 
-export interface GetAllBakery {
+export interface GetAllBakeryResponse {
   _id: string;
   title: string;
   breadsCount: number;

@@ -16,11 +16,11 @@ import {
   Bakerys,
   Checkout,
   Customers,
-  MapPage,
   Bakery,
   BakeryDough,
   Delivery,
   BakeryBread,
+  LeafletMap,
 } from "./pages";
 import { Layouts } from "./layouts";
 import { Notifications } from "./pages/notification";
@@ -87,7 +87,7 @@ const App = () => {
           path="/customer/customer-details"
           element={<CustomerDetails />}
         />
-        <Route path="map" element={<MapPage />} />
+        <Route path="map" element={<LeafletMap />} />
         <Route path="/costs" element={<Costs />} />
         <Route path="/message" element={<Message />} />
         <Route path="/balance" element={<Balance />} />
