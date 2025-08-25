@@ -31,3 +31,5 @@ export * from "./delete";
 export * from "./dollar";
 export * from "./checkbox";
 export * from "./clock";
+export * from "./camera";
+export * from "./complaint";

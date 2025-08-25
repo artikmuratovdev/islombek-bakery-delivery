@@ -29,6 +29,7 @@ const PUBLIC_ROUTES = [
   "/debts/:id",
   "/trade/:id",
   "/trade/:id/edit",
+  "/my-salaries",
 ];
 
 export const Layouts = ({

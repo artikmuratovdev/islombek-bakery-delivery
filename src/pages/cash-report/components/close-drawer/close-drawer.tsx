@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
-  TextArea,
   Input,
   Select,
   SelectTrigger,
@@ -12,6 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
+import { TextArea } from "@/components/common";
 
 export const CloseDrawer = ({ setOpen }: any) => {
   const form = useForm<any>();
