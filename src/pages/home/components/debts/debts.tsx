@@ -52,6 +52,14 @@ export const Debts = () => {
     getDriverDebtClientsTodayDebts,
   ]);
 
+  console.log(driverDebtClients);
+
+  const totalBalance =
+    driverDebtClients?.reduce(
+      (sum, item) => sum + Number(item.balance || 0),
+      0
+    ) || 0;
+
   return (
     <div>
       <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full z-10">
@@ -69,11 +77,9 @@ export const Debts = () => {
           </div>
           <div>
             <h2 className="text-white text-xl font-semibold font-inter">
-              Qarzdorlar
+              {totalBalance.toLocaleString("ru-RU")}
             </h2>
-            <h2 className="text-white text-2xl font-semibold font-inter">
-              8 000 000
-            </h2>
+            <h2 className="text-white text-2xl font-semibold font-inter"></h2>
           </div>
           <button onClick={() => navigate("/notifications")}>
             <Notifications className="cursor-pointer text-[#FFCC15] w-6 h-6" />

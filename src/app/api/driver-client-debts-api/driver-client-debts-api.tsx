@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_TAGS } from "@/constants";
 import { baseApi } from "../base-api";
 import { PATHS } from "./paths";
@@ -24,7 +25,7 @@ export const driverClientDebtsApi = baseApi.injectEndpoints({
       providesTags: [API_TAGS.DEBT_CLIENTS],
     }),
     getDriverDebtClientsTotalDebt: build.query<
-      DriverDebtClientsTotalDebtResponse,
+      DriverDebtClientsTotalDebtResponse[],
       DriverDebtClientsTotalDebtRequest
     >({
       query: ({ clientId, startDate, endDate }) => ({
@@ -45,6 +46,35 @@ export const driverClientDebtsApi = baseApi.injectEndpoints({
       }),
       providesTags: [API_TAGS.DEBT_CLIENTS],
     }),
+    getDriverDebtClientDebtPayments: build.query<
+      {
+        _id: string;
+        client: string;
+        debt: number;
+        paidAmount: number;
+        createdAt: string;
+        updatedAt: string;
+      }[],
+      { id: string; startDate?: string; endDate?: string }
+    >({
+      query: ({ id, startDate, endDate }) => ({
+        url: PATHS.DRIVER_CLIENT_DEBTS_TOTAL_DEBT + `${id}/debts/payments`,
+        method: "GET",
+        params: { startDate, endDate },
+      }),
+      providesTags: [API_TAGS.DEBT_CLIENTS],
+    }),
+    createDriverDebtClientDebtPayment: build.mutation<
+      void,
+      { id: string; body: { amount: number } }
+    >({
+      query: ({ id, body }) => ({
+        url: PATHS.DRIVER_CLIENT_DEBTS_TOTAL_DEBT + `${id}/debts/pay`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [API_TAGS.DEBT_CLIENTS],
+    }),
   }),
 });
 
@@ -55,4 +85,7 @@ export const {
   useLazyGetDriverDebtClientsTodayDebtsQuery,
   useGetDriverDebtClientsTotalDebtQuery,
   useLazyGetDriverDebtClientsTotalDebtQuery,
+  useGetDriverDebtClientDebtPaymentsQuery,
+  useLazyGetDriverDebtClientDebtPaymentsQuery,
+  useCreateDriverDebtClientDebtPaymentMutation,
 } = driverClientDebtsApi;
