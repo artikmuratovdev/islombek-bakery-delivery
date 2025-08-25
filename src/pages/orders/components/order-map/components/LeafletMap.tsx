@@ -3,86 +3,26 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-interface Props {
-  drivers?: { user: { _id: string }; lat: number; lng: number; rot: number }[];
-  setLocation?: (value: {
-    user: { _id: string };
-    lat: number;
-    lng: number;
-    rot: number;
-  }) => void;
+interface Driver {
+  user: { _id: string };
+  lat: number;
+  lng: number;
+  rot: number;
 }
 
-const TileLayerControl = ({
-  drivers,
-  position,
-  hybridTile,
-  setHybridTile,
-  mapRef,
-}: {
-  drivers?: Props["drivers"];
-  position: [number, number];
-  hybridTile: boolean;
-  setHybridTile: (value: boolean) => void;
-  mapRef: React.MutableRefObject<L.Map | null>;
-}) => {
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setView(
-        drivers?.length
-          ? [
-              +(drivers.reduce((a, b) => a + b.lat, 0) / drivers.length).toFixed(
-                6
-              ),
-              +(
-                drivers.reduce((a, b) => a + b.lng, 0) / drivers.length
-              ).toFixed(6),
-            ]
-          : position,
-        mapRef.current.getZoom()
-      );
-    }
-  }, [drivers, position]);
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: "10px",
-        left: "10px",
-        zIndex: 1000,
-        background: "white",
-        padding: "8px",
-        borderRadius: "5px",
-        boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <input
-        type="checkbox"
-        checked={hybridTile}
-        onChange={(e) => {
-          setHybridTile(e.target.checked);
-          mapRef.current?.invalidateSize();
-        }}
-        style={{ marginRight: "5px", scale: "1.5" }}
-      />
-      <label style={{ fontSize: "14px", fontWeight: "bold", color: "black" }}>
-        Hybrid
-      </label>
-    </div>
-  );
-};
+interface Props {
+  drivers?: Driver[];
+  setLocation?: (value: Driver) => void;
+}
 
 function LeafletMap({ drivers, setLocation }: Props) {
   const [position, setPosition] = useState<[number, number]>(
     drivers?.length
       ? [
-          +(drivers.reduce((a, b) => a + b.lat, 0) / drivers.length).toFixed(6),
-          +(drivers.reduce((a, b) => a + b.lng, 0) / drivers.length).toFixed(6),
+          drivers.reduce((a, b) => a + b.lat, 0) / drivers.length,
+          drivers.reduce((a, b) => a + b.lng, 0) / drivers.length,
         ]
-      : [37.235588485310316, 67.28402941296861]
+      : [37.235588485310316, 67.28402941296861] // default
   );
   const [rotation, setRotation] = useState(0);
   const [hybridTile, setHybridTile] = useState(false);
@@ -122,101 +62,134 @@ function LeafletMap({ drivers, setLocation }: Props) {
     return () => navigator.geolocation.clearWatch(watcher);
   }, [setLocation, drivers, rotation]);
 
-  // 📍 Map click event – faqat oxirgi marker qolsin
+  // 📍 Map click event → faqat oxirgi marker qolsin
   useEffect(() => {
-    if (mapRef.current) {
-      const handleMapClick = (e: L.LeafletMouseEvent) => {
-        const { lat, lng } = e.latlng;
-        setClickedMarker([lat, lng]); // 🔹 faqat oxirgi marker
-        console.log("Clicked coordinates:", { lat, lng });
-      };
+    if (!mapRef.current) return;
 
-      mapRef.current.on("click", handleMapClick);
+    const handleMapClick = (e: L.LeafletMouseEvent) => {
+      const { lat, lng } = e.latlng;
+      console.log("📍 Selected location:", { lat, lng });
+      setClickedMarker([lat, lng]);
+      if (setLocation) {
+        setLocation({
+          user: { _id: "manual-selected" },
+          lat,
+          lng,
+          rot: 0,
+        });
+      }
+    };
 
-      return () => {
-        mapRef.current?.off("click", handleMapClick);
-      };
-    }
-  }, []);
+    mapRef.current.on("click", handleMapClick);
+    return () => {
+      mapRef.current?.off("click", handleMapClick);
+    };
+  }, [setLocation]);
 
   return (
-    <MapContainer
-      center={position}
-      zoom={16}
-      style={{ height: "50vh", width: "100%" }}
-      scrollWheelZoom={false}
-      ref={mapRef}
-    >
-      <TileLayerControl
-        drivers={drivers}
-        position={position}
-        hybridTile={hybridTile}
-        setHybridTile={setHybridTile}
-        mapRef={mapRef}
-      />
+    <div style={{ position: "relative", width: "100%", height: "50vh" }}>
+      <MapContainer
+        center={position}
+        zoom={16}
+        style={{ height: "100%", width: "100%" }}
+        scrollWheelZoom={false}
+        whenReady={(map) => {
+          mapRef.current = map.target;
+        }}
+      >
+        <TileLayer
+          attribution="&copy; Google Maps"
+          url={`https://{s}.google.com/vt/lyrs=${
+            hybridTile ? "s,h" : "m"
+          }&x={x}&y={y}&z={z}`}
+          subdomains={["mt0", "mt1", "mt2", "mt3"]}
+          maxZoom={20}
+        />
 
-      <TileLayer
-        attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
-        url={`https://{s}.google.com/vt/lyrs=${
-          hybridTile ? "s,h" : "m"
-        }&x={x}&y={y}&z={z}`}
-        subdomains={["mt0", "mt1", "mt2", "mt3"]}
-        maxZoom={20}
-      />
+        {/* 🚗 Driver markers */}
+        {drivers?.length &&
+          drivers.map((driver) => (
+            <Marker
+              key={driver.user._id}
+              position={[driver.lat, driver.lng]}
+              icon={L.divIcon({
+                html: `<img src="/car.png" style="transform: rotate(${driver.rot}deg); width: 60px; height: 60px; object-fit: contain;" />`,
+                iconSize: [60, 60],
+                iconAnchor: [30, 60],
+                popupAnchor: [0, -60],
+                className: "transparent-marker",
+              })}
+            >
+              <Popup>ID: {driver.user._id || "N/A"}</Popup>
+            </Marker>
+          ))}
 
-      {/* 🚗 Driver markers */}
-      {drivers?.length &&
-        drivers.map((driver) => (
+        {/* 📍 Faqat oxirgi click marker */}
+        {clickedMarker && (
           <Marker
-            key={driver.user._id}
-            position={[driver.lat, driver.lng]}
+            position={clickedMarker}
             icon={L.divIcon({
-              html: `<img src="/car.png" style="transform: rotate(${driver.rot}deg); width: 60px; height: 60px; object-fit: contain;" />`,
+              html: `<img src="/map-pin.png" style="width: 40px; height: 40px; object-fit: contain;" />`,
+              iconSize: [40, 40],
+              iconAnchor: [20, 40],
+              popupAnchor: [0, -40],
+              className: "custom-marker",
+            })}
+          >
+            <Popup>
+              Marker at {clickedMarker[0].toFixed(6)},{" "}
+              {clickedMarker[1].toFixed(6)}
+            </Popup>
+          </Marker>
+        )}
+
+        {/* 🚘 Agar drivers yo‘q bo‘lsa – local user marker */}
+        {!drivers?.length && position && (
+          <Marker
+            position={position}
+            icon={L.divIcon({
+              html: `<img src="/car.png" style="transform: rotate(${rotation}deg); width: 60px; height: 60px; object-fit: contain;" />`,
               iconSize: [60, 60],
               iconAnchor: [30, 60],
               popupAnchor: [0, -60],
               className: "transparent-marker",
             })}
           >
-            <Popup>ID: {driver.user._id || "N/A"}</Popup>
+            <Popup>ID: {localStorage.getItem("driver") || "N/A"}</Popup>
           </Marker>
-        ))}
+        )}
+      </MapContainer>
 
-      {/* 📍 Faqat oxirgi click marker */}
-      {clickedMarker && (
-        <Marker
-          position={clickedMarker}
-          icon={L.divIcon({
-            html: `<img src="/login_logo.png" style="width: 40px; height: 40px; object-fit: contain;" />`,
-            iconSize: [40, 40],
-            iconAnchor: [20, 40],
-            popupAnchor: [0, -40],
-            className: "custom-marker",
-          })}
-        >
-          <Popup>
-            Marker at {clickedMarker[0].toFixed(6)},{" "}
-            {clickedMarker[1].toFixed(6)}
-          </Popup>
-        </Marker>
-      )}
-
-      {/* 🚘 Agar drivers yo‘q bo‘lsa – local user marker */}
-      {!drivers?.length && position && (
-        <Marker
-          position={position}
-          icon={L.divIcon({
-            html: `<img src="/car.png" style="transform: rotate(${rotation}deg); width: 60px; height: 60px; object-fit: contain;" />`,
-            iconSize: [60, 60],
-            iconAnchor: [30, 60],
-            popupAnchor: [0, -60],
-            className: "transparent-marker",
-          })}
-        >
-          <Popup>ID: {localStorage.getItem("driver") || "N/A"}</Popup>
-        </Marker>
-      )}
-    </MapContainer>
+      {/* ✅ Hybrid toggle tashqariga qo'yildi */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10px",
+          left: "10px",
+          zIndex: 10000,
+          background: "white",
+          padding: "8px",
+          borderRadius: "5px",
+          boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
+          display: "flex",
+          alignItems: "center",
+          pointerEvents: "auto",
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={hybridTile}
+          onChange={(e) => {
+            setHybridTile(e.target.checked);
+            mapRef.current?.invalidateSize();
+          }}
+          style={{ marginRight: "5px", transform: "scale(1.5)" }}
+        />
+        <label style={{ fontSize: "14px", fontWeight: "bold", color: "black" }}>
+          Hybrid
+        </label>
+      </div>
+    </div>
   );
 }
 

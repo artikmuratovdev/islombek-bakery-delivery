@@ -61,8 +61,6 @@ export const OrderMap = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  console.log(data);
   return (
     <div className='w-full max-w-2xl'>
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl mx-auto z-30'>
@@ -103,11 +101,11 @@ export const OrderMap = () => {
               {data?.commit}
             </h2>
           </div>
-          <div className='w-full h-24 bg-white rounded-lg border border-yellow-400 mt-2 space-y-3'>
+          <div className='w-full h-auto bg-white rounded-lg border border-yellow-400 my-2 space-y-3'>
             {Array.isArray(data?.breadsInfo) && data?.breadsInfo.map((item) => (
               <div
                 key={item._id}
-                className='grid grid-cols-3 px-4 items-center mt-3'
+                className='grid grid-cols-3 px-4 items-center py-2'
               >
                 <h2 className="text-blue-950 text-sm font-extrabold font-['Inter'] leading-tight ">
                   {item.title}
