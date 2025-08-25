@@ -58,7 +58,7 @@ export const LoginForm: React.FC = () => {
   return (
     <div className="p-5">
       <div>
-        <Toaster position="top-right" reverseOrder={false} />
+        <Toaster position="top-center" reverseOrder={false} />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="pt-5 space-y-5">
         <Controller

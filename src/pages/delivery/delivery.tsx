@@ -42,7 +42,12 @@ export const Delivery = () => {
           {deliverys ? (
             deliverys && deliverys.length > 0 ? (
               deliverys.map((delivery) => (
-                <Accordion type="single" collapsible className="w-full">
+                <Accordion
+                  key={delivery._id}
+                  type="single"
+                  collapsible
+                  className="w-full"
+                >
                   <AccordionItem value="item-1" className="border-none">
                     <AccordionTrigger className="bg-white border border-yellow-400 rounded-lg px-4 py-2 flex justify-between items-center no-underline hover:no-underline">
                       <p className="text-blue-950 text-base font-semibold w-3/5">
@@ -66,12 +71,12 @@ export const Delivery = () => {
                         <tbody>
                           {delivery.breads.map((item, idx) => (
                             <tr
-                              key={item.count + idx}
+                              key={item.date + item.count + idx}
                               className="border-b border-yellow-400"
                             >
                               <td className="py-2">{item.count}</td>
                               <td className="py-2">
-                                {format(item.date, "HH-MM")}
+                                {format(item.date, "HH-mm")}
                               </td>
                             </tr>
                           ))}

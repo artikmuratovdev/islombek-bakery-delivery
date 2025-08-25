@@ -83,14 +83,39 @@ export interface UpdateBakeryDoughResponse {
   };
 }
 
+export interface DoughInfo {
+  _id: string;
+  title: string;
+  amount: number;
+}
+
 export interface UpdateBakeryBreadRequest {
   id: string;
   breads: GetBakeryBreadResponse[];
   action: BreadActionType;
 }
 
+export interface DriverBread {
+  _id: string;
+  breadInfo: Record<string, number>; // key: breadId, value: soni
+  doughInfo: Record<string, DoughInfo>; // key: doughId
+  branch: string;
+  breadCount: number;
+  savdo: number;
+  qarzlar: number;
+  kirim: number;
+  xarajatlar: number;
+  balans: number;
+  doughCount: number;
+  driver: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
 export interface UpdateBakeryBreadResponse {
-  data: {
+data: {
     message: string;
+    driverBread: DriverBread;
   };
 }

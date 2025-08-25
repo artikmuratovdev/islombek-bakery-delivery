@@ -37,18 +37,15 @@ export const BakeryBread = () => {
     bread && breads ? breads.every((item) => item.amount === 0) : true;
 
   async function handleUpdateBread() {
-    if (!id && !breads) return;
+    if (id && breads && breads.length > 0) {
+      const updateBreads = breads?.filter((item) => item.amount > 0);
+      const res = await updateBread({ id, breads: updateBreads, action });
 
-    const res = await updateBread({ id, breads: breads ?? [], action });
-
-    console.log(res);
-
-    if ("data" in res && "message" in res.data!) {
-      toast.success(res.data.message as string);
+      if ("data" in res && "message" in res.data!) {
+        toast.success(res.data.message as string);
+      }
     }
   }
-
-  console.log(breads);
 
   return (
     <div>

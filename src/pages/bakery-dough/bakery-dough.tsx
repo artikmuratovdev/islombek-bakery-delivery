@@ -32,12 +32,13 @@ export const BakeryDough = () => {
     dough && doughs ? doughs.every((item) => item.amount === 0) : true;
 
   async function handleUpdateDough() {
-    if (!id && !doughs) return;
+    if (id && doughs && doughs.length > 0) {
+      const updateDoughs = doughs.filter((item) => item.amount > 0);
+      const res = await updateDough({ id, doughs: updateDoughs });
 
-    const res = await updateDough({ id, doughs: doughs ?? [] });
-
-    if ("data" in res && "message" in res.data!) {
-      toast.success(res.data.message as string);
+      if ("data" in res && "message" in res.data!) {
+        toast.success(res.data.message as string);
+      }
     }
   }
   return (
@@ -60,7 +61,7 @@ export const BakeryDough = () => {
         </div>
       </div>
 
-      <div className="mt-32 px-6">
+      <div className="mt-32 px-6 space-y-5">
         {doughs ? (
           doughs && doughs.length > 0 ? (
             <>
