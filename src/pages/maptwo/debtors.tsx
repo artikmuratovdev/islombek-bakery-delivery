@@ -1,9 +1,10 @@
-import { BottomSheet, Button, LeafletMap } from "@/components";
+import { Button } from "@/components";
 import { ArrowLeft, Notifications } from "@/icons";
 import { useNavigate } from "react-router-dom";
 import { PaymentDrawer } from "./components";
 import { useState } from "react";
 import PullToRefresh from "react-simple-pull-to-refresh";
+import { BottomSheet, LeafletMap } from "@/components/common";
 
 export const Debtors = () => {
   const navigate = useNavigate();

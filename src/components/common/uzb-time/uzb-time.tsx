@@ -57,7 +57,7 @@ export const UZBTime = ({
             <div className={cn("")}>
               <div className="flex items-center gap-5 border border-yellow rounded-lg py-0.5 px-2">
                 <div>
-                  <p className="text-[14px] font-semibold leading-[1.1] tracking-[0px]">
+                  <p className="text-[14px] text-white font-semibold leading-[1.1] tracking-[0px]">
                     {selectedRange?.from && selectedRange?.to
                       ? `${format(selectedRange.from, "yyyy.MM.dd")} - ${format(
                           selectedRange.to,
@@ -65,7 +65,7 @@ export const UZBTime = ({
                         )}`
                       : date.split("/").join(".")}
                   </p>
-                  <p className="text-[14px] font-semibold leading-[1.1] tracking-[0px]">
+                  <p className="text-[14px] text-white font-semibold leading-[1.1] tracking-[0px]">
                     {time}
                   </p>
                 </div>

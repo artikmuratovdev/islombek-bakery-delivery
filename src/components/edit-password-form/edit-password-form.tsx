@@ -1,16 +1,17 @@
 import { BottomSheet } from "@/components/common";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Controller,
-  useForm,
   FieldValues,
   SubmitHandler,
+  useForm,
 } from "react-hook-form";
 import { useState } from "react";
-import { Button } from "../ui";
 import { Password } from "@/icons";
 import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components";
+import { useHandleRequest } from "@/hooks";
+import { useUpdatePasswordMutation } from "@/app/api/profileApi";
 
 export const EditPasswordForm = () => {
   const [open, setOpen] = useState(false);
@@ -25,16 +26,27 @@ export const EditPasswordForm = () => {
     reset,
   } = useForm();
 
+  const [updatePassword] = useUpdatePasswordMutation();
+  const handleRequest = useHandleRequest();
+
   const onSubmit: SubmitHandler<FieldValues> = (formValues) => {
-    console.log("Form Values:", formValues);
-    alert("Form submit qilindi! Console logni tekshiring.");
-    reset();
-    setOpen(false);
+    handleRequest({
+      request: async () => {
+        await updatePassword({
+          confirmPassword: formValues.confirmPassword,
+          newPassword: formValues.newPassword,
+          oldPassword: formValues.oldPassword,
+        }).unwrap();
+      },
+      onSuccess: () => {
+        reset();
+        setOpen(false);
+      },
+    });
   };
 
   const inputClass =
     "w-full font-semibold bg-white rounded-lg border border-[#ffcb15] pr-10";
-
   const iconStyle = "absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer";
 
   return (
@@ -53,9 +65,9 @@ export const EditPasswordForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="w-full">
           <div className="w-full py-10 space-y-4">
             {/* Eski parol */}
-            <Label htmlFor="oldPassword" className="text-right text-[#ffcb15]">
+            <label htmlFor="oldPassword" className="text-right text-[#ffcb15]">
               Eski parol
-            </Label>
+            </label>
             <Controller
               name="oldPassword"
               control={control}
@@ -79,17 +91,18 @@ export const EditPasswordForm = () => {
                       onClick={() => setShowOld(true)}
                     />
                   )}
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.oldPassword?.message as string}
-                  </p>
+                  {errors.oldPassword && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.oldPassword.message as string}
+                    </p>
+                  )}
                 </div>
               )}
             />
 
-            {/* Yangi parol */}
-            <Label htmlFor="newPassword" className="text-right text-[#ffcb15]">
+            <label htmlFor="newPassword" className="text-right text-[#ffcb15]">
               Yangi parol
-            </Label>
+            </label>
             <Controller
               name="newPassword"
               control={control}
@@ -113,20 +126,21 @@ export const EditPasswordForm = () => {
                       onClick={() => setShowNew(true)}
                     />
                   )}
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.newPassword?.message as string}
-                  </p>
+                  {errors.newPassword && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.newPassword.message as string}
+                    </p>
+                  )}
                 </div>
               )}
             />
 
-            {/* Tasdiqlash */}
-            <Label
+            <label
               htmlFor="confirmPassword"
               className="text-right text-[#ffcb15]"
             >
               Yangi parolni tasdiqlash
-            </Label>
+            </label>
             <Controller
               name="confirmPassword"
               control={control}
@@ -150,9 +164,11 @@ export const EditPasswordForm = () => {
                       onClick={() => setShowConfirm(true)}
                     />
                   )}
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.confirmPassword?.message as string}
-                  </p>
+                  {errors.confirmPassword && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.confirmPassword.message as string}
+                    </p>
+                  )}
                 </div>
               )}
             />

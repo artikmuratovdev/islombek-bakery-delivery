@@ -1,6 +1,14 @@
+import { API_TAGS } from "@/constants";
 import { baseApi } from "../base-api";
 import { PATHS } from "./path";
-import { LoginRequest, LoginResponse } from "./types";
+import {
+  LoginRequest,
+  LoginResponse,
+  MeResponse,
+  ProfileResponse,
+  UpdateAvatarRequest,
+  UpdateAvatarResponse,
+} from "./types";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -11,7 +19,42 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    me: build.query<ProfileResponse, void>({
+      query: () => ({
+        url: PATHS.ME,
+        method: "GET",
+      }),
+    }),
+    ubdateAvatar: build.mutation<UpdateAvatarResponse, UpdateAvatarRequest>({
+      query: (body) => ({
+        url: PATHS.UPDATE_AVATAR,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: [API_TAGS.USER],
+    }),
+    upload: build.mutation<UpdateAvatarResponse, UpdateAvatarRequest>({
+      query: (body) => ({
+        url: PATHS.UPLOAD,
+        method: "POST",
+        body,
+      }),
+    }),
+    getAllUsers: build.query<MeResponse[], { roles: string[] }>({
+      query: (params) => ({
+        url: "/auth/get-all-users",
+        params,
+        method: "GET",
+      }),
+      providesTags: [API_TAGS.USER],
+    }),
   }),
 });
 
-export const { useLoginMutation } = authApi;
+export const {
+  useLoginMutation,
+  useMeQuery,
+  useLazyMeQuery,
+  useUbdateAvatarMutation,
+  useGetAllUsersQuery,
+} = authApi;

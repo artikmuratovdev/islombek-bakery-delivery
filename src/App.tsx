@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useStorage } from "./utils";
+
 import {
   HomePage,
   Login,
@@ -21,26 +24,35 @@ import {
   Delivery,
   BakeryBread,
   LeafletMap,
+  MySalaries,
 } from "./pages";
+
 import { Layouts } from "./layouts";
 import { Notifications } from "./pages/notification";
-import { useEffect } from "react";
+
 import {
   DoughDetails,
   Drivers,
   Income,
   Trade,
 } from "./pages/balance/components";
-import { TradeDetails } from "./pages/balance/components/trade/components";
+
+import {
+  TradeDetails,
+  TradeEdit,
+} from "./pages/balance/components/trade/components";
+
 import { Debts } from "./pages/home/components";
 import { DebtsDetails } from "./pages/home/components/debts/components/general-debts/components";
-import { OrderMap } from "./pages/orders/components";
+
+import { AcceptedOrder, OrderMap } from "./pages/orders/components";
 import {
   NewOrder,
   OrderPage,
 } from "./pages/orders/components/old-order/components";
+
+
 import { CustomerDetails } from "./pages/customers/components/customer-details";
-import { useStorage } from "./utils";
 
 const App = () => {
   const navigate = useNavigate();
@@ -57,19 +69,23 @@ const App = () => {
   return (
     <Layouts>
       <Routes>
+        {/* Auth */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
+
+        {/* Dashboard */}
         <Route path="/dashboard" element={<HomePage />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/notifications" element={<Notifications />} />
+        <Route path="/my-salaries" element={<MySalaries />} />
+
+        {/* Orders */}
         <Route path="/orders" element={<Orders />} />
         <Route path="/order/:id" element={<Order />} />
-        <Route path="/debtors/:id" element={<Debtors />} />
-        <Route path="/drivers" element={<Drivers />} />
-        <Route path="/trade" element={<Trade />} />
-        <Route path="/balance/income" element={<Income />} />
-        <Route path="/debts" element={<Debts />} />
-        <Route path="/debts/debts-details" element={<DebtsDetails />} />
-        <Route path="/trade/trade-details" element={<TradeDetails />} />
+        <Route path="/orders/accepted/:id" element={<AcceptedOrder />} />
+        <Route path="/orders/pre-order/:id" element={<OrderPage />} />
         <Route path="/orders/order-map" element={<OrderMap />} />
+        <Route path="/orders/order-map/:id" element={<OrderMap />} />
         <Route path="/new-order" element={<NewOrder />} />
 
         <Route path="/bakerys" element={<Bakerys />} />
@@ -79,6 +95,20 @@ const App = () => {
         <Route path="bakerys/bakery/:id/delivery" element={<Delivery />} />
 
         <Route path="new-order/order" element={<OrderPage />} />
+        {/* Debts & Debtors */}
+        <Route path="/debts" element={<Debts />} />
+        <Route path="/debts/:id" element={<DebtsDetails />} />
+        <Route path="/debtors/:id" element={<Debtors />} />
+
+        {/* Trade & Balance */}
+        <Route path="/trade" element={<Trade />} />
+        <Route path="/trade/:id" element={<TradeDetails />} />
+        <Route path="/trade/:id/edit" element={<TradeEdit />} />
+        <Route path="/balance" element={<Balance />} />
+        <Route path="/balance/income" element={<Income />} />
+        <Route path="/drivers" element={<Drivers />} />
+
+        {/* Other Pages */}
         <Route path="/sale" element={<SalePage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/dough-details" element={<DoughDetails />} />
@@ -88,13 +118,13 @@ const App = () => {
           element={<CustomerDetails />}
         />
         <Route path="map" element={<LeafletMap />} />
+        {/* <Route path="/map" element={<MapPage />} /> */}
         <Route path="/costs" element={<Costs />} />
         <Route path="/message" element={<Message />} />
-        <Route path="/balance" element={<Balance />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/chat/:id" element={<Chat />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/profile" element={<Profile />} />
+
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </Layouts>

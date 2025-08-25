@@ -21,3 +21,5 @@ export * from "./mapPage";
 export * from "./bakery-dough";
 export * from "./delivery";
 export * from "./bakery-bread";
+export * from "./my-salaries";
+export * from "./complaints";

@@ -25,7 +25,11 @@ const PUBLIC_ROUTES = [
   "/bakery/bakery-details/dispatcher-details",
   "/checkout",
   "/customer",
-  "customer/customer-details"
+  "customer/customer-details",
+  "/debts/:id",
+  "/trade/:id",
+  "/trade/:id/edit",
+  "/my-salaries",
 ];
 
 export const Layouts = ({

@@ -1,4 +1,4 @@
-import { Button, TextArea } from "@/components";
+import { Button } from "@/components";
 import { Controller, useForm } from "react-hook-form";
 import {
   Select,
@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TextArea } from "@/components/common";
 
 export const SentMessage = ({
   setOpen,

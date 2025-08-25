@@ -1,11 +1,12 @@
 import { ArrowLeft, Notifications } from "@/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { PaymentDrawer } from "./components";
-import { BottomSheet, Button } from "@/components";
+import { Button } from "@/components";
 import { useState } from "react";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { LeafletMap } from "../../components/common/leaflet-map/leaflet-map";
 import toast from "react-hot-toast";
+import { BottomSheet } from "@/components/common";
 
 export const Order = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ export const Order = () => {
     <PullToRefresh onRefresh={handleRefresh}>
       <div>
         {/* Header */}
-        <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full min-h-screen">
+        <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full z-50">
           <div className="flex w-[95%] m-auto justify-between items-center">
             <Button
               onClick={() => navigate("/orders")}
@@ -72,9 +73,9 @@ export const Order = () => {
         </div>
 
         {/* Content */}
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 pt-[90px]">
           {/* Map */}
-          <div className="mt-[76px]">
+          <div>
             <LeafletMap
               setLocation={(location) => {
                 setLatLng(`${location.lat},${location.lng}`);
@@ -83,7 +84,7 @@ export const Order = () => {
           </div>
 
           {/* Order Info */}
-          <div className="w-full p-3 mt-5 z-50">
+          <div className="w-full p-3 mt-5 z-40">
             <div className="flex justify-between text-center px-3 py-3 bg-white font-bold text-[#1C2C57] rounded-lg border border-[#FFCC15]">
               <span className="text-[#1b2b56] text-[15px] font-bold font-inter">
                 {formatTime(debtor.createdAt)}
@@ -116,12 +117,9 @@ export const Order = () => {
         </div>
 
         {/* Payment Drawer */}
-        <BottomSheet
-          children={<PaymentDrawer />}
-          open={open}
-          setOpen={setOpen}
-          className="bg-[#1b2b56]"
-        />
+        <BottomSheet open={open} setOpen={setOpen} className="bg-[#1b2b56]">
+          <PaymentDrawer />
+        </BottomSheet>
       </div>
     </PullToRefresh>
   );

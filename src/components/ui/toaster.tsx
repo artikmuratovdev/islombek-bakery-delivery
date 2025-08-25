@@ -1,4 +1,4 @@
-import { useToast } from "@/hooks/use-toast"
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Toast,
   ToastClose,
@@ -6,14 +6,15 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/components/ui/toast"
+} from "@/components/ui/toast";
+import { useToaster } from "react-hot-toast";
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts } = useToaster();
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({ id, title, description, action, ...props }: any) {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
@@ -25,9 +26,9 @@ export function Toaster() {
             {action}
             <ToastClose />
           </Toast>
-        )
+        );
       })}
       <ToastViewport />
     </ToastProvider>
-  )
+  );
 }
