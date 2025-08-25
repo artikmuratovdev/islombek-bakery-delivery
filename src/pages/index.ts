@@ -17,3 +17,5 @@ export * from "./bakery";
 export * from "./checkout";
 export * from "./customers";
 export * from "./mapPage";
+export * from "./my-salaries";
+export * from "./complaints";

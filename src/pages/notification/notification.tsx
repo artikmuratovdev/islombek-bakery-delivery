@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 export const Notifications = () => {
   const navigate = useNavigate();
 
-  // 🔹 Static mock data
   const notifications = [
     {
       _id: "1",
@@ -36,7 +35,6 @@ export const Notifications = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full z-10">
         <div className="flex w-[95%] m-auto justify-between items-center">
           <div className="flex gap-x-[30px] items-center">

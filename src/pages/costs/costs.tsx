@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeft, Edit, Menu, Notifications, Trash } from "@/icons";
-import { BottomSheet } from "@/components";
+import { BottomSheet } from "@/components/common";
 import { CostsDrawer, EditDrawer } from "./components";
 import {
   DropdownMenu,

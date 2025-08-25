@@ -1,4 +1,4 @@
-import { BottomSheet, Button } from "@/components";
+import { Button } from "@/components";
 import { UZBTime } from "@/components/common/uzb-time";
 import { Tabs } from "@/components/tabs/tabs";
 import { ArrowLeft, Dollar, Notifications } from "@/icons";
@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Accardion, Payments } from "..";
 import { DollarBottom } from "../bottom-sheet";
 import { useLazyGetDriverDebtClientsTotalDebtQuery } from "@/app/api";
+import { BottomSheet } from "@/components/common";
 
 export const DebtsDetails = () => {
   const { id } = useParams();

@@ -1,8 +1,9 @@
-import { BottomSheet, Button } from "@/components";
+import { Button } from "@/components";
 import { ArrowLeft, Plus } from "@/icons";
 import { useNavigate } from "react-router-dom";
 import { Arrived, Sent, SentMessage } from "./components";
 import { useState } from "react";
+import { BottomSheet } from "@/components/common";
 
 export const Message = () => {
   const navigate = useNavigate();
