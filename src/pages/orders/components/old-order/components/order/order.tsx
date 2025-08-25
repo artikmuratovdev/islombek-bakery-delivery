@@ -24,6 +24,8 @@ export const OrderPage = () => {
   const navigate = useNavigate();
   const [breads, setBreads] = useState<breadInfo[]>([]);
 
+  console.log(preOrder);
+
   const { control, reset } = useForm({
     defaultValues: {
       client: '',
@@ -47,7 +49,7 @@ export const OrderPage = () => {
         phone: preOrder?.phone ?? '',
         address: preOrder?.address ?? '',
         commit: preOrder?.commit ?? '',
-        deliveryTime: formatForDateTimeLocal(preOrder?.deliveryTime),
+        deliveryTime: preOrder?.deliveryTime,
         paidAmount: preOrder?.paidAmount ?? 0,
       });
 
@@ -194,7 +196,7 @@ export const OrderPage = () => {
                   readOnly
                   {...field}
                   id='deliveryTime'
-                  type='datetime-local'
+                  type='text'
                   className='w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
                 />
               )}
@@ -236,24 +238,35 @@ export const OrderPage = () => {
         </div>
 
         {preOrder?.paymentHistory &&
-          preOrder?.paymentHistory.length > 0 &&
-          preOrder.paymentHistory.map((p) => (
-            <div
-              key={p._id}
-              className='w-full h-11 relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 flex justify-between items-center px-4 mt-3'
-            >
-              <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-70">
-                {p.fromUser?.fullName} <br /> {p.fromUser?.role}{' '}
-                <span className='text-green-700 ml-3'>
-                  {p.amount.toLocaleString('ru-RU')}
-                </span>
-              </h3>
-              <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-30">
-                <p>{parseDate(p.paymentDate)?.toString().split(' ')[0]}</p>
-                <p className='text-end'>{parseDate(p.paymentDate)?.toString().split(' ')[1]}</p>
-              </h3>
-            </div>
-          ))}
+          preOrder.paymentHistory.length > 0 &&
+          preOrder.paymentHistory.map((p) => {
+            const date = new Date(p.paymentDate);
+            date.setTime(date.getTime());
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+
+            return (
+              <div
+                key={p._id}
+                className='w-full h-11 relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 flex justify-between items-center px-4 mt-3'
+              >
+                <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-70">
+                  {p.fromUser?.fullName} <br /> {p.fromUser?.role}{' '}
+                  <span className='text-green-700 ml-3'>
+                    {p.amount.toLocaleString('ru-RU')}
+                  </span>
+                </h3>
+                <h3 className="text-blue-950 text-base font-semibold font-['Inter'] w-30">
+                  <p>{`${day}-${month}-${year}`}</p>
+                  <p className='text-end'>{`${hours}:${minutes}`}</p>
+                </h3>
+              </div>
+            );
+          })}
       </div>
 
       <div className=' mt-2 px-4 flex flex-col space-y-2 items-start'>

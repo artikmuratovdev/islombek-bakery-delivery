@@ -50,7 +50,7 @@ export interface activeOrder {
 }
 
 export interface preOrder extends activeOrder {
-  deliveryTime: Date;
+  deliveryTime: string;
 }
 
 export interface preOrderPostReq {
@@ -67,7 +67,7 @@ type Payment = {
   _id: string;
   amount: number;
   fromUser: FromUser | null;
-  paymentDate: Date | string;
+  paymentDate: Date;
 };
 
 type FromUser = {

@@ -1,20 +1,16 @@
-import {
-  Button,
-  Input,
-} from '@/components';
+import { Button, Input } from '@/components';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Notifications } from '@/icons';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { breadInfo, preOrderPostReq } from '@/app/api/orderApi/types';
 import BreadList from '@/components/form/BreadLists/BreadList';
 import { useCreatePreOrderMutation, useGetBreadPricesQuery } from '@/app/api';
 
-
 export const NewOrder = () => {
-  const {data: breadPrice} = useGetBreadPricesQuery();
+  const { data: breadPrice } = useGetBreadPricesQuery();
   const [addPreOrder] = useCreatePreOrderMutation();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
@@ -22,6 +18,7 @@ export const NewOrder = () => {
     control,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm<preOrderPostReq>({
     defaultValues: {
       client: '',
@@ -69,6 +66,7 @@ export const NewOrder = () => {
   const navigate = useNavigate();
   return (
     <div>
+      <Toaster />
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
         <div className='flex w-[95%] m-auto items-center justify-between'>
           <Button
@@ -226,7 +224,17 @@ export const NewOrder = () => {
           <Controller
             name='paidAmount'
             control={control}
-            rules={{ required: 'Olingan pul miqdorini kiriting' }}
+            rules={{
+              required: 'Olingan pul miqdorini kiriting',
+              min: {
+                value: 1,
+                message: "Pul miqdori 0 dan katta bo'lishi kerak",
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: 'Faqat raqamlar kiritilishi mumkin',
+              },
+            }}
             render={({ field }) => (
               <>
                 <Input
@@ -234,18 +242,18 @@ export const NewOrder = () => {
                   placeholder='Olingan pul miqdorini kiriting'
                   id='paidAmount'
                   type='text'
-                  inputMode='numeric'
-                  pattern='[0-9]*'
-                  value={field.value}
+                  value={(field.value ?? '')
+                    .toString()
+                    .replace(/^0+(?=\d)/, '')}
                   onChange={(e) => {
-                    const onlyNumbers = e.target.value.replace(/\D/g, '');
-                    field.onChange(onlyNumbers);
+                    const val = Number(e.target.value);
+                    setValue('paidAmount', isNaN(val) ? 0 : val);
                   }}
                   className='w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
                 />
                 {errors.paidAmount && (
                   <p className='text-red-600 font-semibold text-base'>
-                    {errors?.paidAmount?.message?.toString()}
+                    {errors.paidAmount.message?.toString()}
                   </p>
                 )}
               </>

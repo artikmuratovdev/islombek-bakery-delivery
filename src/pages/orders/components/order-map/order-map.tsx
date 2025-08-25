@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useOnline } from '@reactuses/core';
 import { socket } from '@/utils';
 import LeafletMap from './components/LeafletMap';
+import toast, { Toaster } from 'react-hot-toast';
 
 export const setPhoneNumber = (number: string) =>
   number.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
@@ -47,12 +48,31 @@ export const OrderMap = () => {
 
   const postLocation = async () => {
     if (selectedLocation) {
-      await sendLocation({
-        id: id as string,
-        body: {
-          location: { lat: selectedLocation.lat, lng: selectedLocation.lng },
-        },
-      }).unwrap();
+      try {
+        const res = await sendLocation({
+          id: id as string,
+          body: {
+            location: { lat: selectedLocation.lat, lng: selectedLocation.lng },
+          },
+        }).unwrap();
+
+        console.log('sendLocation response:', res);
+        toast.success(res.message || 'Joylashuv saqlandi');
+      } catch (err: any) {
+        console.error('sendLocation error:', err);
+        toast.error(err?.data?.message || 'Xatolik yuz berdi');
+      }
+    }
+  };
+
+  const acceptOrderData = async () => {
+    try {
+      const res = await acceptOrder(id as string).unwrap();
+      // backenddan {"message":"Zakaz qabul qilindi"} keladi
+      toast.success(res.message || "Zakaz qabul qilindi ✅");
+      navigate("/orders");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Xatolik yuz berdi ❌");
     }
   };
 
@@ -80,6 +100,7 @@ export const OrderMap = () => {
   }, []);
   return (
     <div className='w-full max-w-2xl'>
+      <Toaster />
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl mx-auto z-30'>
         <div className='flex w-[95%] m-auto justify-between items-center'>
           <Button
@@ -145,7 +166,7 @@ export const OrderMap = () => {
           </h1>
           <div className='flex items-end flex-col-reverse'>
             <Button
-              onClick={() => acceptOrder(id as string)}
+              onClick={acceptOrderData}
               className='w-40 h-8 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-center items-center gap-3 text-[#1B2B56] hover:bg-yellow-400 mt-5'
             >
               Qabul qilish
