@@ -1,90 +1,146 @@
-import { useState, useEffect, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import L, { Map as LeafletMapInstance } from "leaflet";
+import { Driver } from "../order-map";
 
-interface Driver {
-  user: { _id: string };
-  lat: number;
-  lng: number;
-  rot: number;
-}
 
 interface Props {
   drivers?: Driver[];
   setLocation?: (value: Driver) => void;
+  setSelectLocation: React.Dispatch<React.SetStateAction<Driver | null>>;
+}
+function LocationMarker({
+  setLocation,
+  setSelectLocation,
+}: {
+  setLocation?: (value: Driver) => void;
+  setSelectLocation: React.Dispatch<React.SetStateAction<Driver | null>>;
+}) {
+  const [position, setPosition] = useState<[number, number] | null>(null);
+
+  useMapEvents({
+    click(e) {
+      const coords: [number, number] = [e.latlng.lat, e.latlng.lng];
+      setPosition(coords);
+      e.target.flyTo(coords);
+
+      const driverObj: Driver = {
+        user: { _id: "manual-selected" },
+        lat: coords[0],
+        lng: coords[1],
+        rot: 0,
+      };
+
+      // 📌 Har ikkisini yangilash
+      setLocation?.(driverObj);
+      setSelectLocation(driverObj);
+    },
+  });
+
+  if (!position) return null;
+
+  return (
+    <Marker
+      position={position}
+      icon={L.divIcon({
+        html: `<img src="/map-pin.png" style="width:40px;height:40px;object-fit:contain;" />`,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40],
+        className: "custom-marker",
+      })}
+    >
+      <Popup>
+        Marker at {position[0].toFixed(6)}, {position[1].toFixed(6)}
+      </Popup>
+    </Marker>
+  );
 }
 
-function LeafletMap({ drivers, setLocation }: Props) {
-  const [position, setPosition] = useState<[number, number]>(
-    drivers?.length
-      ? [
-          drivers.reduce((a, b) => a + b.lat, 0) / drivers.length,
-          drivers.reduce((a, b) => a + b.lng, 0) / drivers.length,
-        ]
-      : [37.235588485310316, 67.28402941296861] // default
-  );
+
+function LeafletMap({ drivers, setLocation , setSelectLocation}: Props) {
+  
+  const defaultPos: [number, number] = [37.2349, 67.2841];
+  const [position, setPosition] = useState<[number, number]>(defaultPos);
   const [rotation, setRotation] = useState(0);
   const [hybridTile, setHybridTile] = useState(false);
-  const mapRef = useRef<L.Map | null>(null);
+  const mapRef = useRef<LeafletMapInstance | null>(null);
 
-  // 🔹 Faqat oxirgi bosilgan marker
-  const [clickedMarker, setClickedMarker] = useState<[number, number] | null>(
-    null
-  );
+  /* 🧮 Memoized average drivers position */
+  const driversCenter = useMemo<[number, number] | null>(() => {
+    if (!drivers?.length) return null;
+    return [
+      drivers.reduce((sum, d) => sum + d.lat, 0) / drivers.length,
+      drivers.reduce((sum, d) => sum + d.lng, 0) / drivers.length,
+    ];
+  }, [drivers]);
 
-  // 📍 GPS location tracking
+  /* 📡 GPS tracking */
   useEffect(() => {
     const watcher = navigator.geolocation.watchPosition(
       (pos) => {
+        const coords: [number, number] = [
+          pos.coords.latitude,
+          pos.coords.longitude,
+        ];
+
         if (!drivers && setLocation) {
           const newID = crypto.randomUUID();
+          const driverId =
+            localStorage.getItem("driver") ||
+            (localStorage.setItem("driver", newID), newID);
+
           setLocation({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
+            lat: coords[0],
+            lng: coords[1],
             rot: pos.coords.heading || rotation,
-            user: {
-              _id:
-                localStorage.getItem("driver") ||
-                (localStorage.setItem("driver", newID), newID),
-            },
+            user: { _id: driverId },
           });
         }
-        setPosition([pos.coords.latitude, pos.coords.longitude]);
+
+        setPosition(coords);
         setRotation((prev) => pos.coords.heading || prev);
       },
-      (err) => {
-        console.error("Geolocation error:", err);
-      },
+      (err) => console.error("Geolocation error:", err),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
     );
-
     return () => navigator.geolocation.clearWatch(watcher);
-  }, [setLocation, drivers, rotation]);
+  }, [drivers, setLocation, rotation]);
 
-  // 📍 Map click event → faqat oxirgi marker qolsin
+  /* 🚗 Auto re-center when drivers update */
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (driversCenter && mapRef.current) {
+      setPosition(driversCenter);
+      mapRef.current.flyTo(driversCenter, mapRef.current.getZoom());
+    }
+  }, [driversCenter]);
 
-    const handleMapClick = (e: L.LeafletMouseEvent) => {
-      const { lat, lng } = e.latlng;
-      console.log("📍 Selected location:", { lat, lng });
-      setClickedMarker([lat, lng]);
-      if (setLocation) {
-        setLocation({
-          user: { _id: "manual-selected" },
-          lat,
-          lng,
-          rot: 0,
-        });
-      }
-    };
-
-    mapRef.current.on("click", handleMapClick);
-    return () => {
-      mapRef.current?.off("click", handleMapClick);
-    };
-  }, [setLocation]);
+  /* 🖼 Driver marker renderer */
+  const renderDriverMarker = useCallback(
+    (driver: Driver) => (
+      <Marker
+        key={driver.user._id}
+        position={[driver.lat, driver.lng]}
+        icon={L.divIcon({
+          html: `<img src="/car.png" style="transform:rotate(${driver.rot}deg);width:60px;height:60px;object-fit:contain;" />`,
+          iconSize: [60, 60],
+          iconAnchor: [30, 60],
+          popupAnchor: [0, -60],
+          className: "transparent-marker",
+        })}
+      >
+        <Popup>ID: {driver.user._id || "N/A"}</Popup>
+      </Marker>
+    ),
+    []
+  );
 
   return (
     <div style={{ position: "relative", width: "100%", height: "50vh" }}>
@@ -92,10 +148,8 @@ function LeafletMap({ drivers, setLocation }: Props) {
         center={position}
         zoom={16}
         style={{ height: "100%", width: "100%" }}
-        scrollWheelZoom={false}
-        whenReady={(map) => {
-          mapRef.current = map.target;
-        }}
+        scrollWheelZoom
+        whenReady={(map) => (mapRef.current = map.target)}
       >
         <TileLayer
           attribution="&copy; Google Maps"
@@ -106,49 +160,15 @@ function LeafletMap({ drivers, setLocation }: Props) {
           maxZoom={20}
         />
 
-        {/* 🚗 Driver markers */}
-        {drivers?.length &&
-          drivers.map((driver) => (
-            <Marker
-              key={driver.user._id}
-              position={[driver.lat, driver.lng]}
-              icon={L.divIcon({
-                html: `<img src="/car.png" style="transform: rotate(${driver.rot}deg); width: 60px; height: 60px; object-fit: contain;" />`,
-                iconSize: [60, 60],
-                iconAnchor: [30, 60],
-                popupAnchor: [0, -60],
-                className: "transparent-marker",
-              })}
-            >
-              <Popup>ID: {driver.user._id || "N/A"}</Popup>
-            </Marker>
-          ))}
+        {/* 🚗 Drivers */}
+        {drivers?.map(renderDriverMarker)}
 
-        {/* 📍 Faqat oxirgi click marker */}
-        {clickedMarker && (
-          <Marker
-            position={clickedMarker}
-            icon={L.divIcon({
-              html: `<img src="/map-pin.png" style="width: 40px; height: 40px; object-fit: contain;" />`,
-              iconSize: [40, 40],
-              iconAnchor: [20, 40],
-              popupAnchor: [0, -40],
-              className: "custom-marker",
-            })}
-          >
-            <Popup>
-              Marker at {clickedMarker[0].toFixed(6)},{" "}
-              {clickedMarker[1].toFixed(6)}
-            </Popup>
-          </Marker>
-        )}
-
-        {/* 🚘 Agar drivers yo‘q bo‘lsa – local user marker */}
-        {!drivers?.length && position && (
+        {/* 📍 Local user */}
+        {!drivers?.length && (
           <Marker
             position={position}
             icon={L.divIcon({
-              html: `<img src="/car.png" style="transform: rotate(${rotation}deg); width: 60px; height: 60px; object-fit: contain;" />`,
+              html: `<img src="/car.png" style="transform:rotate(${rotation}deg);width:60px;height:60px;object-fit:contain;" />`,
               iconSize: [60, 60],
               iconAnchor: [30, 60],
               popupAnchor: [0, -60],
@@ -158,9 +178,14 @@ function LeafletMap({ drivers, setLocation }: Props) {
             <Popup>ID: {localStorage.getItem("driver") || "N/A"}</Popup>
           </Marker>
         )}
+
+        {/* 📍 Manual click marker */}
+        {/* 📍 Manual click marker */}
+<LocationMarker setLocation={setLocation} setSelectLocation={setSelectLocation} />
+
       </MapContainer>
 
-      {/* ✅ Hybrid toggle tashqariga qo'yildi */}
+      {/* ✅ Hybrid toggle */}
       <div
         style={{
           position: "absolute",
@@ -170,10 +195,9 @@ function LeafletMap({ drivers, setLocation }: Props) {
           background: "white",
           padding: "8px",
           borderRadius: "5px",
-          boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
+          boxShadow: "0 0 10px rgba(0,0,0,0.3)",
           display: "flex",
           alignItems: "center",
-          pointerEvents: "auto",
         }}
       >
         <input
@@ -185,7 +209,9 @@ function LeafletMap({ drivers, setLocation }: Props) {
           }}
           style={{ marginRight: "5px", transform: "scale(1.5)" }}
         />
-        <label style={{ fontSize: "14px", fontWeight: "bold", color: "black" }}>
+        <label
+          style={{ fontSize: "14px", fontWeight: "bold", color: "black" }}
+        >
           Hybrid
         </label>
       </div>

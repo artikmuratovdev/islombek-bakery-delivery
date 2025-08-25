@@ -42,7 +42,6 @@ import {
 } from './pages/bakery/components';
 import { CustomerDetails } from './pages/customers/components/customer-details';
 import { useStorage } from './utils';
-import NewLeafletmap from './pages/orders/components/order-map/components/NewLeafletmap';
 
 const App = () => {
   const navigate = useNavigate();
@@ -104,7 +103,6 @@ const App = () => {
         <Route path='/chat/:id' element={<Chat />} />
         <Route path='/notifications' element={<Notifications />} />
         <Route path='/profile' element={<Profile />} />
-        <Route path='/leaflet' element={<NewLeafletmap />} />
         <Route path='*' element={<Navigate to='/dashboard' />} />
       </Routes>
     </Layouts>

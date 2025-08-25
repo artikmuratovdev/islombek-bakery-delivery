@@ -42,6 +42,11 @@ export interface activeOrder {
     fullName: string;
   };
   acceptedTimeDriver?: Date | string;
+  location?: {
+        lat: number,
+        lng: number,
+        _id: string
+    }
 }
 
 export interface preOrder extends activeOrder {
@@ -111,4 +116,14 @@ export interface AddActiveOrderReq {
   phone: string;
   commit?: string;
   paidAmount: number;
+}
+
+export interface Location {
+  id:string;
+  body : {
+    location: {
+    lat: number,
+    lng: number
+  }
+  }
 }
