@@ -79,3 +79,51 @@ interface UpdatePasswordRequest {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface UpdateAvatarRequest {
+  avatar: string;
+}
+
+export interface UpdateAvatarResponse {
+  _id: string;
+  role: string;
+  status: number;
+  branch: string;
+  fullName: string;
+  avatar: string;
+  username: sardor;
+  supplierProducts: {
+    [supplierId: string]: number;
+  };
+  sessions: [
+    {
+      _id: string;
+      userAgent: string;
+      ip: string;
+      approved: boolean;
+      createdAt: string;
+    }
+  ];
+  createdAt: string;
+  updatedAt: string;
+  balance: number;
+  breadPrices: [];
+  salaryBalance: number;
+}
+
+export interface MeResponse {
+  _id: string;
+  role: string;
+  status: number;
+  branch: string;
+  fullName: string;
+  avatar: string;
+  username: string;
+  supplierProducts: [];
+  sessions: MeSessions[];
+  createdAt: string;
+  updatedAt: string;
+  balance: number;
+  breadPrices: [];
+  salaryBalance: number;
+}

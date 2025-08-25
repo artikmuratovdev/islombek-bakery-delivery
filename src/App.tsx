@@ -20,6 +20,7 @@ import {
   Checkout,
   Customers,
   MapPage,
+  MySalaries,
 } from "./pages";
 
 import { Layouts } from "./layouts";
@@ -77,6 +78,7 @@ const App = () => {
         <Route path="/dashboard" element={<HomePage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/notifications" element={<Notifications />} />
+        <Route path="/my-salaries" element={<MySalaries />} />
 
         {/* Orders */}
         <Route path="/orders" element={<Orders />} />

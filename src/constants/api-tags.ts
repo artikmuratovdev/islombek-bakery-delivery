@@ -3,4 +3,7 @@ export enum API_TAGS {
   AUTH = "AUTH",
   DEBT_CLIENTS = "DEBT_CLIENTS",
   DASTAVCHIK_SAVDO = "DASTAVCHIK_SAVDO",
+  ORDER = "ORDER",
+  Upload = "Upload",
+  COMPLAINTS = "COMPLAINTS",
 }

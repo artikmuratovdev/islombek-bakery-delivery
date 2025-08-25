@@ -1,11 +1,12 @@
 import { ArrowLeft, Notifications } from "@/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { PaymentDrawer } from "./components";
-import { BottomSheet, Button } from "@/components";
+import { Button } from "@/components";
 import { useState } from "react";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { LeafletMap } from "../../components/common/leaflet-map/leaflet-map";
 import toast from "react-hot-toast";
+import { BottomSheet } from "@/components/common";
 
 export const Order = () => {
   const navigate = useNavigate();

@@ -1,126 +1,78 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ArrowLeft, Camera } from "@/icons";
-import { useState } from "react";
-import { Button } from "../ui";
-import { BottomSheet } from "../common";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef } from "react";
 import {
-  Controller,
-  FieldValues,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+  useMeQuery,
+  useUbdateAvatarMutation,
+  useUploadMutation,
+} from "@/app/api";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useHandleRequest } from "@/hooks";
 import toast from "react-hot-toast";
+import { CameraIcon } from "lucide-react";
 
 export const ProfileTop = () => {
-  const [open, setOpen] = useState(false);
+  const { data: me, refetch } = useMeQuery();
+  const handleRequest = useHandleRequest();
+  const [uploadImage] = useUploadMutation();
 
-  // Static user (API o‘rniga)
-  const [user, setUser] = useState({
-    _id: "12345",
-    fullName: "Sardor Web",
-    avatar: "https://via.placeholder.com/150",
-  });
+  const [updateAvatar] = useUbdateAvatarMutation();
 
-  const [avatarUrl, setAvatarUrl] = useState(user.avatar);
-  const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { control, handleSubmit, formState, reset } = useForm();
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
 
-  // File yuklash (faqat local preview)
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) return toast.error("Fayl tanlanmadi");
 
-    const imageUrl = URL.createObjectURL(file); // faqat preview uchun
-    setAvatarUrl(imageUrl);
+    const formData = new FormData();
+    formData.append("file", file);
 
-    toast.success("Avatar muvaffaqiyatli yangilandi (static)");
-  };
-
-  const onSubmit: SubmitHandler<FieldValues> = async (formValues) => {
-    setUser((prev) => ({ ...prev, fullName: formValues.fullName }));
-    toast.success("Ism muvaffaqiyatli o‘zgartirildi (static)");
-    setOpen(false);
-    reset();
+    await handleRequest({
+      request: async () => {
+        const { url } = await uploadImage(formData).unwrap();
+        return await updateAvatar({ avatar: url }).unwrap();
+      },
+      onSuccess: () => {
+        toast.success("Profil rasmi muvaffaqiyatli o’zgartirildi");
+        refetch();
+      },
+    });
   };
 
   return (
-    <div className="border-b-2 border-[#FFCC15] pb-6 rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full z-10">
-      <Button
-        onClick={() => navigate("/dashboard")}
-        className="w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full ml-2 mb-4"
-      >
-        <ArrowLeft className="text-2xl" />
-      </Button>
-      <div className="flex w-[95%] m-auto gap-x-5 items-center">
-        <div className="relative">
-          <Avatar className="w-[116px] h-[116px] object-cover">
-            <AvatarImage
-              className="w-[116px] h-[116px] object-cover"
-              src={avatarUrl}
-              alt="Avatar"
-            />
-            <AvatarFallback>{user.fullName[0] || "U"}</AvatarFallback>
-          </Avatar>
-          <div className="absolute -bottom-1 right-1 !h-9 !w-9">
-            <Label htmlFor="picture" className="w-full">
-              <Camera className="!h-9 !w-9 cursor-pointer" />
-            </Label>
-            <Input
-              id="picture"
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-          </div>
-        </div>
-        <h5 className="text-center text-white text-base font-semibold leading-[31.20px]">
-          {user.fullName || "Guest"}
-        </h5>
-      </div>
-      <BottomSheet
-        open={open}
-        setOpen={setOpen}
-        className="bg-[#1C2C57]"
-        children={
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="w-full">
-            <div className="w-full py-10">
-              <Label htmlFor="name" className="text-right text-[#ffcb15]">
-                Username
-              </Label>
-              <Controller
-                name="fullName"
-                control={control}
-                defaultValue={user.fullName}
-                rules={{ required: "Full name is required" }}
-                render={({ field }) => (
-                  <Input
-                    className="w-full font-semibold bg-white rounded-lg border border-[#ffcb15] flex-col justify-start items-start gap-3 inline-flex"
-                    placeholder="Ism kiriting"
-                    {...field}
-                  />
-                )}
-              />
-              <p className="text-sm mt-1 ml-1 text-red-600">
-                {formState.errors.fullName?.message?.toString()}
-              </p>
+    <div className="flex items-start gap-x-5">
+      <div className="flex flex-col relative">
+        <Avatar className="w-[95px] h-[95px]">
+          <AvatarImage src={me?.avatar} alt="@shadcn" />
+          <AvatarFallback>{me?.fullName}</AvatarFallback>
+        </Avatar>
 
-              <Button
-                type="submit"
-                className="mt-6 w-full py-[3px] bg-[#ffcb15] rounded-lg text-[#1b2b56] hover:text-white justify-center items-center"
-              >
-                Save
-              </Button>
-            </div>
-          </form>
-        }
-      />
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
+        <button
+          onClick={handleUploadClick}
+          className="absolute bottom-2 right-1 bg-black/50 rounded-full p-1"
+        >
+          <CameraIcon className="text-white w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="flex gap-x-4 mt-5 items-center">
+        <h3 className="text-center justify-center text-white text-base font-bold">
+          {me?.fullName || "Loading..."}
+        </h3>
+      </div>
     </div>
   );
 };

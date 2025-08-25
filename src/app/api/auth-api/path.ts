@@ -3,4 +3,5 @@ export enum PATHS {
   ME = "/auth/me",
   EDIT = "/user/",
   UPLOAD = "/upload",
+  UPDATE_AVATAR = "/auth/update-avatar",
 }
