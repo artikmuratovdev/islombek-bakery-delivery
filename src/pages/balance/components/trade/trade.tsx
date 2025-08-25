@@ -175,7 +175,6 @@ export const Trade = () => {
                 </h2>
               )}
 
-              {/* Dropdown */}
               <DropdownMenu
                 open={openId === item._id}
                 onOpenChange={(isOpen) =>
