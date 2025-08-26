@@ -8,4 +8,6 @@ export enum API_TAGS {
   ORDER = "ORDER",
   Upload = "Upload",
   COMPLAINTS = "COMPLAINTS",
+  BALANCE ="BALANCE",
+  KIRIM="KIRIM"
 }
