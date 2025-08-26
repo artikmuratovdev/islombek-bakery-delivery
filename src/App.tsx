@@ -53,6 +53,8 @@ import {
 
 
 import { CustomerDetails } from "./pages/customers/components/customer-details";
+import 'react-day-picker/style.css'
+
 
 const App = () => {
   const navigate = useNavigate();
@@ -111,7 +113,7 @@ const App = () => {
         {/* Other Pages */}
         <Route path="/sale" element={<SalePage />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/dough-details" element={<DoughDetails />} />
+        <Route path="/dough-details/:id" element={<DoughDetails />} />
         <Route path="/customer" element={<Customers />} />
         <Route
           path="/customer/customer-details"
