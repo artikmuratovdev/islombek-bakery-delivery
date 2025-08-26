@@ -127,3 +127,12 @@ export interface MeResponse {
   breadPrices: [];
   salaryBalance: number;
 }
+
+export interface Reason {
+  _id: string;
+  branch: string;
+  content : string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -23,7 +23,7 @@ export const Drivers = () => {
 				<div className='flex items-center'>
 					<span
 						className='cursor-pointer'
-						onClick={() => navigate('/dashboard/driver/balans')}
+						onClick={() => navigate('/balance')}
 					>
 						<svg
 							width='28'
