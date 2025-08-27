@@ -19,6 +19,8 @@ const buttonVariants = cva(
 					'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
 				link: 'text-primary underline-offset-4 hover:underline',
+        yellow: "bg-[#FFCC15] text-[#1C2C57] shadow-sm hover:bg-[#FFCC15]/90",
+        greenary: "bg-[#099431] text-white shadow-sm hover:bg-[#099431]/90",
 				bakery:
 					'text-[#15255c] bg-white rounded-[10px] hover:bg-gray-300 cursor-pointer',
 				kirim:
