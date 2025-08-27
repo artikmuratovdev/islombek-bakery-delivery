@@ -28,7 +28,7 @@ export const Checkout = () => {
           <Link to={'/'}>
             <ArrowLeft className='bg-[#FFCC15] text-[#1C2C57] rounded-full p-1 shrink-0 cursor-pointer scale-125' />
           </Link>
-          <h3 className='text-white mx-auto text-xl'>Kassa hisoboti</h3>
+          <h3 className='text-white mx-auto text-xl font-bold'>Kassa hisoboti</h3>
         </div>
       </div>
       <div className='mt-24 px-4'>
