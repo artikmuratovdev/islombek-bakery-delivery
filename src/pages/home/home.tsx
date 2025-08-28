@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMeQuery } from "@/app/api";
+import { useMeQuery } from '@/app/api'
 import { setCheckoutId } from "@/app/slices/CheckOutSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components";
 import { Bakerys, Checkout, Customer, Debts, MessagesIcon, MessagesIcons, Notifications } from "@/icons";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
   const navigate = useNavigate();
+  const {data} = useMeQuery()
   const dispatch = useDispatch();
   const { data: me } = useMeQuery();
 
@@ -32,7 +33,7 @@ export const HomePage = () => {
               <AvatarFallback>Sardor</AvatarFallback>
             </Avatar>
             <h2 className="text-white text-xl font-semibold font-inter">
-              Guest
+              {data?.fullName}
             </h2>
           </div>
           <button onClick={() => navigate("/notifications")}>

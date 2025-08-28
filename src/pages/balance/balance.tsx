@@ -1,39 +1,20 @@
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components";
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Separator } from '@/components/ui/separator'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { format } from 'date-fns'
 import {
-    Chevron,
-    MessagesIcon,
-    MessagesIcons,
-    Notifications,
-} from "@/icons";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-
-const DATA = [
-    {
-        id: 2,
-        label: "Qarzlar",
-        value: "8 000 000",
-        color: "text-red-600",
-    },
-    {
-        id: 4,
-        label: "Xarajatlar",
-        value: "3 000 000",
-        color: "text-red-600",
-    },
-]
+	useGetAllDoughQuery,
+	useGetAllDriverBalansBreadsQuery,
+	useGetAllDriverBalansMainQuery,
+	useGetAllDriverCashKirimQuery,
+} from '@/app/api/balance'
+import { useMeQuery } from '@/app/api'
 
 export const Balance = () => {
     const [open, setOpen] = useState(false);
@@ -71,7 +52,7 @@ export const Balance = () => {
                     </button>
                 </div>
             </div>
-            <div className="mt-[80px] w-[95%] m-auto p-[12px] overflow-y-auto h-auto mb-20 flex flex-col gap-y-4">
+            <div className="mt-[30%] w-[95%] m-auto p-[12px] overflow-y-auto h-auto mb-20 flex flex-col gap-y-4">
                 <div className="flex items-center justify-between">
                     <button onClick={() => navigate("/message")}>
                         <MessagesIcon className="w-6 h-6 text-[#FFCC15]" />

@@ -13,7 +13,6 @@ import {
   useSubmitPreOrderMutation,
 } from "@/app/api";
 import BreadList from "@/components/form/BreadLists/BreadList";
-import { isValid, parse, format } from "date-fns";
 import { BottomSheet } from "@/components/common";
 
 export const OrderPage = () => {
@@ -67,21 +66,6 @@ export const OrderPage = () => {
     }
     refetch();
   }, [id, preOrder, breadPrice, reset, refetch]);
-
-  const parseDate = (date: Date | string): string | null => {
-    try {
-      const dateString = typeof date === "string" ? date : date.toISOString();
-
-      const formattedDate = dateString.slice(0, 16).replace("T", " ");
-
-      const parsed = parse(formattedDate, "yyyy-MM-dd HH:mm", new Date());
-
-      return isValid(parsed) ? format(parsed, "dd-MM-yyyy HH:mm") : null;
-    } catch (error) {
-      console.error("Error parsing date:", error);
-      return null;
-    }
-  };
 
   const [open, setOpen] = useState(false);
 
