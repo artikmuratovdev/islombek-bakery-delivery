@@ -85,8 +85,9 @@ export const EditReport = ({
       reset();
       console.log(res);
       setOpen(false);
-    } catch (error) {
-      console.log(error);
+    } catch (error : any) {
+      console.log(error.message);
+
     }
   };
   return (

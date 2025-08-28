@@ -73,7 +73,7 @@ export const AddReport = ({refetch}:{refetch:() => void}) => {
       <Toaster />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
-          <div className='rounded-full p-[18px] bg-[#FFCC15] fixed bottom-[80px] right-[30px] z-30'>
+          <div className='rounded-full p-[18px] bg-[#FFCC15] fixed bottom-[30px] right-[30px] z-30'>
             <FaPlus size={15} className='cursor-pointer text-[#1C2C57]' />
           </div>
         </SheetTrigger>
