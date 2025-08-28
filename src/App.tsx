@@ -53,7 +53,6 @@ import {
 
 
 import { CustomerDetails } from "./pages/customers/components/customer-details";
-import 'react-day-picker/style.css'
 
 
 const App = () => {

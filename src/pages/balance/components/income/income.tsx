@@ -7,7 +7,6 @@ import {
 	DrawerHeader,
 } from '@/components/ui/drawer'
 import { Button } from '@/components/ui/button'
-import 'react-day-picker/style.css'
 import {
 	useGetAllDriverCashKirimQuery,
 	useGetDriverCashByIdQuery,
