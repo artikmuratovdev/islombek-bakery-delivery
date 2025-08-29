@@ -50,10 +50,7 @@ import {
   NewOrder,
   OrderPage,
 } from "./pages/orders/components/old-order/components";
-
-
 import { CustomerDetails } from "./pages/customers/components/customer-details";
-import 'react-day-picker/style.css'
 
 
 const App = () => {
