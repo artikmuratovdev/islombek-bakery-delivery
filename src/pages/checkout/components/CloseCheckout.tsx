@@ -12,16 +12,12 @@ import {
 } from "@/components/ui/sheet";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast, { Toaster } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 
 export const CloseCheckout = () => {
   const { data: getUsers, isLoading: getUsersLoading} = useGetAllUsersQuery({roles:[
-      'CEO',
       'ADMIN',
-      'DRIVER',
-      'SUPPLIER',
-      'DOUGHMAKER',
-      'DISPATCHER',
     ]});
   const [open, setOpen] = useState(false);
   const [closeCash , {isLoading}] = useCloseCashMutation();
@@ -39,7 +35,6 @@ export const CloseCheckout = () => {
     defaultValues: {
       amount: 0,
       toUser: '',
-      fromUser: '',
       reason: '',
     },
   });
@@ -55,13 +50,18 @@ export const CloseCheckout = () => {
       console.log(response)
       reset();
       setOpen(false);
-    } catch (error) {
+      toast.success(response.message);
+    } catch (error : any) {
       console.log(error);
+      toast.error(error?.data?.message || "Kassa yopishda xatolik yuz berdi");
     }
+
+    console.log(data)
   };
 
   return (
     <div>
+      <Toaster />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
           <div className='text-[#1C2C57] fixed bottom-5 left-[20px] right-[20px]'>
@@ -119,29 +119,6 @@ export const CloseCheckout = () => {
                 <span className='text-red-500'>{errors.amount.message}</span>
               )}
 
-              <label
-                htmlFor=''
-                className='text-start text-[12px] text-[#FFCC15] font-[600]'
-              >
-                Bergan xodim
-              </label>
-              <Controller
-                name='fromUser'
-                control={control}
-                render={({ field }) => (
-                  <SelectUser
-                    className='bg-white'
-                    userData={getUsers}
-                    setId={field.onChange}
-                    title='Xodim tanlash'
-                    isLoading={getUsersLoading}
-                    {...field}
-                  />
-                )}
-              />
-              {errors.fromUser && (
-                <span className='text-red-500'>{errors.fromUser.message}</span>
-              )}
 
               <label
                 htmlFor=''
