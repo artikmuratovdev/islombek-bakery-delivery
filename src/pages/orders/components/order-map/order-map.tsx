@@ -70,7 +70,7 @@ export const OrderMap = () => {
       const res = await acceptOrder(id as string).unwrap();
       // backenddan {"message":"Zakaz qabul qilindi"} keladi
       toast.success(res.message || "Zakaz qabul qilindi ✅");
-      navigate("/orders");
+      navigate('/orders',{state:'activeOrder'});
     } catch (err: any) {
       toast.error(err?.data?.message || "Xatolik yuz berdi ❌");
     }
@@ -104,7 +104,7 @@ export const OrderMap = () => {
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl mx-auto z-30'>
         <div className='flex w-[95%] m-auto justify-between items-center'>
           <Button
-            onClick={() => navigate('/orders')}
+            onClick={() => navigate('/orders',{state:'activeOrder'})}
             className='w-5 h-5 bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full'
           >
             <ArrowLeft className='text-2xl' />

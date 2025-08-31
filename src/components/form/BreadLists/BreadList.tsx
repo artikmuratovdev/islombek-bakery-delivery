@@ -6,9 +6,10 @@ type BreadListProps = {
   breadPrices: breadInfo[];
   setBreads: React.Dispatch<React.SetStateAction<breadInfo[]>>;
   priceHide?: boolean
+  debtShow?: number
 };
 
-const BreadList = ({ breadPrices, setBreads ,priceHide}: BreadListProps) => {
+const BreadList = ({ breadPrices, setBreads ,priceHide,debtShow}: BreadListProps) => {
   const [totals, setTotals] = useState<Record<string, number>>({});
 
   const handleTotalChange = (id: string, value: number) => {
@@ -36,7 +37,7 @@ const BreadList = ({ breadPrices, setBreads ,priceHide}: BreadListProps) => {
       </div>
 
       <div className='mt-4 text-white text-2xl font-semibold'>
-        Umumiy: {grandTotal.toLocaleString('ru-RU')} so'm
+        Umumiy: {(debtShow ||grandTotal).toLocaleString('ru-RU')} so'm
       </div>
     </div>
   );

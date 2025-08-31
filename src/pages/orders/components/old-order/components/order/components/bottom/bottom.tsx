@@ -10,10 +10,11 @@ type Props = {
   id: string;
   breads: breadInfo[];
   setBreads: React.Dispatch<React.SetStateAction<breadInfo[]>>;
+  debt:number
+  refetch?: () => void
 };
 
-export const Bottom = ({ breads, setBreads, id }: Props) => {
-  const navigate = useNavigate();
+export const Bottom = ({ breads, setBreads, id ,debt,refetch}: Props) => {
   const [setupOrder] = useSetupOrderMutation();
   const [paidAmount, setPaidAmount] = useState(0);
 
@@ -27,13 +28,13 @@ export const Bottom = ({ breads, setBreads, id }: Props) => {
     };
     console.log(data);
     await setupOrder(data);
-    navigate('/orders');
+    if (refetch) refetch();
   };
   return (
     <div className='w-full h-80 relative bg-white/0 rounded-xl outline outline-2 outline-offset-[-2px] outline-yellow-400 px-4 py-1 mt-4'>
       <div className='space-y-3 pt-2 mb-5'>
         {breads && (
-          <BreadList breadPrices={breads} priceHide setBreads={setBreads} />
+          <BreadList breadPrices={breads} debtShow={debt} priceHide setBreads={setBreads} />
         )}
       </div>
       <div className='mt-2'>

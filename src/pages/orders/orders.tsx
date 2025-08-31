@@ -1,13 +1,19 @@
 import { Button } from "@/components";
 import { Tabs } from "@/components/tabs/tabs";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Notifications } from "@/icons";
 import { ActiveOrder, OldOrder } from "./components";
 
 export const Orders = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("activeOrder");
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setActiveTab(location.state || "activeOrder");
+  },[location.state])
 
   const tabs = [
     { label: 'Faol zakazlar', value: 'activeOrder' },
