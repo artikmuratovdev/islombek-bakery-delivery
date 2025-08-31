@@ -142,7 +142,7 @@ export const Salary = ({ items }: { items: GetExpensesResponse[] }) => {
                         className='border border-[#FFCC15] bg-white outline-none p-1 px-2 font-semibold text-[#1C2C57] rounded-[8px] w-full'
                         {...field}
                         readOnly
-                        value={Number(field.value).toLocaleString('ru-RU')}
+                        value={field.value}
                       />
                     )}
                   />

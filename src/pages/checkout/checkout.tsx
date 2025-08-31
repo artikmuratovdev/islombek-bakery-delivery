@@ -6,6 +6,7 @@ import { useGetAllExpenseQuery } from '@/app/api/checkout';
 import { GetExpensesResponse } from '@/app/api/checkout/types';
 import { AddReport } from './components/addReport';
 import {ProfileResponse } from '@/app/api/auth-api/types';
+import { CloseCheckout } from './components/CloseCheckout';
 
 export const Checkout = () => {
   const userStr = localStorage.getItem("user");
@@ -55,7 +56,7 @@ export const Checkout = () => {
           </TabsContent>
         </Tabs>
         <AddReport refetch={refetch} />
-        {/* <CloseCheckout /> */}
+        <CloseCheckout />
       </div>
     </div>
   );

@@ -5,10 +5,11 @@ import BreadList from '@/components/form/BreadLists/BreadList';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
+import { Toaster } from '@/components/ui/toaster';
 import { ArrowLeft, Notifications } from '@/icons';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 
 type FormData = {
@@ -65,7 +66,7 @@ export const AcceptedOrder = () => {
         id: id as string,
         body: { paidAmount: order?.totalAmount as number, breadsInfo: breads },
       }).unwrap();
-      navigate('/orders');
+      navigate('/orders',{state:'activeOrder'});
       toast.success(message);
     }
   };
@@ -77,8 +78,8 @@ export const AcceptedOrder = () => {
       body: { paidAmount: data.paidAmount, breadsInfo: breads },
     }).unwrap();
 
-    navigate('/orders');
     toast.success(message);
+    navigate('/orders',{state:'activeOrder'});
   };
 
   return (
@@ -87,7 +88,7 @@ export const AcceptedOrder = () => {
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
         <div className='flex w-[95%] m-auto items-center justify-between'>
           <Button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/orders',{state:'activeOrder'})}
             className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full'
           >
             <ArrowLeft className='text-2xl' />

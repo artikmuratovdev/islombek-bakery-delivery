@@ -50,8 +50,6 @@ import {
   NewOrder,
   OrderPage,
 } from "./pages/orders/components/old-order/components";
-
-
 import { CustomerDetails } from "./pages/customers/components/customer-details";
 
 
