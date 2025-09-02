@@ -1,12 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { MAIN_TABS_LINK } from "@/mock";
+import { useGetActiveOrdersQuery, useGetPreOrderQuery } from "@/app/api";
+import { useEffect, useState } from "react";
 
 // 🔹 Static demo orders count
-const demoOrdersCount = 3;
 
 export const Footer = () => {
+  const [demoOrdersCount, setDemoOrdersCount] = useState(0);
   const location = useLocation();
+
+  const {data:activeOrders} = useGetActiveOrdersQuery();
+  const {data:preOrder} = useGetPreOrderQuery();
+
+
+  useEffect(() => {
+    setDemoOrdersCount(
+      (activeOrders?.orders?.length || 0) + (preOrder?.length || 0)
+    );
+  },[activeOrders,preOrder]);
 
   const leftLinks = MAIN_TABS_LINK.slice(
     0,

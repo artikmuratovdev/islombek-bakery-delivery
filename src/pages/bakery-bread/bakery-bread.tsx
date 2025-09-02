@@ -69,144 +69,145 @@ export const BakeryBread = () => {
 
       <div className="mt-32 px-6 space-y-5">
         {breads ? (
-          breads && breads.length > 0 ? (
-            <>
-              {breads.map((breadItem) => (
-                <div
-                  key={breadItem.doughType}
-                  className="w-full h-12 relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-[#FFCC15] overflow-hidden flex items-center px-4 justify-between"
-                >
-                  <div className="text-[#1C2C57] text-sm font-bold flex-1">
-                    {breadItem.breadTitle}
-                  </div>
-                  <p className="text-[#1C2C57] text-sm font-bold flex gap-x-1 flex-1">
-                    {breadItem.limitBreadCount}
-                  </p>
-                  <div className="flex items-center gap-3 flex-1">
-                    <button
-                      className="w-8 h-8 flex justify-center items-center bg-[#1C2C57] rounded-full text-[#FFCC15] transition"
-                      onClick={() =>
-                        setBreads((prev) =>
-                          prev?.map((item) =>
-                            item.doughType === breadItem.doughType
-                              ? {
-                                  ...item,
-                                  amount:
-                                    item.amount > 0
-                                      ? item.amount - 1
-                                      : item.amount,
-                                }
-                              : item
-                          )
-                        )
-                      }
-                    >
-                      -
-                    </button>
-                    {isBreadInputChange[breadItem.doughType] ? (
-                      <input
-                        type="text"
-                        autoFocus
-                        value={breadItem.amount}
-                        className="w-10 px-2 outline-none border text-center"
-                        onChange={(e) =>
-                          Number(e.target.value) <= breadItem.limitBreadCount &&
+          <>
+            {breads && breads.length > 0 ? (
+              <>
+                {breads.map((breadItem) => (
+                  <div
+                    key={breadItem.doughType}
+                    className="w-full h-12 relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-[#FFCC15] overflow-hidden flex items-center px-4 justify-between"
+                  >
+                    <div className="text-[#1C2C57] text-sm font-bold flex-1">
+                      {breadItem.breadTitle}
+                    </div>
+                    <p className="text-[#1C2C57] text-sm font-bold flex gap-x-1 flex-1">
+                      {breadItem.limitBreadCount}
+                    </p>
+                    <div className="flex items-center gap-3 flex-1">
+                      <button
+                        className="w-8 h-8 flex justify-center items-center bg-[#1C2C57] rounded-full text-[#FFCC15] transition"
+                        onClick={() =>
                           setBreads((prev) =>
                             prev?.map((item) =>
                               item.doughType === breadItem.doughType
                                 ? {
                                     ...item,
-                                    amount: Number(e.target.value),
+                                    amount:
+                                      item.amount > 0
+                                        ? item.amount - 1
+                                        : item.amount,
                                   }
                                 : item
                             )
                           )
                         }
-                        onKeyDown={(e) =>
-                          e.key === "Enter" &&
-                          setIsBreadInputChange((prev) => ({
-                            ...prev,
-                            [breadItem.doughType]: false,
-                          }))
-                        }
-                      />
-                    ) : (
-                      <span
-                        className="text-[#1C2C57] text-sm font-bold w-6 text-center"
+                      >
+                        -
+                      </button>
+                      {isBreadInputChange[breadItem.doughType] ? (
+                        <input
+                          type="text"
+                          autoFocus
+                          value={breadItem.amount}
+                          className="w-10 px-2 outline-none border text-center"
+                          onChange={(e) =>
+                            Number(e.target.value) <=
+                              breadItem.limitBreadCount &&
+                            setBreads((prev) =>
+                              prev?.map((item) =>
+                                item.doughType === breadItem.doughType
+                                  ? {
+                                      ...item,
+                                      amount: Number(e.target.value),
+                                    }
+                                  : item
+                              )
+                            )
+                          }
+                          onKeyDown={(e) =>
+                            e.key === "Enter" &&
+                            setIsBreadInputChange((prev) => ({
+                              ...prev,
+                              [breadItem.doughType]: false,
+                            }))
+                          }
+                        />
+                      ) : (
+                        <span
+                          className="text-[#1C2C57] text-sm font-bold w-6 text-center"
+                          onClick={() =>
+                            setIsBreadInputChange((prev) => ({
+                              ...prev,
+                              [breadItem.doughType]: true,
+                            }))
+                          }
+                        >
+                          {breadItem.amount}
+                        </span>
+                      )}
+                      <button
+                        className="w-8 h-8 flex justify-center items-center bg-[#1C2C57] rounded-full text-[#FFCC15] transition"
                         onClick={() =>
-                          setIsBreadInputChange((prev) => ({
-                            ...prev,
-                            [breadItem.doughType]: true,
-                          }))
+                          setBreads((prev) =>
+                            prev?.map((item) =>
+                              item.doughType === breadItem.doughType &&
+                              item.amount < item.limitBreadCount
+                                ? {
+                                    ...item,
+                                    amount: item.amount + 1,
+                                  }
+                                : item
+                            )
+                          )
                         }
                       >
-                        {breadItem.amount}
-                      </span>
-                    )}
-                    <button
-                      className="w-8 h-8 flex justify-center items-center bg-[#1C2C57] rounded-full text-[#FFCC15] transition"
-                      onClick={() =>
-                        setBreads((prev) =>
-                          prev?.map((item) =>
-                            item.doughType === breadItem.doughType &&
-                            item.amount < item.limitBreadCount
-                              ? {
-                                  ...item,
-                                  amount: item.amount + 1,
-                                }
-                              : item
-                          )
-                        )
-                      }
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </>
+            ) : (
+              <p className="text-white font-[600] text-[18px] text-center">
+                Nonlar mavjud emas
+              </p>
+            )}
 
-              <div className="my-10 flex items-center gap-5 justify-between">
-                <div
-                  className="flex-1 flex items-center gap-2"
-                  onClick={() => setAction("OLISH")}
-                >
-                  <div className="w-6 h-6 border-2 border-[#FFCC15] rounded-full flex items-center justify-center p-1">
-                    {action === "OLISH" && (
-                      <div className="w-full h-full rounded-full bg-[#FFCC15]"></div>
-                    )}
-                  </div>
-                  <p className="text-white font-[600] text-[21px]">
-                    Olib ketish
-                  </p>
+            <div className="my-10 flex items-center gap-5 justify-between">
+              <div
+                className="flex-1 flex items-center gap-2"
+                onClick={() => setAction("OLISH")}
+              >
+                <div className="w-6 h-6 border-2 border-[#FFCC15] rounded-full flex items-center justify-center p-1">
+                  {action === "OLISH" && (
+                    <div className="w-full h-full rounded-full bg-[#FFCC15]"></div>
+                  )}
                 </div>
-                <div
-                  className="flex-1 flex items-center gap-2"
-                  onClick={() => setAction("BERISH")}
-                >
-                  <div className="w-6 h-6 border-2 border-[#FFCC15] rounded-full flex items-center justify-center p-1">
-                    {action === "BERISH" && (
-                      <div className="w-full h-full rounded-full bg-[#FFCC15]"></div>
-                    )}
-                  </div>
-                  <p className="text-white font-[600] text-[21px]">Berish</p>
-                </div>
+                <p className="text-white font-[600] text-[21px]">Olib ketish</p>
               </div>
+              <div
+                className="flex-1 flex items-center gap-2"
+                onClick={() => setAction("BERISH")}
+              >
+                <div className="w-6 h-6 border-2 border-[#FFCC15] rounded-full flex items-center justify-center p-1">
+                  {action === "BERISH" && (
+                    <div className="w-full h-full rounded-full bg-[#FFCC15]"></div>
+                  )}
+                </div>
+                <p className="text-white font-[600] text-[21px]">Berish</p>
+              </div>
+            </div>
 
-              <div className="mt-12 flex justify-end">
-                <Button
-                  disabled={isDisabled}
-                  className="w-36 h-7 p-3 bg-[#CDC7C7] rounded-lg text-[#1B2B56] inline-flex justify-center items-center gap-1 hover:bg-[#CDC7C7]"
-                  onClick={handleUpdateBread}
-                >
-                  Davom etish
-                </Button>
-              </div>
-            </>
-          ) : (
-            <p className="text-white font-[600] text-[18px] text-center">
-              Xamirlar mavjud emas
-            </p>
-          )
+            <div className="mt-12 flex justify-end">
+              <Button
+                disabled={isDisabled}
+                className="w-36 h-7 p-3 bg-[#CDC7C7] rounded-lg text-[#1B2B56] inline-flex justify-center items-center gap-1 hover:bg-[#CDC7C7]"
+                onClick={handleUpdateBread}
+              >
+                Davom etish
+              </Button>
+            </div>
+          </>
         ) : (
           <p className="text-white font-[600] text-[18px] text-center">
             Loading...

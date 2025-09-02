@@ -148,15 +148,7 @@ export const SalePage = () => {
                   changeBreadPrices={(value) =>
                     setValue("client", value.fullName)
                   }
-                  clients={[
-                    ...(clients?.clients || []),
-                    {
-                      _id: "other",
-                      fullName: "Boshqa",
-                      phone: "",
-                      hasOrder: false,
-                    },
-                  ]}
+                  clients={clients || [] as client[]}
                   placeholder={field.value || "Mijozni tanlang"}
                 />
                 {errors.client && (

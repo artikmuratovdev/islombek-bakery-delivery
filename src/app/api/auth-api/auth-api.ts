@@ -6,6 +6,7 @@ import {
   LoginResponse,
   MeResponse,
   ProfileResponse,
+  Reason,
   UpdateAvatarRequest,
   UpdateAvatarResponse,
 } from "./types";
@@ -48,7 +49,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: [API_TAGS.USER],
     }),
-  }),
+    getAllReasons: build.query<Reason[], void>({
+      query: () => ({
+        url: "/reason/all-reason",
+        method: "GET",
+      }),
+      providesTags: [API_TAGS.USER]
+    })
+  })
 });
 
 export const {
@@ -57,4 +65,5 @@ export const {
   useLazyMeQuery,
   useUbdateAvatarMutation,
   useGetAllUsersQuery,
+  useGetAllReasonsQuery
 } = authApi;

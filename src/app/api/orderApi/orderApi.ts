@@ -67,9 +67,9 @@ export const orderApi = baseApi.injectEndpoints({
         body
       }),
     }),
-    getClients: build.query<{ clients: client[] }, void>({
+    getClients: build.query<client[], void>({
       query: () => ({
-        url: PATH.GET_CLIENTS,
+        url: PATH.GET_CLIENTS + '?roles=CLIENT',
         method: 'GET',
       }),
     }),

@@ -10,7 +10,6 @@ import "leaflet/dist/leaflet.css";
 import L, { Map as LeafletMapInstance } from "leaflet";
 import { Driver } from "../order-map";
 
-
 interface Props {
   drivers?: Driver[];
   setLocation?: (value: Driver) => void;
@@ -64,9 +63,7 @@ function LocationMarker({
   );
 }
 
-
-function LeafletMap({ drivers, setLocation , setSelectLocation}: Props) {
-  
+function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
   const defaultPos: [number, number] = [37.2349, 67.2841];
   const [position, setPosition] = useState<[number, number]>(defaultPos);
   const [rotation, setRotation] = useState(0);
@@ -181,8 +178,10 @@ function LeafletMap({ drivers, setLocation , setSelectLocation}: Props) {
 
         {/* 📍 Manual click marker */}
         {/* 📍 Manual click marker */}
-<LocationMarker setLocation={setLocation} setSelectLocation={setSelectLocation} />
-
+        <LocationMarker
+          setLocation={setLocation}
+          setSelectLocation={setSelectLocation}
+        />
       </MapContainer>
 
       {/* ✅ Hybrid toggle */}
@@ -209,9 +208,7 @@ function LeafletMap({ drivers, setLocation , setSelectLocation}: Props) {
           }}
           style={{ marginRight: "5px", transform: "scale(1.5)" }}
         />
-        <label
-          style={{ fontSize: "14px", fontWeight: "bold", color: "black" }}
-        >
+        <label style={{ fontSize: "14px", fontWeight: "bold", color: "black" }}>
           Hybrid
         </label>
       </div>
