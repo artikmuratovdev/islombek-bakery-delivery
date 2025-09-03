@@ -76,7 +76,7 @@ export const Delivery = () => {
                             >
                               <td className="py-2">{item.count}</td>
                               <td className="py-2">
-                                {format(item.date, "HH-mm")}
+                                {format(item.date, "HH : mm")}
                               </td>
                             </tr>
                           ))}

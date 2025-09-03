@@ -83,7 +83,7 @@ export const bakeryApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { breads, action },
       }),
-      invalidatesTags: [API_TAGS.BAKERY],
+      invalidatesTags: [API_TAGS.BAKERY, API_TAGS.BALANCE],
     }),
   }),
 });
