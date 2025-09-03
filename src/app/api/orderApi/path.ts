@@ -14,6 +14,7 @@ export enum PATH {
   // Other endpoints
 
   GET_CLIENTS = 'auth/get-all-users',
+  CUSTOMER_QUERY = "order/client",
   CREATE_ACTIVE_ORDER = 'driver-sotuv/create-order/faol-zakaz',
   SEND_LOCATION = ACTIVE_ORDERS + '/locatsiyani-qabul-qilish/'
 
