@@ -102,6 +102,7 @@ export const SalePage = () => {
       toast.success(action === "add" ? "Sotuv qo‘shildi" : "Qarz yozildi");
       setOpen(false);
       navigate("/dashboard");
+      // console.log(sentData)
     } catch (err: any) {
       toast.error("Xatolik yuz berdi");
       console.error(err);
@@ -146,7 +147,7 @@ export const SalePage = () => {
                   onChange={field.onChange}
                   setValues={onChangeClient}
                   changeBreadPrices={(value) =>
-                    setValue("client", value.fullName)
+                    setValue("client", value.id)
                   }
                   clients={clients || [] as client[]}
                   placeholder={field.value || "Mijozni tanlang"}
