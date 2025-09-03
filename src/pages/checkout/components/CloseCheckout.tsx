@@ -50,7 +50,7 @@ export const CloseCheckout = () => {
       console.log(response)
       reset();
       setOpen(false);
-      toast.success(response.message);
+      toast.success(response.message)
     } catch (error : any) {
       console.log(error);
       toast.error(error?.data?.message || "Kassa yopishda xatolik yuz berdi");

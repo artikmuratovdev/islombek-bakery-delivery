@@ -2,6 +2,7 @@ import { API_TAGS } from "@/constants";
 import { baseApi } from "../base-api";
 import { PATHS } from "./path";
 import {
+  InfoNotification,
   LoginRequest,
   LoginResponse,
   MeResponse,
@@ -40,6 +41,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: [API_TAGS.USER],
     }),
     getAllUsers: build.query<MeResponse[], { roles: string[] }>({
       query: (params) => ({
@@ -55,6 +57,25 @@ export const authApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: [API_TAGS.USER]
+    }),
+    getUser: build.query<MeResponse, string>({
+      query: (id) => ({
+        url: PATHS.USER + id,
+      }),
+    }),
+    getInfoNotifications: build.query<InfoNotification[], string>({
+      query: (userId) => ({
+        url: "info-notification/" + userId + '/notifications/info',
+        method: "GET",
+      }),
+      providesTags: [API_TAGS.USER]
+    }),
+    getInfoNotification: build.query<InfoNotification, string>({
+      query: (userId) => ({
+        url: "info-notification/notifications/info/" + userId,
+        method: "GET",
+      }),
+      providesTags: [API_TAGS.USER]
     })
   })
 });
@@ -65,5 +86,8 @@ export const {
   useLazyMeQuery,
   useUbdateAvatarMutation,
   useGetAllUsersQuery,
-  useGetAllReasonsQuery
+  useGetAllReasonsQuery,
+  useGetInfoNotificationsQuery,
+  useGetInfoNotificationQuery,
+  useLazyGetUserQuery
 } = authApi;

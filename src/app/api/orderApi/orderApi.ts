@@ -1,6 +1,19 @@
+import { API_TAGS } from '@/constants';
 import { baseApi } from '../base-api';
 import { PATH } from './path';
-import { activeOrder, AddActiveOrderReq, breadInfo, client, Location, preOrder, preOrderPostReq, setupOrderReq, submitOrderReq } from './types';
+import {
+  activeOrder,
+  AddActiveOrderReq,
+  breadInfo,
+  client,
+  ClientQuery,
+  Clients,
+  Location,
+  preOrder,
+  preOrderPostReq,
+  setupOrderReq,
+  submitOrderReq,
+} from './types';
 
 export const orderApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -61,10 +74,10 @@ export const orderApi = baseApi.injectEndpoints({
       }),
     }),
     setupOrder: build.mutation<{ message: string }, setupOrderReq>({
-      query: ({id,body}) => ({
+      query: ({ id, body }) => ({
         url: PATH.SETUP_ORDER + id,
         method: 'PATCH',
-        body
+        body,
       }),
     }),
     getClients: build.query<client[], void>({
@@ -73,20 +86,39 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
     }),
-    createActiveOrder: build.mutation<{ message: string , order:activeOrder}, AddActiveOrderReq>({
+    getClientById: build.query<
+      {
+        orders: activeOrder[];
+      },
+      { id?: string }
+    >({
+      query: ({ id }) => PATH.CUSTOMER_QUERY + '/' + id + '/orders',
+      providesTags: [API_TAGS.ORDER],
+    }),
+    getCustomers: build.query<Clients, ClientQuery>({
+      query: ({ client }) => ({
+        url: PATH.CUSTOMER_QUERY + (client ? `?search=${client}` : ''),
+        method: 'GET',
+      }),
+      providesTags: [API_TAGS.CLIENTS],
+    }),
+    createActiveOrder: build.mutation<
+      { message: string; order: activeOrder },
+      AddActiveOrderReq
+    >({
       query: (body) => ({
         url: PATH.CREATE_ACTIVE_ORDER,
         method: 'POST',
         body,
       }),
     }),
-    sendLocation : build.mutation<{ message: string }, Location>({
-      query: ({id,body}) => ({
+    sendLocation: build.mutation<{ message: string }, Location>({
+      query: ({ id, body }) => ({
         url: PATH.SEND_LOCATION + id,
         method: 'PATCH',
-        body
+        body,
       }),
-    })
+    }),
   }),
 });
 
@@ -103,5 +135,7 @@ export const {
   useSetupOrderMutation,
   useGetClientsQuery,
   useCreateActiveOrderMutation,
-  useSendLocationMutation
+  useSendLocationMutation,
+  useGetCustomersQuery,
+  useGetClientByIdQuery,
 } = orderApi;

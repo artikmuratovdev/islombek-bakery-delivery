@@ -41,6 +41,7 @@ export interface activeOrder {
     _id: string;
     fullName: string;
   };
+  deliveryTime?:Date;
   acceptedTimeDriver?: Date | string;
   location?: {
         lat: number,
@@ -100,6 +101,20 @@ export interface setupOrderReq {
     paidAmount:number;
     breadsInfo: breadInfo[];
   };
+}
+export interface ClientQuery {
+  client?: string;
+}
+
+export interface Clients {
+  clients: customer[];
+}
+export interface customer {
+  _id: string;
+  fullName: string;
+  hasOrder: boolean;
+  phone?: string;
+  address: string | {lat:number,lng:number};
 }
 
 export interface client {

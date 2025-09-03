@@ -131,8 +131,19 @@ export interface MeResponse {
 export interface Reason {
   _id: string;
   branch: string;
-  content : string;
+  content: string;
   status: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface InfoNotification {
+  _id: string;
+  title: string;
+  branch: string;
+  body: string;
+  from: string;
+  toUser: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

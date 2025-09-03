@@ -193,7 +193,7 @@ export const AcceptedOrder = () => {
           )}
         </div>
         <div className='flex justify-between mb-5'>
-          <Controller
+          {order?.client !== "Boshqa" && <Controller
             name='isDebt'
             control={control}
             render={({ field }) => (
@@ -212,9 +212,9 @@ export const AcceptedOrder = () => {
                 Qarz
               </Label>
             )}
-          />
+          />}
 
-          <Button className='w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15]'>
+          <Button className='w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] ml-auto'>
             Saqlash
           </Button>
         </div>

@@ -5,16 +5,19 @@ import { ForWork, Salary } from './components';
 import { useGetAllExpenseQuery } from '@/app/api/checkout';
 import { GetExpensesResponse } from '@/app/api/checkout/types';
 import { AddReport } from './components/addReport';
-import {ProfileResponse } from '@/app/api/auth-api/types';
 import { CloseCheckout } from './components/CloseCheckout';
+import { useMeQuery } from '@/app/api';
+import { useEffect } from 'react';
 
 export const Checkout = () => {
-  const userStr = localStorage.getItem("user");
-  const user: ProfileResponse | null = userStr ? JSON.parse(userStr) : null;
-  const {_id, balance} = user || {};
-  const { data: expenses , refetch} = useGetAllExpenseQuery(_id as string, {
-    skip: !_id
+  const {data:me , refetch : meRefetch} = useMeQuery();
+  const { data: expenses , refetch} = useGetAllExpenseQuery(me?._id as string, {
+    skip: !me?._id
   });
+
+  useEffect(() => {
+    meRefetch();
+  },[expenses])
 
   const for_work = expenses?.filter(
     (expense) => expense.expense_type === 'for_work' && expense
@@ -36,7 +39,7 @@ export const Checkout = () => {
         <div className='mt-[70px]'>
           <div className='rounded-[8px] bg-white p-3 px-5 border-[1px] border-[#FFCC15] flex items-center justify-between text-[16px] text-[#1C2C57] font-[600]'>
             <p>Balance</p>
-            <p>{Number(balance).toLocaleString('ru-RU')}</p>
+            <p>{Number(me?.balance).toLocaleString('ru-RU')}</p>
           </div>
         </div>
         <Tabs defaultValue='for-work' className='w-full mt-8'>
