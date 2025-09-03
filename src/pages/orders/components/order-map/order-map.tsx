@@ -1,6 +1,7 @@
 import {
   useAcceptOrderMutation,
   useGetOneOrderQuery,
+  useMeQuery,
   useSendLocationMutation,
 } from '@/app/api';
 import { Button } from '@/components';
@@ -26,6 +27,7 @@ export interface Driver {
 export const OrderMap = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const {data:me} = useMeQuery();
   const { data } = useGetOneOrderQuery(id as string);
   const [acceptOrder] = useAcceptOrderMutation();
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -45,6 +47,10 @@ export const OrderMap = () => {
       });
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem('driver', me?.fullName as string)
+  },[me?.fullName])
 
   const postLocation = async () => {
     if (selectedLocation) {

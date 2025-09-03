@@ -83,7 +83,6 @@ const App = () => {
         <Route path="/order/:id" element={<Order />} />
         <Route path="/orders/accepted/:id" element={<AcceptedOrder />} />
         <Route path="/orders/pre-order/:id" element={<OrderPage />} />
-        <Route path="/orders/order-map" element={<OrderMap />} />
         <Route path="/orders/order-map/:id" element={<OrderMap />} />
         <Route path="/new-order" element={<NewOrder />} />
 
