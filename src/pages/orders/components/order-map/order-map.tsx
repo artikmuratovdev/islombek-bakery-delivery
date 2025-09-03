@@ -13,6 +13,7 @@ import { useOnline } from '@reactuses/core';
 import { socket } from '@/utils';
 import LeafletMap from './components/LeafletMap';
 import toast, { Toaster } from 'react-hot-toast';
+import { activeOrder } from '@/app/api/orderApi/types';
 
 export const setPhoneNumber = (number: string) =>
   number.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
@@ -133,7 +134,7 @@ export const OrderMap = () => {
                 {getTimes(data?.createdAt || '', currentTime)}
               </h2>
               <h2 className="text-blue-950 text-base font-bold font-['Inter'] leading-tight">
-                Hello
+                {(data?.client as { fullName: string }).fullName}
               </h2>
             </div>
             <div className='w-full flex justify-between px-4 items-center'>
