@@ -23,7 +23,6 @@ export const driverBalansApi = baseApi.injectEndpoints({
 				if (response.error) {
 					return { error: response.error }
 				}
-				// ✅ shu joyda response.data turini to‘g‘ri qil
 				return { data: response.data as DriverBalansMainResponse }
 			},
 			providesTags: [API_TAGS.BALANCE],
