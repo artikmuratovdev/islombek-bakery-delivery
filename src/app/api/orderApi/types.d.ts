@@ -1,16 +1,15 @@
 export interface activeOrder {
   _id: string;
-  client:{
+  client: string | {
         _id: string;
+        fullName: string;
         branch: string;
         phone: string;
         address: {
           lat: number;
           lng: number;
         };
-        fullName: string;
-      }
-    | string;
+      } ;
   branch: string;
   status: number;
   commit: string;
