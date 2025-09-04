@@ -26,7 +26,6 @@ export function Delete_Modal({ children, onDelete }: Props) {
       setvalidate(false);
       setDel('');
       setOpen(false);
-      console.log('OK');
     } else {
       setvalidate(true);
     }

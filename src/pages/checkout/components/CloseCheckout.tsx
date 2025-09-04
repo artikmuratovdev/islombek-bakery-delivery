@@ -47,16 +47,14 @@ export const CloseCheckout = () => {
       const sentData = {bakerRoomId,...data}
       sentData.amount = Number(data.amount) 
       const response = await closeCash(sentData).unwrap();
-      console.log(response)
       reset();
       setOpen(false);
       toast.success(response.message)
     } catch (error : any) {
-      console.log(error);
+      console.error(error);
       toast.error(error?.data?.message || "Kassa yopishda xatolik yuz berdi");
     }
 
-    console.log(data)
   };
 
   return (

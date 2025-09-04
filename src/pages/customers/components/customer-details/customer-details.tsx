@@ -66,7 +66,6 @@ export const CustomerDetails = () => {
 
     fetchDrivers();
   }, [data, getDriver]);
-  console.log(drivers);
 
   return (
     <div>

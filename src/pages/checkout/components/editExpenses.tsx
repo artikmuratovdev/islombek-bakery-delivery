@@ -37,7 +37,6 @@ export const EditReport = ({
   ]});
   const [editExpense , {isLoading:isPending}] = useEditExpenseMutation();
 
-  console.log('SelectedUser', !!selectedUser);
 
   const {
     control,
@@ -61,17 +60,6 @@ export const EditReport = ({
       if (isNaN(sum)) {
         throw new Error("Summa to'g'ri formatda emas.");
       }
-
-      console.log({
-        id: editId,
-        body: {
-          expense_type,
-          amount: Number(sum)* 1000,
-          fromUser: fromUser,
-          toUser: selectedUser,
-          reason: data.reason,
-        },
-      });
       const res = await editExpense({
         id: editId,
         body: {
@@ -83,10 +71,9 @@ export const EditReport = ({
         },
       }).unwrap();
       reset();
-      console.log(res);
       setOpen(false);
     } catch (error : any) {
-      console.log(error.message);
+      console.error(error.message);
 
     }
   };

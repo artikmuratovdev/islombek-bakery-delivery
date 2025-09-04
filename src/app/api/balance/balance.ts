@@ -80,7 +80,6 @@ export const driverBalansApi = baseApi.injectEndpoints({
 
 		updateDoughAmount: build.mutation({
 			query: ({ id, doughs }) => {
-				console.log(doughs)
 				return {
 					url: `/driver-balans/${id}/take-dough`,
 					method: 'PATCH',
