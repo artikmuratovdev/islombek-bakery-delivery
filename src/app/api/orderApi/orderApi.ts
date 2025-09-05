@@ -22,24 +22,28 @@ export const orderApi = baseApi.injectEndpoints({
         url: PATH.ACTIVE_ORDERS,
         method: 'GET',
       }),
+      providesTags: [API_TAGS.ORDER],
     }),
     acceptOrder: build.mutation<{ message: string }, string>({
       query: (id) => ({
         url: PATH.ACCEPT_ORDER + id,
         method: 'PATCH',
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     getOneOrder: build.query<preOrder, string>({
       query: (id) => ({
         url: PATH.GET_ONE_ORDER + id,
         method: 'GET',
       }),
+      providesTags: [API_TAGS.ORDER],
     }),
     getBreadPrices: build.query<breadInfo[], void>({
       query: () => ({
         url: PATH.GET_BREAD_PRICES,
         method: 'GET',
       }),
+      providesTags: [API_TAGS.ORDER],
     }),
     submitAnOrder: build.mutation<{ message: string }, submitOrderReq>({
       query: ({ id, body }) => ({
@@ -47,12 +51,14 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     getPreOrder: build.query<preOrder[], void>({
       query: () => ({
         url: PATH.PRE_ORDER,
         method: 'GET',
       }),
+      providesTags: [API_TAGS.ORDER],
     }),
     createPreOrder: build.mutation<{ message: string }, preOrderPostReq>({
       query: (body) => ({
@@ -60,18 +66,21 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     submitPreOrder: build.mutation<{ message: string }, string>({
       query: (id) => ({
         url: PATH.SUBMIT_PRE_ORDER + id,
         method: 'POST',
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     deleteOrder: build.mutation<{ message: string }, string>({
       query: (id) => ({
         url: PATH.DELETE_ORDER + id,
         method: 'DELETE',
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     setupOrder: build.mutation<{ message: string }, setupOrderReq>({
       query: ({ id, body }) => ({
@@ -79,12 +88,14 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     getClients: build.query<client[], void>({
       query: () => ({
         url: PATH.GET_CLIENTS + '?roles=CLIENT',
         method: 'GET',
       }),
+      providesTags: [API_TAGS.CLIENTS],
     }),
     getClientById: build.query<
       {
@@ -111,6 +122,7 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     sendLocation: build.mutation<{ message: string }, Location>({
       query: ({ id, body }) => ({
@@ -118,6 +130,7 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
   }),
 });

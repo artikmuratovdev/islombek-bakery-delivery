@@ -15,6 +15,7 @@ interface Props {
   setLocation?: (value: Driver) => void;
   setSelectLocation: React.Dispatch<React.SetStateAction<Driver | null>>;
 }
+
 function LocationMarker({
   setLocation,
   setSelectLocation,
@@ -28,7 +29,7 @@ function LocationMarker({
     click(e) {
       const coords: [number, number] = [e.latlng.lat, e.latlng.lng];
       setPosition(coords);
-      e.target.flyTo(coords);
+      e.target.flyTo(coords, 18);
 
       const driverObj: Driver = {
         user: { _id: "manual-selected" },
@@ -37,7 +38,6 @@ function LocationMarker({
         rot: 0,
       };
 
-      // 📌 Har ikkisini yangilash
       setLocation?.(driverObj);
       setSelectLocation(driverObj);
     },
@@ -57,7 +57,7 @@ function LocationMarker({
       })}
     >
       <Popup>
-        Marker at {position[0].toFixed(6)}, {position[1].toFixed(6)}
+        Joylashuv : {position[0].toFixed(6)}, {position[1].toFixed(6)}
       </Popup>
     </Marker>
   );
@@ -68,9 +68,9 @@ function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
   const [position, setPosition] = useState<[number, number]>(defaultPos);
   const [rotation, setRotation] = useState(0);
   const [hybridTile, setHybridTile] = useState(false);
+  const [autoCenter, setAutoCenter] = useState(true);
   const mapRef = useRef<LeafletMapInstance | null>(null);
 
-  /* 🧮 Memoized average drivers position */
   const driversCenter = useMemo<[number, number] | null>(() => {
     if (!drivers?.length) return null;
     return [
@@ -89,11 +89,7 @@ function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
         ];
 
         if (!drivers && setLocation) {
-          const newID = crypto.randomUUID();
-          const driverId =
-            localStorage.getItem("driver") ||
-            (localStorage.setItem("driver", newID), newID);
-
+          const driverId = localStorage.getItem("driver") as string;
           setLocation({
             lat: coords[0],
             lng: coords[1],
@@ -111,31 +107,54 @@ function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
     return () => navigator.geolocation.clearWatch(watcher);
   }, [drivers, setLocation, rotation]);
 
+  /* 📍 Re-center when position updates */
+  useEffect(() => {
+    if (mapRef.current && position && autoCenter) {
+      mapRef.current.flyTo(position, 18);
+    }
+  }, [position, autoCenter]);
+
   /* 🚗 Auto re-center when drivers update */
   useEffect(() => {
-    if (driversCenter && mapRef.current) {
+    if (driversCenter && mapRef.current && autoCenter) {
       setPosition(driversCenter);
-      mapRef.current.flyTo(driversCenter, mapRef.current.getZoom());
+      mapRef.current.flyTo(driversCenter, 18);
     }
-  }, [driversCenter]);
+  }, [driversCenter, autoCenter]);
 
-  /* 🖼 Driver marker renderer */
+  /* 🛑 Stop auto-center if user moves the map */
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const map = mapRef.current;
+
+    const stopAutoCenter = () => setAutoCenter(false);
+    map.on("dragstart", stopAutoCenter);
+    map.on("zoomstart", stopAutoCenter);
+
+    return () => {
+      map.off("dragstart", stopAutoCenter);
+      map.off("zoomstart", stopAutoCenter);
+    };
+  }, []);
+
   const renderDriverMarker = useCallback(
-    (driver: Driver) => (
-      <Marker
-        key={driver.user._id}
-        position={[driver.lat, driver.lng]}
-        icon={L.divIcon({
-          html: `<img src="/car.png" style="transform:rotate(${driver.rot}deg);width:60px;height:60px;object-fit:contain;" />`,
-          iconSize: [60, 60],
-          iconAnchor: [30, 60],
-          popupAnchor: [0, -60],
-          className: "transparent-marker",
-        })}
-      >
-        <Popup>ID: {driver.user._id || "N/A"}</Popup>
-      </Marker>
-    ),
+    (driver: Driver) => {
+      return (
+        <Marker
+          key={driver.user._id}
+          position={[driver.lat, driver.lng]}
+          icon={L.divIcon({
+            html: `<img src="/car.png" style="transform:rotate(${driver.rot}deg);width:60px;height:60px;object-fit:contain;" />`,
+            iconSize: [60, 60],
+            iconAnchor: [30, 60],
+            popupAnchor: [0, -60],
+            className: "transparent-marker",
+          })}
+        >
+          <Popup>ID: {driver.user._id || "N/A"}</Popup>
+        </Marker>
+      );
+    },
     []
   );
 
@@ -176,7 +195,6 @@ function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
           </Marker>
         )}
 
-        {/* 📍 Manual click marker */}
         {/* 📍 Manual click marker */}
         <LocationMarker
           setLocation={setLocation}

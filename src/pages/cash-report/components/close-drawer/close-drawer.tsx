@@ -62,12 +62,6 @@ export const CloseDrawer = ({ setOpen }: any) => {
   const onSubmit = async (data: any) => {
     setSubmitting(true);
     setTimeout(() => {
-      console.log("📤 Yuborilgan ma’lumot:", {
-        expected: totalAmount,
-        actual: Number(data.actual),
-        comment: data.comment,
-        receiver: data.receiver,
-      });
       setSubmitting(false);
       setOpen(false);
     }, 1000);

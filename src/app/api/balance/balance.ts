@@ -23,7 +23,6 @@ export const driverBalansApi = baseApi.injectEndpoints({
 				if (response.error) {
 					return { error: response.error }
 				}
-				// ✅ shu joyda response.data turini to‘g‘ri qil
 				return { data: response.data as DriverBalansMainResponse }
 			},
 			providesTags: [API_TAGS.BALANCE],
@@ -81,7 +80,6 @@ export const driverBalansApi = baseApi.injectEndpoints({
 
 		updateDoughAmount: build.mutation({
 			query: ({ id, doughs }) => {
-				console.log(doughs)
 				return {
 					url: `/driver-balans/${id}/take-dough`,
 					method: 'PATCH',

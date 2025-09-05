@@ -1,6 +1,7 @@
 import {
   useAcceptOrderMutation,
   useGetOneOrderQuery,
+  useMeQuery,
   useSendLocationMutation,
 } from '@/app/api';
 import { Button } from '@/components';
@@ -26,12 +27,14 @@ export interface Driver {
 export const OrderMap = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data } = useGetOneOrderQuery(id as string);
+  const { data: me } = useMeQuery();
+  const { data } = useGetOneOrderQuery(id as string, { skip: !id });
   const [acceptOrder] = useAcceptOrderMutation();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [selectedLocation, setSelectedLocation] = useState<Driver | null>(null);
   const [sendLocation] = useSendLocationMutation();
 
+  console.log(data?.client);
   const online = useOnline();
   const setLocation = (driver: Driver) => {
     if (!online) {
@@ -45,6 +48,10 @@ export const OrderMap = () => {
       });
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem('driver', me?.fullName as string);
+  }, [me?.fullName]);
 
   const postLocation = async () => {
     if (selectedLocation) {
@@ -68,11 +75,10 @@ export const OrderMap = () => {
   const acceptOrderData = async () => {
     try {
       const res = await acceptOrder(id as string).unwrap();
-      // backenddan {"message":"Zakaz qabul qilindi"} keladi
-      toast.success(res.message || "Zakaz qabul qilindi ✅");
-      navigate('/orders',{state:'activeOrder'});
+      toast.success(res.message || 'Zakaz qabul qilindi ✅');
+      navigate('/orders', { state: 'activeOrder' });
     } catch (err: any) {
-      toast.error(err?.data?.message || "Xatolik yuz berdi ❌");
+      toast.error(err?.data?.message || 'Xatolik yuz berdi ❌');
     }
   };
 
@@ -104,7 +110,7 @@ export const OrderMap = () => {
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl mx-auto z-30'>
         <div className='flex w-[95%] m-auto justify-between items-center'>
           <Button
-            onClick={() => navigate('/orders',{state:'activeOrder'})}
+            onClick={() => navigate('/orders', { state: 'activeOrder' })}
             className='w-5 h-5 bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full'
           >
             <ArrowLeft className='text-2xl' />
@@ -127,7 +133,11 @@ export const OrderMap = () => {
                 {getTimes(data?.createdAt || '', currentTime)}
               </h2>
               <h2 className="text-blue-950 text-base font-bold font-['Inter'] leading-tight">
-                Hello
+                {
+                  data?.client
+                    ? (data?.client as { fullName: string }).fullName
+                    : (data?.client as string)
+                }
               </h2>
             </div>
             <div className='w-full flex justify-between px-4 items-center'>

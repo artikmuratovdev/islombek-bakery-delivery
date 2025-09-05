@@ -35,7 +35,6 @@ export const Salary = ({ items }: { items: GetExpensesResponse[] }) => {
     },
   });
 
-  console.log('items', items);
 
   const setDatas = (name: string, price: string) => {
     reset({ name, price });

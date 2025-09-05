@@ -36,7 +36,6 @@ export const ForWork = ({ items }: { items: GetExpensesResponse[] }) => {
     },
   });
 
-  console.log('items', items);
 
   const setDatas = (name: string, price: string) => {
     reset({ name, price });
@@ -56,7 +55,6 @@ export const ForWork = ({ items }: { items: GetExpensesResponse[] }) => {
     setOpen(false);
   };
 
-  console.log('items', items);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <Toaster />

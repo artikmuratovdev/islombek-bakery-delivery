@@ -27,7 +27,6 @@ export const SelectUser = forwardRef<HTMLButtonElement, SelectProps>(
     { userData, className, setId, title = "Chat qo'shish", isLoading, disabled, selectedUser },
     ref
   ) => {
-    console.log("Default selected user", selectedUser);
 
     return (
       <Select

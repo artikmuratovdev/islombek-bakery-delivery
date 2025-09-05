@@ -31,7 +31,6 @@ export const SentMessage = ({ setOpen }: any) => {
     ],
   });
 
-  console.log(allUsers);
 
   const onSubmit = (data: PropsComp) => {
     handkeRequest({

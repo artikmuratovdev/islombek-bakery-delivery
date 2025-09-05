@@ -1,18 +1,16 @@
-import { Button } from "@/components";
+
 import { UZBTime } from "@/components/common/uzb-time";
 import { Tabs } from "@/components/tabs/tabs";
-import { ArrowLeft, Dollar, Notifications } from "@/icons";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { DollarBottom } from "../bottom-sheet";
-import {
-  useLazyGetDriverDebtClientDebtPaymentsQuery,
-  useLazyGetDriverDebtClientsTotalDebtQuery,
-} from "@/app/api";
-import { BottomSheet } from "@/components/common";
-import { Card, CardContent } from "@/components/ui/card";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, DollarSignIcon } from "lucide-react";
 import { Separator } from "@radix-ui/react-select";
+import { Button } from "@/components/ui/button";
+import { IoNotifications } from "react-icons/io5";
+import { useLazyGetDriverDebtClientDebtPaymentsQuery, useLazyGetDriverDebtClientsTotalDebtQuery } from "@/app/api";
+import { Card, CardContent } from "@/components/ui/card";
+import { BottomSheet } from "@/components/common";
 
 export const DebtsDetails = () => {
   const { id } = useParams();
@@ -78,7 +76,7 @@ export const DebtsDetails = () => {
             </h2>
           </div>
           <button onClick={() => navigate("/notifications")}>
-            <Notifications className="cursor-pointer text-[#FFCC15] w-6 h-6" />
+            <IoNotifications className="cursor-pointer text-[#FFCC15] w-6 h-6" />
           </button>
         </div>
       </div>
@@ -219,7 +217,7 @@ export const DebtsDetails = () => {
           className="fixed bottom-[104px] right-5 h-10 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]"
           onClick={() => setOpen(true)}
         >
-          <Dollar />
+          <DollarSignIcon />
         </Button>
       )}
 

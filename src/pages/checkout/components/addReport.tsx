@@ -51,7 +51,6 @@ export const AddReport = ({refetch}:{refetch:() => void}) => {
       toUser : data.accept,
       reason: data.reason,
     }
-    console.log(submittedData);
     try {
       const result = await createExpense(submittedData).unwrap();
       toast.success(result.message);
@@ -66,7 +65,6 @@ export const AddReport = ({refetch}:{refetch:() => void}) => {
   const acceptedDisabled = watch('reason');
   const getCost = watch('cost');
 
-  console.log(getCost);
 
   return (
     <div>
