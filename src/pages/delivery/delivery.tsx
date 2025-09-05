@@ -34,10 +34,12 @@ export const Delivery = () => {
           </button>
         </div>
       </div>
-      <div className="mt-[25%] px-6">
+
+      <div className="mt-[25%] px-6 mb-20">
         <div className="w-full flex justify-end mb-4">
           <UZBTime />
         </div>
+
         <div className="space-y-5 mt-10">
           {deliverys ? (
             deliverys && deliverys.length > 0 ? (
