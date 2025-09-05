@@ -108,7 +108,7 @@ export function LeafletMap() {
 
 	return (
 		<>
-			<div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full '>
+			<div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full'>
 				<div className='flex w-[95%] m-auto justify-between items-center'>
 					<div
 						className='flex gap-x-2 items-center'
@@ -132,7 +132,7 @@ export function LeafletMap() {
 				</div>
 			</div>
 
-			<div className='w-[95%] h-[80vh] mx-auto mt-24'>
+			<div className='w-[95%] h-[74vh] mx-auto mt-24'>
 				<MapContainer
 					center={position}
 					zoom={16}
