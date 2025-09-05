@@ -71,10 +71,10 @@ export const EditReport = ({
         },
       }).unwrap();
       reset();
+      console.log(res);
       setOpen(false);
     } catch (error : any) {
-      console.error(error.message);
-
+      console.log(error.message);
     }
   };
   return (
