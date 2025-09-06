@@ -7,17 +7,13 @@ import { GetExpensesResponse } from '@/app/api/checkout/types';
 import { AddReport } from './components/addReport';
 import { CloseCheckout } from './components/CloseCheckout';
 import { useMeQuery } from '@/app/api';
-import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 export const Checkout = () => {
-  const {data:me , refetch : meRefetch} = useMeQuery();
-  const { data: expenses , refetch} = useGetAllExpenseQuery(me?._id as string, {
+  const {data:me } = useMeQuery();
+  const { data: expenses } = useGetAllExpenseQuery(me?._id as string, {
     skip: !me?._id
   });
-
-  useEffect(() => {
-    meRefetch();
-  },[expenses])
 
   const for_work = expenses?.filter(
     (expense) => expense.expense_type === 'for_work' && expense
@@ -27,6 +23,7 @@ export const Checkout = () => {
   );
   return (
     <div>
+      <Toaster />
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full'>
         <div className='flex justify-between items-center'>
           <Link to={'/'}>
@@ -58,7 +55,7 @@ export const Checkout = () => {
             <Salary items={for_salary as GetExpensesResponse[]} />
           </TabsContent>
         </Tabs>
-        <AddReport refetch={refetch} />
+        <AddReport />
         <CloseCheckout />
       </div>
     </div>

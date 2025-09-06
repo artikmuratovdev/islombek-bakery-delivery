@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Notifications } from "@/icons";
 import { ActiveOrder, OldOrder } from "./components";
+import { Toaster } from "react-hot-toast";
 
 export const Orders = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export const Orders = () => {
 
   return (
     <div className="min-h-screen flex justify-center">
+      <Toaster />
       <div className="w-full max-w-2xl">
         <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl z-10 mx-auto">
           <div className="flex w-[95%] m-auto justify-between items-center">

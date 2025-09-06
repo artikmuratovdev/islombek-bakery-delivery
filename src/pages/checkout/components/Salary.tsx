@@ -12,13 +12,14 @@ import {
 } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import toast  from 'react-hot-toast';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { Delete_Modal } from './DeleteModal';
 import { GetExpensesResponse } from '@/app/api/checkout/types';
 import { useDeleteExpenseMutation } from '@/app/api/checkout';
 import { EditReport } from './editExpenses';
+import { useHandleRequest } from '@/hooks';
 
 export const Salary = ({ items }: { items: GetExpensesResponse[] }) => {
   const [deleteExpenses] = useDeleteExpenseMutation();
@@ -40,13 +41,21 @@ export const Salary = ({ items }: { items: GetExpensesResponse[] }) => {
     reset({ name, price });
   };
 
+  const handleRequest = useHandleRequest();
+
   const deleteDatas = async (id: string) => {
-    try {
-      const res = await deleteExpenses(id).unwrap();
-      toast.success(res.message);
-    } catch (error: any) {
-      toast.error(error.data.message);
-    }
+    await handleRequest({
+      request: async () => {
+        const res = await deleteExpenses(id);
+        return res;
+      },
+      onSuccess:(data) => {
+        toast.success(data.data.message);
+      },
+      onError: (error : any) => {
+        toast.error(error.message);
+      }
+    })
   };
 
   const onSubmit = () => {
@@ -55,7 +64,6 @@ export const Salary = ({ items }: { items: GetExpensesResponse[] }) => {
   };
   return (
     <div>
-      <Toaster />
       <div className='space-y-4'>
         <Sheet open={open} onOpenChange={setOpen}>
           {items.map((item) => (

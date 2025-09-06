@@ -3,19 +3,22 @@ import { breadInfo } from '@/app/api/orderApi/types';
 import { Button, Input } from '@/components';
 import BreadList from '@/components/form/BreadLists/BreadList';
 import { Label } from '@/components/ui/label';
+import { useHandleRequest } from '@/hooks';
 import { useState } from 'react'
+import toast from 'react-hot-toast';
 
 type Props = {
   id: string;
   breads: breadInfo[];
   setBreads: React.Dispatch<React.SetStateAction<breadInfo[]>>;
   debt:number
-  refetch?: () => void
+  closeBottom?: () => void
 };
 
-export const Bottom = ({ breads, setBreads, id ,debt,refetch}: Props) => {
+export const Bottom = ({ breads, setBreads, id ,debt,closeBottom}: Props) => {
   const [setupOrder] = useSetupOrderMutation();
   const [paidAmount, setPaidAmount] = useState(0);
+  const handleRequest = useHandleRequest();
 
   const onSubmit = async () => {
     const data = {
@@ -25,12 +28,30 @@ export const Bottom = ({ breads, setBreads, id ,debt,refetch}: Props) => {
         paidAmount,
       },
     };
-    console.log(data);
-    await setupOrder(data);
-    if (refetch) refetch();
+
+    await handleRequest({
+      request: async () => {
+        const response = await setupOrder(data);
+        return response;
+      },
+      onSuccess: (data) => {
+        console.log('Data', data.data.message);
+        toast.success(data.data.message);
+        closeBottom && closeBottom();
+      },
+      onError: (err: any) => {
+        console.log('Error', err.message);
+        toast.error(err.message);
+      },
+    })
+
+    // console.log(data);
+    // await setupOrder(data);
+    // if (refetch) refetch();
   };
   return (
     <div className='w-full h-80 relative bg-white/0 rounded-xl outline outline-2 outline-offset-[-2px] outline-yellow-400 px-4 py-1 mt-4'>
+      
       <div className='space-y-3 pt-2 mb-5'>
         {breads && (
           <BreadList breadPrices={breads} debtShow={debt} priceHide setBreads={setBreads} />

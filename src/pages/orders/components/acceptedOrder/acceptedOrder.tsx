@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
 import { Toaster } from '@/components/ui/toaster';
+import { useHandleRequest } from '@/hooks';
 import { ArrowLeft, Notifications } from '@/icons';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -25,6 +26,7 @@ export const AcceptedOrder = () => {
   const navigate = useNavigate();
   const { data: order } = useGetOneOrderQuery(id as string);
   const [submitOrder] = useSubmitAnOrderMutation();
+  const handleRequest = useHandleRequest();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
 
@@ -62,24 +64,45 @@ export const AcceptedOrder = () => {
       onDebtSubmit(data);
     } else {
       console.log({ ...data, breadsInfo: breads });
-      const { message } = await submitOrder({
-        id: id as string,
-        body: { paidAmount: order?.totalAmount as number, breadsInfo: breads },
-      }).unwrap();
-      navigate('/orders',{state:'activeOrder'});
-      toast.success(message);
+      await handleRequest({
+        request: async () => {
+          const response = await submitOrder({
+            id: id as string,
+            body: { paidAmount: order?.debtAmount as number, breadsInfo: breads },
+          });
+          return response;
+        },
+        onSuccess: (data) => {
+          toast.success(data.data.message);
+          navigate('/orders',{state:'activeOrder'});
+        },
+        onError: (error : any) => {
+          console.log("Error",error.data.message);
+          toast.error(error.data.message);
+      }})
     }
   };
 
   const onDebtSubmit = async (data: FormData) => {
     console.log({ ...data, breadsInfo: breads });
-    const { message } = await submitOrder({
-      id: id as string,
-      body: { paidAmount: data.paidAmount, breadsInfo: breads },
-    }).unwrap();
 
-    toast.success(message);
-    navigate('/orders',{state:'activeOrder'});
+    await handleRequest({
+      request: async () => {
+        const response = await submitOrder({
+          id: id as string,
+          body: { paidAmount: data.paidAmount, breadsInfo: breads },
+        });
+        return response;
+      },
+      onSuccess: (data) => {
+        toast.success(data.data.message);
+        navigate('/orders',{state:'activeOrder'});
+      },
+      onError: (error : any) => {
+        console.log("Error",error.message);
+        toast.error(error.data.message);
+      }
+    })
   };
 
   return (

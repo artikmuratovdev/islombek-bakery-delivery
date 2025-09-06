@@ -26,6 +26,7 @@ export const authApi = baseApi.injectEndpoints({
         url: PATHS.ME,
         method: "GET",
       }),
+      providesTags: [API_TAGS.USER],
     }),
     ubdateAvatar: build.mutation<UpdateAvatarResponse, UpdateAvatarRequest>({
       query: (body) => ({

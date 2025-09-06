@@ -11,11 +11,12 @@ import {
 } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import toast  from 'react-hot-toast';
 import { FaPlus } from 'react-icons/fa';
 import { SelectReasons } from './Select_Reason';
+import { useHandleRequest } from '@/hooks';
 
-export const AddReport = ({refetch}:{refetch:() => void}) => {
+export const AddReport = () => {
   const { data: getUsers, isLoading: getUsersLoading } = useGetAllUsersQuery({roles:[
     'CEO',
     'ADMIN',
@@ -41,6 +42,7 @@ export const AddReport = ({refetch}:{refetch:() => void}) => {
     },
   });
   const [createExpense] = useCreateExpensesMutation();
+  const handleRequest = useHandleRequest();
 
   const [open , setOpen] = useState(false)
 
@@ -51,14 +53,28 @@ export const AddReport = ({refetch}:{refetch:() => void}) => {
       toUser : data.accept,
       reason: data.reason,
     }
-    try {
-      const result = await createExpense(submittedData).unwrap();
-      toast.success(result.message);
-      reset();
-      refetch()
-    } catch (error : any) {
-      toast.error(error.data.message);
-    }
+    await handleRequest({
+      request: async () => {
+        const response = await createExpense(submittedData);
+        return response;
+      },
+      onSuccess: (data) => {
+        toast.success(data.data.message);
+        reset();
+      },
+      onError: (error : any) => {
+        toast.error(error.data.message);
+      }
+    })
+
+    // try {
+    //   const result = await createExpense(submittedData).unwrap();
+    //   toast.success(result.message);
+    //   reset();
+    //   refetch()
+    // } catch (error : any) {
+    //   toast.error(error.data.message);
+    // }
     setOpen(false)
   };
 
@@ -68,7 +84,6 @@ export const AddReport = ({refetch}:{refetch:() => void}) => {
 
   return (
     <div>
-      <Toaster />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
           <div className='rounded-full p-[18px] bg-[#FFCC15] fixed bottom-[30px] right-[30px] z-30'>

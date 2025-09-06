@@ -3,6 +3,7 @@ import { useMeQuery } from '@/app/api'
 import { setCheckoutId } from "@/app/slices/CheckOutSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components";
 import { Bakerys, Checkout, Customer, Debts, MessagesIcon, MessagesIcons, Notifications } from "@/icons";
+import { Toaster } from 'react-hot-toast';
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +19,7 @@ export const HomePage = () => {
   }
   return (
     <div>
+      <Toaster />
       <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full ">
         <div className="flex w-[95%] m-auto justify-between items-center">
           <div

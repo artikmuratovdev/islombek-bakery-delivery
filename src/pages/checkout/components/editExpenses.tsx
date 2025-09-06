@@ -11,6 +11,8 @@ import { FaRegEdit } from 'react-icons/fa';
 import { SelectUser } from '@/components';
 import { useGetAllUsersQuery } from '@/app/api';
 import { useEditExpenseMutation } from '@/app/api/checkout';
+import { useHandleRequest } from '@/hooks';
+import toast from 'react-hot-toast';
 
 export const EditReport = ({
   editId,
@@ -27,16 +29,10 @@ export const EditReport = ({
   expense_type: 'for_work' | 'for_salary';
   fromUser?: string;
 }) => {
-  const { data: getUsers, isLoading: getUsersLoading } = useGetAllUsersQuery({roles : [
-    'CEO',
-    'ADMIN',
-    'DRIVER',
-    'SUPPLIER',
-    'DOUGHMAKER',
-    'DISPATCHER',
-  ]});
-  const [editExpense , {isLoading:isPending}] = useEditExpenseMutation();
-
+  const { data: getUsers, isLoading: getUsersLoading } = useGetAllUsersQuery({
+    roles: ['CEO', 'ADMIN', 'DRIVER', 'SUPPLIER', 'DOUGHMAKER', 'DISPATCHER'],
+  });
+  const [editExpense, { isLoading: isPending }] = useEditExpenseMutation();
 
   const {
     control,
@@ -53,29 +49,40 @@ export const EditReport = ({
 
   const setId = useState('')[1];
   const [open, setOpen] = useState(false);
+  const handleRequest = useHandleRequest();
 
-  const onSubmit = async (data: { sum: string ,user:string,reason:string}): Promise<void> => {
-    try {
-      const sum = parseInt(data.sum);
-      if (isNaN(sum)) {
-        throw new Error("Summa to'g'ri formatda emas.");
-      }
-      const res = await editExpense({
-        id: editId,
-        body: {
-          expense_type,
-          amount: Number(sum)* 1000,
-          fromUser: fromUser as string,
-          toUser: selectedUser,
-          reason: data.reason,
-        },
-      }).unwrap();
-      reset();
-      console.log(res);
-      setOpen(false);
-    } catch (error : any) {
-      console.log(error.message);
-    }
+  const onSubmit = async (data: {
+    sum: string;
+    user: string;
+    reason: string;
+  }): Promise<void> => {
+    await handleRequest({
+      request: async () => {
+        const sum = parseInt(data.sum);
+        if (isNaN(sum)) {
+          throw new Error("Summa to'g'ri formatda emas.");
+        }
+        const response = await editExpense({
+          id: editId,
+          body: {
+            expense_type,
+            amount: Number(data.sum) * 1000,
+            fromUser: fromUser as string,
+            toUser: selectedUser,
+            reason: data.reason,
+          },
+        }).unwrap();
+        return response;
+      },
+      onSuccess: (data) => {
+        toast.success(data.data.message);
+        setOpen(false);
+        reset();
+      },
+      onError: (error: any) => {
+        toast.error(error.data.message);
+      },
+    });
   };
   return (
     <Sheet open={open} onOpenChange={setOpen}>

@@ -102,7 +102,6 @@ export const SalePage = () => {
       toast.success(action === "add" ? "Sotuv qo‘shildi" : "Qarz yozildi");
       setOpen(false);
       navigate("/dashboard");
-      // console.log(sentData)
     } catch (err: any) {
       toast.error("Xatolik yuz berdi");
       console.error(err);
@@ -298,7 +297,7 @@ export const SalePage = () => {
                         <Input
                           {...field}
                           placeholder="Olingan pul"
-                          value={(field.value ?? 0).toLocaleString()}
+                          value={(field.value ?? 0).toLocaleString('ru-RU')}
                           onChange={(e) => {
                             const val = Number(
                               e.target.value.replace(/[^\d]/g, "")
@@ -336,7 +335,7 @@ export const SalePage = () => {
                           onChange={(e) => {
                             field.onChange(e.target.value);
                           }}
-                          className="bg-white rounded-lg border-yellow-500 border-2"
+                          className="bg-white rounded-lg border-yellow-500 border-2 p-2"
                         ></textarea>
                         {errors.commit && (
                           <span className="text-red-500">

@@ -13,6 +13,7 @@ import { useOnline } from '@reactuses/core';
 import { socket } from '@/utils';
 import LeafletMap from './components/LeafletMap';
 import toast, { Toaster } from 'react-hot-toast';
+import { useHandleRequest } from '@/hooks';
 
 export const setPhoneNumber = (number: string) =>
   number.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
@@ -33,6 +34,7 @@ export const OrderMap = () => {
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [selectedLocation, setSelectedLocation] = useState<Driver | null>(null);
   const [sendLocation] = useSendLocationMutation();
+  const handleRequest = useHandleRequest();
 
   console.log(data?.client);
   const online = useOnline();
@@ -55,31 +57,49 @@ export const OrderMap = () => {
 
   const postLocation = async () => {
     if (selectedLocation) {
-      try {
-        const res = await sendLocation({
-          id: id as string,
-          body: {
-            location: { lat: selectedLocation.lat, lng: selectedLocation.lng },
-          },
-        }).unwrap();
-
-        console.log('sendLocation response:', res);
-        toast.success(res.message || 'Joylashuv saqlandi');
-      } catch (err: any) {
-        console.error('sendLocation error:', err);
-        toast.error(err?.data?.message || 'Xatolik yuz berdi');
-      }
+      await handleRequest({
+        request: async () => {
+          const res = await sendLocation({
+            id: id as string,
+            body: {
+              location: { lat: selectedLocation.lat, lng: selectedLocation.lng },
+            },
+          });
+          return res;
+        },
+        onSuccess: (data) => {
+          console.log('sendLocation response:', data.data.message);
+          toast.success(data.data.message || 'Joylashuv saqlandi');
+        },
+        onError: (error : any) => {
+          console.error('sendLocation error:', error);
+          toast.error(error?.data?.message || 'Xatolik yuz berdi');
+        }
+      })
     }
   };
 
   const acceptOrderData = async () => {
-    try {
-      const res = await acceptOrder(id as string).unwrap();
-      toast.success(res.message || 'Zakaz qabul qilindi ✅');
-      navigate('/orders', { state: 'activeOrder' });
-    } catch (err: any) {
-      toast.error(err?.data?.message || 'Xatolik yuz berdi ❌');
-    }
+    await handleRequest({
+      request: async () => {
+        const res = await acceptOrder(id as string);
+        return res;
+      },
+      onSuccess: (data) => {
+        toast.success(data.data.message || 'Zakaz qabul qilindi ✅');
+        navigate('/orders', { state: 'activeOrder' });
+      },
+      onError: (error : any) => {
+        toast.error(error?.data?.message || 'Xatolik yuz berdi ❌');
+      }
+    })
+    // try {
+    //   const res = await acceptOrder(id as string).unwrap();
+    //   toast.success(res.message || 'Zakaz qabul qilindi ✅');
+    //   navigate('/orders', { state: 'activeOrder' });
+    // } catch (err: any) {
+    //   toast.error(err?.data?.message || 'Xatolik yuz berdi ❌');
+    // }
   };
 
   useEffect(() => {

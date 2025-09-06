@@ -14,6 +14,7 @@ import {
 } from '@/app/api';
 import BreadList from '@/components/form/BreadLists/BreadList';
 import { BottomSheet } from '@/components/common';
+import { useHandleRequest } from '@/hooks';
 import toast, { Toaster } from 'react-hot-toast';
 
 export const OrderPage = () => {
@@ -24,6 +25,8 @@ export const OrderPage = () => {
   const [deleteOrder] = useDeleteOrderMutation();
   const navigate = useNavigate();
   const [breads, setBreads] = useState<breadInfo[]>([]);
+
+  const handleRequest = useHandleRequest();
 
   console.log(preOrder);
 
@@ -71,21 +74,46 @@ export const OrderPage = () => {
   const [open, setOpen] = useState(false);
 
   const submitting = async () => {
-    try {
-      if (preOrder) {
-        const {message} = await submitPreOrder(preOrder._id).unwrap();
-        toast.success(message);
+    await handleRequest({
+      request: async () => {
+        if (!preOrder) throw new Error('PreOrder not found');
+        const response = await submitPreOrder(preOrder?._id as string);
+        return response;
+      },
+      onSuccess: (data) =>{
+        toast.success(data.message);
+        console.log('Data',data)
         navigate('/orders',{state:'preOrder'});
+      },
+      onError: (error : any) => {
+        console.log("Error",error.message);
+        toast.error(error.message);
       }
-    } catch (error : any) {
-      console.log(error.data.message);
-      toast.error(error.data.message);
-    }
+    })
   };
+
+  const onDelete = async () => {
+    await handleRequest({
+      request: async () => {
+        if (!preOrder) throw new Error('PreOrder not found');
+        const response = await deleteOrder(preOrder?._id as string);
+        return response;
+      },
+      onSuccess: (data) => {
+        toast.success(data.data.message);
+        console.log('Data',data.data.message)
+        navigate('/orders',{state:'preOrder'});
+      },
+      onError: (error : any) => {
+        console.log("Error",error.message);
+        toast.error(error.message);
+      }
+    })
+  }
 
   return (
     <div className='w-full max-w-2xl pb-20'>
-      <Toaster/>
+      <Toaster />
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[20px] fixed top-0 w-full max-w-2xl z-10 mx-auto'>
         <div className='flex w-[95%] m-auto justify-between items-center'>
           <Button
@@ -278,12 +306,7 @@ export const OrderPage = () => {
         </Button>
         <Button
           className='w-36 h-9 p-3 bg-red-600 rounded-lg text-white inline-flex justify-center items-center gap-1 hover:bg-red-600 font-bold'
-          onClick={() => {
-            if (preOrder) {
-              deleteOrder(preOrder?._id);
-              navigate(`/orders`);
-            }
-          }}
+          onClick={onDelete}
         >
           O'chirish
         </Button>
@@ -301,7 +324,7 @@ export const OrderPage = () => {
           debt={preOrder?.debtAmount as number}
           breads={breads}
           setBreads={setBreads}
-          refetch={() => {setOpen(false);refetch()}}
+          closeBottom={() => {setOpen(false)}}
         />
       </BottomSheet>
     </div>
