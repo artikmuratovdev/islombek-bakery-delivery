@@ -36,8 +36,8 @@ const BreadList = ({ breadPrices, setBreads ,priceHide,debtShow}: BreadListProps
         ))}
       </div>
 
-      <div className='mt-4 text-white text-2xl font-semibold'>
-        Umumiy: {(debtShow ||grandTotal).toLocaleString('ru-RU')} so'm
+      <div className='mt-4 text-white text-xl font-semibold'>
+        Umumiy {debtShow && 'qarz '}: {(debtShow ||grandTotal).toLocaleString('ru-RU')} so'm
       </div>
     </div>
   );

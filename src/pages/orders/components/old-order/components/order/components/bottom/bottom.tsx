@@ -44,10 +44,6 @@ export const Bottom = ({ breads, setBreads, id ,debt,closeBottom}: Props) => {
         toast.error(err.message);
       },
     })
-
-    // console.log(data);
-    // await setupOrder(data);
-    // if (refetch) refetch();
   };
   return (
     <div className='w-full h-80 relative bg-white/0 rounded-xl outline outline-2 outline-offset-[-2px] outline-yellow-400 px-4 py-1 mt-4'>

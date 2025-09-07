@@ -120,11 +120,11 @@ const BreadPrices = forwardRef(function BreadPrices(
   return (
     <div
       ref={wrapperRef}
-      className='grid grid-cols-3 gap-5 bg-white rounded-lg px-3 py-2'
+      className='grid grid-cols-5 gap-5 bg-white rounded-lg px-3 py-2'
     >
-      <h3 className='text-blue-950 font-semibold'>{bread.title}</h3>
+      <h3 className='text-blue-950 font-semibold col-span-2'>{bread.title}</h3>
 
-      <div className='text-blue-950 font-semibold flex gap-2 justify-center mr-5'>
+      <div className='text-blue-950 font-semibold flex gap-2 justify-center'>
         {!priceVisible && <p>{price}</p>}
 
         <input
@@ -147,9 +147,9 @@ const BreadPrices = forwardRef(function BreadPrices(
         </span>}
       </div>
 
-      <div className='text-blue-950 font-semibold flex items-center justify-center gap-2'>
+      <div className='text-blue-950 font-semibold flex items-center justify-center gap-2 col-span-2'>
         <Minus
-          className='bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer'
+          className='bg-primary text-[#FFCC15] w-6 aspect-square rounded-lg p-0.5 cursor-pointer'
           onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
         />
 
@@ -168,7 +168,7 @@ const BreadPrices = forwardRef(function BreadPrices(
         />
 
         <Plus
-          className='bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer'
+          className='bg-primary text-[#FFCC15] w-6 aspect-square rounded-lg p-0.5 cursor-pointer'
           onClick={() => {
             if (price > 0) {
               setCount((prev) => prev + 1);
