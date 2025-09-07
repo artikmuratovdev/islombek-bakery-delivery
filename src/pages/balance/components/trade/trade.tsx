@@ -120,7 +120,7 @@ export const Trade = () => {
       </div>
 
       {/* Savdo List */}
-      <div className="px-6 mt-5 space-y-5">
+      <div className="px-6 my-5 space-y-5">
         {isLoading || isFetching ? (
           <div className="flex justify-center items-center h-32">
             <Loader className="animate-spin text-blue-500 w-6 h-6" />
