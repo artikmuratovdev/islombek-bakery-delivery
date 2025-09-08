@@ -1,11 +1,12 @@
 import { EditPasswordForm, Logout, ProfileTop } from "@/components";
 import { ArrowDown } from "@/icons";
+import { Footer } from "@/layouts/footer";
 import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const navigate = useNavigate();
   return (
-    <div className="bg-[#1C2C57] min-h-screen">
+    <div className="bg-[#1C2C57]">
       <header className="py-3 border-b border-yellow-400 rounded-4xl flex justify-between items-center px-4">
         <ProfileTop />
       </header>
@@ -25,6 +26,7 @@ export const Profile = () => {
           <Logout />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

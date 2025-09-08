@@ -88,7 +88,7 @@ export const LoginForm: React.FC = () => {
                 {...field}
                 type="text"
                 placeholder="Username..."
-                className={errors.username ? "border-red-500" : ""}
+                className={(errors.username ? "border-red-500" : "") + " bg-white"}
               />
               {errors.username && (
                 <p className="text-red-500 text-left text-sm">
@@ -111,7 +111,7 @@ export const LoginForm: React.FC = () => {
                 {...field}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password..."
-                className={errors.password ? "border-red-500" : ""}
+                className={(errors.username ? "border-red-500" : "") + " bg-white"}
               />
               <button
                 type="button"
@@ -132,7 +132,7 @@ export const LoginForm: React.FC = () => {
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 text-xl text-[#1C2C57] font-bold bg-yellow-400"
+          className="w-full py-3 text-xl text-[#1C2C57] font-bold bg-yellow-400 hover:text-yellow-500"
         >
           {isLoading ? "⏳ Yuklanmoqda..." : "Login"}
         </Button>

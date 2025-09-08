@@ -51,6 +51,7 @@ import {
   OrderPage,
 } from "./pages/orders/components/old-order/components";
 import { CustomerDetails } from "./pages/customers/components/customer-details";
+import { Toaster } from "react-hot-toast";
 
 
 const App = () => {
@@ -125,6 +126,7 @@ const App = () => {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
+      <Toaster position="top-center" />
     </Layouts>
   );
 };
