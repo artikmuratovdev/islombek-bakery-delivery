@@ -8,12 +8,17 @@ import { AddReport } from './components/addReport';
 import { CloseCheckout } from './components/CloseCheckout';
 import { useMeQuery } from '@/app/api';
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
 
 export const Checkout = () => {
-  const {data:me } = useMeQuery();
+  const {data:me , refetch} = useMeQuery();
   const { data: expenses } = useGetAllExpenseQuery(me?._id as string, {
     skip: !me?._id
   });
+
+  useEffect(() => {
+    refetch()
+  },[expenses])
 
   const for_work = expenses?.filter(
     (expense) => expense.expense_type === 'for_work' && expense

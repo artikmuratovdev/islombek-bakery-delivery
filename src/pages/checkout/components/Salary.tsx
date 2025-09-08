@@ -64,7 +64,7 @@ export const Salary = ({ items }: { items: GetExpensesResponse[] }) => {
   };
   return (
     <div>
-      <div className='space-y-4'>
+      <div className='space-y-4 mb-12'>
         <Sheet open={open} onOpenChange={setOpen}>
           {items.map((item) => (
             <div
