@@ -68,18 +68,22 @@ export const AcceptedOrder = () => {
         request: async () => {
           const response = await submitOrder({
             id: id as string,
-            body: { paidAmount: order?.debtAmount as number, breadsInfo: breads },
+            body: {
+              paidAmount: order?.debtAmount as number,
+              breadsInfo: breads,
+            },
           });
           return response;
         },
         onSuccess: (data) => {
           toast.success(data.data.message);
-          navigate('/orders',{state:'activeOrder'});
+          navigate('/orders', { state: 'activeOrder' });
         },
-        onError: (error : any) => {
-          console.log("Error",error.data.message);
+        onError: (error: any) => {
+          console.log('Error', error.data.message);
           toast.error(error.data.message);
-      }})
+        },
+      });
     }
   };
 
@@ -96,13 +100,13 @@ export const AcceptedOrder = () => {
       },
       onSuccess: (data) => {
         toast.success(data.data.message);
-        navigate('/orders',{state:'activeOrder'});
+        navigate('/orders', { state: 'activeOrder' });
       },
-      onError: (error : any) => {
-        console.log("Error",error.message);
+      onError: (error: any) => {
+        console.log('Error', error.message);
         toast.error(error.data.message);
-      }
-    })
+      },
+    });
   };
 
   return (
@@ -111,7 +115,7 @@ export const AcceptedOrder = () => {
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
         <div className='flex w-[95%] m-auto items-center justify-between'>
           <Button
-            onClick={() => navigate('/orders',{state:'activeOrder'})}
+            onClick={() => navigate('/orders', { state: 'activeOrder' })}
             className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full'
           >
             <ArrowLeft className='text-2xl' />
@@ -216,26 +220,28 @@ export const AcceptedOrder = () => {
           )}
         </div>
         <div className='flex justify-between mb-5'>
-          {order?.client !== "Boshqa" && <Controller
-            name='isDebt'
-            control={control}
-            render={({ field }) => (
-              <Label
-                htmlFor='qarz'
-                className='text-white flex gap-x-2 items-center'
-              >
-                <span className='relative border-2 border-yellow-400 rounded-full w-6 h-6'>
-                  <Checkbox
-                    id='qarz'
-                    checked={field.value}
-                    onCheckedChange={(val) => field.onChange(val)}
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-none data-[state=checked]:bg-yellow-400 rounded-full data-[state=checked]:text-yellow-400`}
-                  />
-                </span>
-                Qarz
-              </Label>
-            )}
-          />}
+          {order?.client !== 'Boshqa' && (
+            <Controller
+              name='isDebt'
+              control={control}
+              render={({ field }) => (
+                <Label
+                  htmlFor='qarz'
+                  className='text-white flex gap-x-2 items-center'
+                >
+                  <span className='relative border-2 border-yellow-400 rounded-full w-6 h-6'>
+                    <Checkbox
+                      id='qarz'
+                      checked={field.value}
+                      onCheckedChange={(val) => field.onChange(val)}
+                      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-none data-[state=checked]:bg-yellow-400 rounded-full data-[state=checked]:text-yellow-400`}
+                    />
+                  </span>
+                  Qarz
+                </Label>
+              )}
+            />
+          )}
 
           <Button className='w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] ml-auto'>
             Saqlash
@@ -264,10 +270,11 @@ export const AcceptedOrder = () => {
                     <>
                       <input
                         type='number'
-                        value={(field.value ?? '')
-                          .toString()
-                          .replace(/^0+(?=\d)/, '')}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        value={(field.value ?? '').toString().replace(/^0+(?=\d)/, '')}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          field.onChange(isNaN(val) ? 0 : Number(val));
+                        }}
                         className='w-full p-1 border border-[#FFCC15] rounded-lg bg-white
                         [&::-webkit-inner-spin-button]:appearance-none 
                         [&::-webkit-outer-spin-button]:appearance-none 

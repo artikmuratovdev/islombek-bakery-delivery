@@ -26,28 +26,29 @@ export const DebtsDetails = () => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  const today = new Date().toISOString().split("T")[0];
+  const [date,setDate] = useState({
+    startDate: today,
+    endDate: today
+  })
+
   const tabs = [
     { label: "Zakaslar", value: "zakaslar" },
     { label: "To'lovlar", value: "to'lovlar" },
   ];
 
-  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     if (activeTab === "zakaslar") {
       getDriverDebtClientsTotalDebt({
-        clientId: id as string,
-        startDate: today,
-        endDate: today,
+        clientId: id as string, ...date
       });
     } else if (activeTab === "to'lovlar") {
       getDriverDebtClientDebtPayments({
-        id: id as string,
-        startDate: today,
-        endDate: today,
+        id: id as string, ...date
       });
     }
-  }, [activeTab, id]); // activeTab o'zgarganda so'rov ketadi
+  }, [activeTab, id, date]); // activeTab o'zgarganda so'rov ketadi
 
   const todayBalance =
     totalDebt?.reduce((sum, item) => sum + Number(item.debtAmount || 0), 0) ||
@@ -87,19 +88,7 @@ export const DebtsDetails = () => {
           <UZBTime
             fetchDate
             onSelectDate={(date) => {
-              if (activeTab === "zakaslar") {
-                getDriverDebtClientsTotalDebt({
-                  clientId: id as string,
-                  startDate: date.startDate,
-                  endDate: date.endDate,
-                });
-              } else if (activeTab === "to'lovlar") {
-                getDriverDebtClientDebtPayments({
-                  id: id as string,
-                  startDate: date.startDate,
-                  endDate: date.endDate,
-                });
-              }
+              setDate(date)
             }}
           />
         </div>

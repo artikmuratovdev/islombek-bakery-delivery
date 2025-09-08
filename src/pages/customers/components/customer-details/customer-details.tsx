@@ -72,7 +72,7 @@ export const CustomerDetails = () => {
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
         <div className='flex items-center justify-between'>
           <Button
-            onClick={() => navigate('/customers')}
+            onClick={() => navigate('/customer')}
             className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full'
           >
             <ArrowLeft className='text-2xl' />
@@ -86,7 +86,7 @@ export const CustomerDetails = () => {
         </div>
       </div>
 
-      <div className='mt-[120px] m-auto p-[16px] space-y-5'>
+      <div className='my-[120px] m-auto p-[16px] space-y-5'>
         {data &&
           (data.orders && data.orders.length > 0 ? (
             data.orders.map((order, index) => (

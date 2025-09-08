@@ -83,6 +83,7 @@ export const UZBTime = ({
                   const startDate = format(range.from, "yyyy-MM-dd");
                   const endDate = format(range.to, "yyyy-MM-dd");
                   onSelectDate({ startDate, endDate });
+                  console.log({ startDate, endDate });
                 }
               }}
               initialFocus
