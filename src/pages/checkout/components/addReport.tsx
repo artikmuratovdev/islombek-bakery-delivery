@@ -63,18 +63,9 @@ export const AddReport = () => {
         reset();
       },
       onError: (error : any) => {
-        toast.error(error.data.message);
+        toast.error(error.message);
       }
     })
-
-    // try {
-    //   const result = await createExpense(submittedData).unwrap();
-    //   toast.success(result.message);
-    //   reset();
-    //   refetch()
-    // } catch (error : any) {
-    //   toast.error(error.data.message);
-    // }
     setOpen(false)
   };
 

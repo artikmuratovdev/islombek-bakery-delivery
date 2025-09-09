@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useHandleRequest } from '@/hooks';
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast, { Toaster } from 'react-hot-toast';
@@ -39,21 +40,24 @@ export const CloseCheckout = () => {
     },
   });
 
+  const handleRequest = useHandleRequest();
+
   const onSubmit = async (data: any): Promise<void> => {
-    try {
-      if (isNaN(data.amount)) {
-        throw new Error("Summa to'g'ri formatda emas.");
-      }
-      const sentData = {bakerRoomId,...data}
-      sentData.amount = Number(data.amount) 
-      const response = await closeCash(sentData).unwrap();
-      reset();
-      setOpen(false);
-      toast.success(response.message)
-    } catch (error : any) {
-      console.error(error);
-      toast.error(error?.data?.message || "Kassa yopishda xatolik yuz berdi");
+    if (isNaN(data.amount)) {
+      throw new Error("Summa to'g'ri formatda emas.");
     }
+    const sentData = {bakerRoomId,...data}
+    sentData.amount = Number(data.amount) 
+    await handleRequest({
+      request : () => closeCash(sentData),
+      onSuccess: (data:any) => {
+        toast.success(data.data.message || 'Kassa muvaffaqiyatli yopildi');
+        reset();
+      },
+      onError: (error : any) => {
+        toast.error(error.message || 'Xatolik yuz berdi');
+      }
+    })
 
   };
 

@@ -14,11 +14,12 @@ import {
 } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { EditReport } from './editExpenses';
 import { Delete_Modal } from './DeleteModal';
+import { useHandleRequest } from '@/hooks';
 
 export const ForWork = ({ items }: { items: GetExpensesResponse[] }) => {
   const [deleteExpenses] = useDeleteExpenseMutation();
@@ -41,13 +42,21 @@ export const ForWork = ({ items }: { items: GetExpensesResponse[] }) => {
     reset({ name, price });
   };
 
+  const handleRequest = useHandleRequest();
+
   const deleteDatas = async (id: string) => {
-    try {
-      const res = await deleteExpenses(id).unwrap();
-      toast.success(res.message);
-    } catch (error: any) {
-      toast.error(error.data.message);
-    }
+    await handleRequest({
+      request: async () => {
+        const res = await deleteExpenses(id);
+        return res;
+      },
+      onSuccess: (data) => {
+        toast.success(data.data.message || "Xabar o'chirish uchun yuborildi");
+      },
+      onError: (error : any) => {
+        toast.error(error.message || "Xatolik yuz berdi");
+      }
+    })
   };
 
   const onSubmit = () => {
@@ -57,7 +66,6 @@ export const ForWork = ({ items }: { items: GetExpensesResponse[] }) => {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <Toaster />
       <div className='space-y-4 mb-16'>
         {items &&
           items.map((item) => (

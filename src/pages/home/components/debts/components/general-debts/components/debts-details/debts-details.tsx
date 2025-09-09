@@ -24,7 +24,7 @@ export const DebtsDetails = () => {
     useLazyGetDriverDebtClientDebtPaymentsQuery();
 
   const [open, setOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState('');
 
   const today = new Date().toISOString().split("T")[0];
   const [date,setDate] = useState({
@@ -48,7 +48,7 @@ export const DebtsDetails = () => {
         id: id as string, ...date
       });
     }
-  }, [activeTab, id, date]); // activeTab o'zgarganda so'rov ketadi
+  }, [activeTab, id, date]);
 
   const todayBalance =
     totalDebt?.reduce((sum, item) => sum + Number(item.debtAmount || 0), 0) ||
@@ -106,24 +106,27 @@ export const DebtsDetails = () => {
                   className="bg-white rounded-xl shadow-md border-none"
                 >
                   <div
-                    className="flex justify-between items-center px-4 pt-2 p-2 cursor-pointer"
-                    onClick={() => setIsOpen(!isOpen)}
+                    className="flex justify-between items-center px-4 p-2 cursor-pointer"
+                    onClick={() => {
+                      isOpen === item._id ? setIsOpen('') : setIsOpen(item._id)}}
                   >
                     <div className="text-[#1C2C57] text-sm font-semibold">
                       {item.date}
                     </div>
-                    <div className="flex space-x-4 text-sm font-semibold items-center">
-                      <span className="text-green-700">{item.totalAmount}</span>
-                      <span className="text-red-700">{item?.debtAmount}</span>
-                      {isOpen ? (
+                    <div className="grid grid-cols-5 w-28 text-sm font-semibold items-center">
+                      <span className="text-green-700 col-span-2 text-end">{item.totalAmount}</span>
+                      <span className="text-red-700 col-span-2 text-end">{item?.debtAmount}</span>
+                      <span className="ml-auto">
+                        {isOpen  === item._id ? (
                         <ChevronUp className="text-[#1C2C57] w-4 h-4" />
                       ) : (
                         <ChevronDown className="text-[#1C2C57] w-4 h-4" />
                       )}
+                      </span>
                     </div>
                   </div>
                   <Separator />
-                  {isOpen && (
+                  {isOpen === item._id && (
                     <CardContent className="text-xs space-y-3 pt-2 pb-4">
                       {item?.orders?.map((element) => (
                         <div className="space-y-1">
@@ -135,11 +138,11 @@ export const DebtsDetails = () => {
                           </div>
                           <div className="space-y-1 flex flex-col">
                             {element?.breadsInfo?.map((bread) => (
-                              <div className="flex justify-between">
+                              <div className="grid grid-cols-5">
                                 <span>{bread?.title}</span>
-                                <span>{bread?.amount}</span>
-                                <span>{bread?.breadPrice}</span>
-                                <span>{bread?.amount * bread?.breadPrice}</span>
+                                <span className="col-span-2 text-center">{bread?.amount}</span>
+                                <span className="text-end">{bread?.breadPrice}</span>
+                                <span className="text-end">{bread?.amount * bread?.breadPrice}</span>
                               </div>
                             ))}
                           </div>
