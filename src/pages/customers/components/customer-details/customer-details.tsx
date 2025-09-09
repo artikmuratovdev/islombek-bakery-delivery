@@ -1,71 +1,14 @@
-import { useGetClientByIdQuery, useLazyGetUserQuery } from '@/app/api';
+import { useGetClientByIdQuery } from '@/app/api';
 import { Button } from '@/components';
+import { distanceTime, setTime } from '@/hooks/setTime';
 import { ArrowLeft, Clock, Notifications } from '@/icons';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-
-export const setTime = (isoString: Date | string): string => {
-  const date = new Date(isoString);
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
-};
-
-export const distanceTime = (date1: Date | string, date2: Date | string) => {
-  if (typeof date1 === 'string') date1 = new Date(date1);
-  if (typeof date2 === 'string') date2 = new Date(date2);
-
-  const diffTime = Math.abs(date1.getTime() - date2.getTime());
-
-  const hours = Math.floor(diffTime / (1000 * 60 * 60));
-  const minutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diffTime % (1000 * 60)) / 1000);
-
-  const h = String(hours).padStart(2, '0');
-  const m = String(minutes).padStart(2, '0');
-  const s = String(seconds).padStart(2, '0');
-
-  if (hours > 0) return `${h}:${m}:${s}`;
-  if (minutes > 0) return `${m}:${s}`;
-  return `${s}s`;
-};
+import { useLocation, useNavigate, useParams} from 'react-router-dom';
 
 export const CustomerDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data } = useGetClientByIdQuery({ id });
-  const [searchParams] = useSearchParams();
-  const name = searchParams.get('name');
-  const number = searchParams.get('number');
-
-  const [getDriver] = useLazyGetUserQuery();
-  const [drivers, setDrivers] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchDrivers = async () => {
-      if (!data?.orders) return;
-
-      const results: string[] = [];
-
-      for (const order of data.orders) {
-        const driverId =
-          typeof order.acceptedDriver === 'string'
-            ? order.acceptedDriver
-            : (order.acceptedDriver as { _id: string })._id;
-
-        try {
-          const res = await getDriver(driverId).unwrap();
-          results.push(res.fullName);
-        } catch (err) {
-          console.error('Failed to fetch driver', driverId, err);
-        }
-      }
-
-      setDrivers(results);
-    };
-
-    fetchDrivers();
-  }, [data, getDriver]);
+  const { data } = useGetClientByIdQuery({ id },{skip: !id});
+  const location = useLocation();
 
   return (
     <div>
@@ -78,7 +21,7 @@ export const CustomerDetails = () => {
             <ArrowLeft className='text-2xl' />
           </Button>
           <h4 className='text-center justify-center text-white text-2xl font-semibold'>
-            {name} <br /> {number}
+            {location.state.fullName} <br /> {location.state.phone}
           </h4>
           <button onClick={() => navigate('/notifications')}>
             <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
@@ -89,14 +32,14 @@ export const CustomerDetails = () => {
       <div className='my-[120px] m-auto p-[16px] space-y-5'>
         {data &&
           (data.orders && data.orders.length > 0 ? (
-            data.orders.map((order, index) => (
+            data.orders.map((order) => (
               <div
                 key={order._id}
                 className='w-full bg-white rounded-lg border border-yellow-400 p-3'
               >
                 <div className='flex justify-between items-center gap-1 mb-2'>
                   <p className='text-blue-950 text-base font-bold leading-tight'>
-                    {drivers[index]}
+                    {order.acceptedDriver?.fullName || "Noma'lum"}
                   </p>
                   <p className='text-red-700 text-base font-semibold leading-none bg-gray-200 p-1 rounded-[10px] w-20 h-7 flex justify-center items-center'>
                     {setTime(order.createdAt)}

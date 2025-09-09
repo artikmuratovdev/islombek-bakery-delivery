@@ -10,8 +10,6 @@ export const OldOrder = () => {
     refetch();
   },[preOrders])
 
-  console.log(preOrders);
-
   const setAsDate = (deliveryTime: Date | string | undefined | null): string => {
     if (!deliveryTime) return "------";
 

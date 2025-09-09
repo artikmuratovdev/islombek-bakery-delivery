@@ -83,7 +83,7 @@ export const DebtsDetails = () => {
       </div>
 
       {/* Content */}
-      <div className="mt-[30%] px-4">
+      <div className="mt-[100px] px-4">
         <div className="flex justify-end px-1">
           <UZBTime
             fetchDate

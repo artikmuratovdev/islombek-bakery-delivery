@@ -1,50 +1,19 @@
 import { useGetCustomersQuery } from '@/app/api';
 import { Input } from '@/components';
+import { setNumber } from '@/hooks/setNumber';
 import { ArrowLeft, Notifications } from '@/icons';
 import { XCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export const Customers = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const { data, refetch } = useGetCustomersQuery({ client: search });
-
-  useEffect(() => {
-    refetch();
-  }, [search]);
-
-  const setNumber = (number: string) => {
-    if (number.startsWith('+998') || number.startsWith('998')) {
-      return (
-        number.slice(4, 6) +
-        ' ' +
-        number.slice(6, 9) +
-        ' ' +
-        number.slice(9, 11) +
-        ' ' +
-        number.slice(11)
-      );
-    }
-    if (number.length === 9) {
-      return (
-        number.slice(0, 2) +
-        ' ' +
-        number.slice(2, 5) +
-        ' ' +
-        number.slice(5, 7) +
-        ' ' +
-        number.slice(7, 9)
-      );
-    }
-  };
+  const { data} = useGetCustomersQuery({ client: search });
 
   const handleSubmit = (data: any) => {
-    const params = new URLSearchParams();
-    if (data.fullName) params.set('name', data.fullName);
-    if (data.phone) params.set('number', data.phone.toString());
-
-    navigate('customer-details/' + data._id + `?${params.toString()}`);
+    navigate('customer-details/' + data._id,
+      {state:{fullName:data.fullName,phone:data.phone}});
   };
 
   return (
@@ -97,7 +66,7 @@ export const Customers = () => {
                 {client.fullName}
               </h1>
               <h3 className='bg-gray-200 rounded-[10px] w-32 h-7 flex justify-center items-center'>
-                {client.phone && setNumber(client.phone)}
+                {client.phone && setNumber?.(client.phone)}
               </h3>
             </div>
           ))}
