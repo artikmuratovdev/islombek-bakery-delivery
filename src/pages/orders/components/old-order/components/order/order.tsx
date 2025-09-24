@@ -7,7 +7,6 @@ import { Bottom } from './components';
 import { breadInfo } from '@/app/api/orderApi/types';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  useDeleteOrderMutation,
   useGetBreadPricesQuery,
   useGetOneOrderQuery,
   useSubmitPreOrderMutation,
@@ -22,7 +21,6 @@ export const OrderPage = () => {
   const { data: breadPrice } = useGetBreadPricesQuery();
   const { data: preOrder, refetch } = useGetOneOrderQuery(id as string);
   const [submitPreOrder] = useSubmitPreOrderMutation();
-  const [deleteOrder] = useDeleteOrderMutation();
   const navigate = useNavigate();
   const [breads, setBreads] = useState<breadInfo[]>([]);
 
@@ -91,25 +89,6 @@ export const OrderPage = () => {
       }
     })
   };
-
-  const onDelete = async () => {
-    await handleRequest({
-      request: async () => {
-        if (!preOrder) throw new Error('PreOrder not found');
-        const response = await deleteOrder(preOrder?._id as string);
-        return response;
-      },
-      onSuccess: (data) => {
-        toast.success(data.data.message);
-        console.log('Data',data.data.message)
-        navigate('/orders',{state:'preOrder'});
-      },
-      onError: (error : any) => {
-        console.log("Error",error.message);
-        toast.error(error.message);
-      }
-    })
-  }
 
   return (
     <div className='w-full max-w-2xl pb-20'>
@@ -303,12 +282,6 @@ export const OrderPage = () => {
           onClick={submitting}
         >
           Topshirish
-        </Button>
-        <Button
-          className='w-36 h-9 p-3 bg-red-600 rounded-lg text-white inline-flex justify-center items-center gap-1 hover:bg-red-600 font-bold'
-          onClick={onDelete}
-        >
-          O'chirish
         </Button>
         <Button
           className='fixed right-5 bottom-24 h-12 aspect-square p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
