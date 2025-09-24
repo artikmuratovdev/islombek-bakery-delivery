@@ -7,9 +7,10 @@ type BreadListProps = {
   setBreads: React.Dispatch<React.SetStateAction<breadInfo[]>>;
   priceHide?: boolean
   debtShow?: number
+  hideAmount?:boolean
 };
 
-const BreadList = ({ breadPrices, setBreads ,priceHide,debtShow}: BreadListProps) => {
+const BreadList = ({ breadPrices, setBreads ,priceHide,debtShow,hideAmount}: BreadListProps) => {
   const [totals, setTotals] = useState<Record<string, number>>({});
 
   const handleTotalChange = (id: string, value: number) => {
@@ -32,6 +33,7 @@ const BreadList = ({ breadPrices, setBreads ,priceHide,debtShow}: BreadListProps
             bread={bread}
             onChange={handleTotalChange}
             setBreads={setBreads}
+            hideAmount={hideAmount}
           />
         ))}
       </div>

@@ -14,11 +14,12 @@ type Props = {
   bread: breadInfo;
   onChange: (id: string, value: number) => void;
   setBreads: React.Dispatch<React.SetStateAction<breadInfo[]>>;
-  priceHide?: boolean
+  priceHide?: boolean;
+  hideAmount?: boolean;
 };
 
 const BreadPrices = forwardRef(function BreadPrices(
-  { bread, onChange, setBreads ,priceHide}: Props,
+  { bread, onChange, setBreads, priceHide, hideAmount }: Props,
   ref
 ) {
   const [count, setCount] = useState<number>(bread.amount ?? 0);
@@ -130,7 +131,7 @@ const BreadPrices = forwardRef(function BreadPrices(
         <input
           ref={priceInputRef}
           type='number'
-          value={(price ?? "").toString().replace(/^0+(?=\d)/, "")}
+          value={(price ?? '').toString().replace(/^0+(?=\d)/, '')}
           onChange={(e) => {
             const val = Number(e.target.value);
             setPrice(isNaN(val) ? 0 : val);
@@ -142,21 +143,24 @@ const BreadPrices = forwardRef(function BreadPrices(
           [&::-webkit-outer-spin-button]:appearance-none`}
         />
 
-        {!priceHide && <span onClick={handleEditClick}>
-          <Edit className='text-yellow cursor-pointer' />
-        </span>}
+        {!priceHide && (
+          <span onClick={handleEditClick}>
+            <Edit className='text-yellow cursor-pointer' />
+          </span>
+        )}
       </div>
 
       <div className='text-blue-950 font-semibold flex items-center justify-center gap-2 col-span-2'>
-        <Minus
+        {!hideAmount && <Minus
           className='bg-primary text-[#FFCC15] w-6 aspect-square rounded-lg p-0.5 cursor-pointer'
           onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
-        />
+        />}
 
-        <input
+        {!hideAmount ? (
+          <input
           ref={countInputRef}
           type='number'
-          value={(count ?? "").toString().replace(/^0+(?=\d)/, "")}
+          value={(count ?? '').toString().replace(/^0+(?=\d)/, '')}
           onChange={(e) => {
             const value = Number(e.target.value);
             setCount(isNaN(value) ? 0 : Math.max(value, 0));
@@ -166,17 +170,24 @@ const BreadPrices = forwardRef(function BreadPrices(
             [&::-webkit-outer-spin-button]:appearance-none 
             [appearance:textfield]'
         />
-
-        <Plus
-          className='bg-primary text-[#FFCC15] w-6 aspect-square rounded-lg p-0.5 cursor-pointer'
-          onClick={() => {
-            if (price > 0) {
-              setCount((prev) => prev + 1);
-            } else {
-              toast.error('Narx nol bo‘lishi mumkin emas');
-            }
-          }}
-        />
+        ) : (
+          <p className='w-10 text-center border border-[#FFCC15] rounded bg-white
+          [&::-webkit-inner-spin-button]:appearance-none 
+          [&::-webkit-outer-spin-button]:appearance-none 
+          [appearance:textfield]'>{count}</p>
+        )}
+        {!hideAmount && (
+          <Plus
+            className='bg-primary text-[#FFCC15] w-6 aspect-square rounded-lg p-0.5 cursor-pointer'
+            onClick={() => {
+              if (price > 0) {
+                setCount((prev) => prev + 1);
+              } else {
+                toast.error('Narx nol bo‘lishi mumkin emas');
+              }
+            }}
+          />
+        )}
       </div>
     </div>
   );
