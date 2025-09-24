@@ -155,6 +155,7 @@ const BreadPrices = forwardRef(function BreadPrices(
           className='bg-primary text-[#FFCC15] w-6 aspect-square rounded-lg p-0.5 cursor-pointer'
           onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
         />}
+        
 
         {!hideAmount ? (
           <input
