@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Tabs } from "@/components/tabs/tabs";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { IoNotifications } from "react-icons/io5";
-import { Input } from "@/components/ui/input";
-import { useLazyGetDriverDebtClientsTodayDebtsQuery, useLazyGetDriverDebtClientsTotalDebtsQuery } from "@/app/api";
+import {
+  useLazyGetDriverDebtClientsTodayDebtsQuery,
+  useLazyGetDriverDebtClientsTotalDebtsQuery,
+} from '@/app/api';
+import { Tabs } from '@/components/tabs/tabs';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { IoNotifications } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 export const Debts = () => {
   const navigate = useNavigate();
@@ -20,13 +23,13 @@ export const Debts = () => {
     { data: driverDebtClientsToday, isLoading: isLoadingToday },
   ] = useLazyGetDriverDebtClientsTodayDebtsQuery();
 
-  const [activeTab, setActiveTab] = useState("umumiy qarzlar");
-  const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState('umumiy qarzlar');
+  const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   const tabs = [
-    { label: "Umumiy qarzlar", value: "umumiy qarzlar" },
-    { label: "Bugungi qarzlar", value: "bugungi qarzlar" },
+    { label: 'Umumiy qarzlar', value: 'umumiy qarzlar' },
+    { label: 'Bugungi qarzlar', value: 'bugungi qarzlar' },
   ];
 
   useEffect(() => {
@@ -38,7 +41,7 @@ export const Debts = () => {
   }, [search]);
 
   useEffect(() => {
-    if (activeTab === "umumiy qarzlar") {
+    if (activeTab === 'umumiy qarzlar') {
       getDriverDebtClientsTotalDebts({ search: debouncedSearch });
     } else {
       getDriverDebtClientsTodayDebts({ search: debouncedSearch });
@@ -52,49 +55,49 @@ export const Debts = () => {
 
   return (
     <div>
-      <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full z-10">
-        <div className="flex w-[95%] m-auto justify-between items-center">
+      <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full z-10'>
+        <div className='flex w-[95%] m-auto justify-between items-center'>
           <div
-            className="flex gap-x-2 items-center"
-            onClick={() => navigate("/dashboard")}
+            className='flex gap-x-2 items-center'
+            onClick={() => navigate('/dashboard')}
           >
             <Button
-              onClick={() => navigate("/trade")}
-              className="w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] p-4 hover:bg-[#FFCC15] rounded-full"
+              onClick={() => navigate('/trade')}
+              className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] p-4 hover:bg-[#FFCC15] rounded-full'
             >
-              <ArrowLeft className="text-2xl" />
+              <ArrowLeft className='text-2xl' />
             </Button>
           </div>
           <div>
-            <h2 className="text-white text-xl font-semibold font-inter">
+            <h2 className='text-white text-xl font-semibold font-inter'>
               Qarzlar
             </h2>
-            <h2 className="text-white text-2xl font-semibold font-inter"></h2>
+            <h2 className='text-white text-2xl font-semibold font-inter'></h2>
           </div>
-          <button onClick={() => navigate("/notifications")}>
-            <IoNotifications className="cursor-pointer text-[#FFCC15] w-6 h-6" />
+          <button onClick={() => navigate('/notifications')}>
+            <IoNotifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
           </button>
         </div>
       </div>
 
-      <div className="mt-[30%] w-[100%] px-4">
+      <div className='mt-[30%] w-[100%] px-4'>
         <Input
-          className="w-full bg-white border border-yellow-400"
-          type="search"
-          placeholder="Qidirish..."
+          className='w-full bg-white border border-yellow-400'
+          type='search'
+          placeholder='Qidirish...'
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <div className="mt-5">
+        <div className='mt-5'>
           <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        <div className="mt-5">
-          {activeTab === "umumiy qarzlar" && (
-            <div className="space-y-3">
+        <div className='mt-5'>
+          {activeTab === 'umumiy qarzlar' && (
+            <div className='space-y-3'>
               {isLoading && (
-                <p className="text-center text-gray-500 font-medium">
+                <p className='text-center text-gray-500 font-medium'>
                   Yuklanmoqda...
                 </p>
               )}
@@ -103,8 +106,14 @@ export const Debts = () => {
                 ? (driverDebtClients ?? []).map((item) => (
                     <div
                       key={item._id}
-                      onClick={() => navigate(`/debts/${item._id}`)}
-                      className="w-full h-10 bg-white rounded-lg border border-yellow-400 flex justify-between items-center px-6 cursor-pointer"
+                      onClick={() => navigate(`/debts/${item._id}`, {state: {
+                        date: {
+                          startDate: new Date('2025-01-01'),
+                          endDate: new Date(),
+                        },
+                        totalDebt: item.balance,
+                      },})}
+                      className='w-full h-10 bg-white rounded-lg border border-yellow-400 flex justify-between items-center px-6 cursor-pointer'
                     >
                       <h2 className="text-blue-950 text-base font-bold font-['Inter'] leading-tight">
                         {item.fullName}
@@ -115,17 +124,17 @@ export const Debts = () => {
                     </div>
                   ))
                 : !isLoading && (
-                    <p className="text-center text-gray-500 font-medium">
+                    <p className='text-center text-gray-500 font-medium'>
                       Ma'lumot yo‘q
                     </p>
                   )}
             </div>
           )}
 
-          {activeTab === "bugungi qarzlar" && (
-            <div className="space-y-3">
+          {activeTab === 'bugungi qarzlar' && (
+            <div className='space-y-3'>
               {isLoadingToday && (
-                <p className="text-center text-gray-500 font-medium">
+                <p className='text-center text-gray-500 font-medium'>
                   Yuklanmoqda...
                 </p>
               )}
@@ -134,8 +143,17 @@ export const Debts = () => {
                 ? (driverDebtClientsToday ?? []).map((item) => (
                     <div
                       key={item._id}
-                      onClick={() => navigate("debts-details")}
-                      className="w-full h-10 bg-white rounded-lg border border-yellow-400 flex justify-between items-center px-6 cursor-pointer"
+                      onClick={() =>
+                        navigate(`/debts/${item.client._id}`, {
+                          state: {
+                            date: {
+                              startDate: new Date(),
+                              endDate: new Date(),
+                            },
+                          },
+                        })
+                      }
+                      className='w-full h-10 bg-white rounded-lg border border-yellow-400 flex justify-between items-center px-6 cursor-pointer'
                     >
                       <h2 className="text-blue-950 text-base font-bold font-['Inter'] leading-tight">
                         {item.client?.fullName}
@@ -146,7 +164,7 @@ export const Debts = () => {
                     </div>
                   ))
                 : !isLoadingToday && (
-                    <p className="text-center text-gray-500 font-medium">
+                    <p className='text-center text-gray-500 font-medium'>
                       Ma'lumot yo‘q
                     </p>
                   )}

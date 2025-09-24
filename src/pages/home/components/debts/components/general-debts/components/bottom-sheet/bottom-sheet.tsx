@@ -13,7 +13,7 @@ interface FormValues {
   amount: string;
 }
 
-export const DollarBottom = ({ setOpen }: { setOpen: any }) => {
+export const DollarBottom = ({ setOpen, debt }: { setOpen: any, debt: number }) => {
   const { id } = useParams();
   const [createDriverDebtClientDebtPayment] =
     useCreateDriverDebtClientDebtPaymentMutation();
@@ -74,9 +74,9 @@ export const DollarBottom = ({ setOpen }: { setOpen: any }) => {
           <p className="text-red-500 text-xs mt-1">{errors.amount.message}</p>
         )}
 
-        {/* <h4 className="text-white text-sm font-semibold font-['Inter'] leading-none mt-5">
-          Qoldiq: {total}
-        </h4> */}
+        <h4 className="text-white text-sm font-semibold font-['Inter'] leading-none mt-5">
+          Qoldiq: {debt}
+        </h4>
 
         <div className="mt-5 flex justify-end">
           <Button
