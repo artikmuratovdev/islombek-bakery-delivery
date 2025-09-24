@@ -261,7 +261,7 @@ export const OrderPage = () => {
 
         <div className='space-y-3 pt-2 mb-5'>
           {breads && (
-            <BreadList breadPrices={breads} priceHide setBreads={setBreads} />
+            <BreadList hideAmount breadPrices={breads} priceHide setBreads={setBreads} />
           )}
         </div>
 
