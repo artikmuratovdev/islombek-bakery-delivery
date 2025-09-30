@@ -80,7 +80,7 @@ export const Debts = () => {
         </div>
       </div>
 
-      <div className='mt-[30%] w-[100%] px-4'>
+      <div className='mt-[100px] w-[100%] px-4'>
         <Input
           className='w-full bg-white border border-yellow-400'
           type='search'
@@ -159,7 +159,7 @@ export const Debts = () => {
                         {item.client?.fullName}
                       </h2>
                       <h2 className="text-blue-950 text-base font-bold font-['Inter'] leading-tight">
-                        {item.client?.balance}
+                        {item.debtAmount}
                       </h2>
                     </div>
                   ))

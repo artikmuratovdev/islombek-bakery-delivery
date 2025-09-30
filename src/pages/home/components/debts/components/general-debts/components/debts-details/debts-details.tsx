@@ -26,8 +26,6 @@ export const DebtsDetails = () => {
 
   const location = useLocation();
 
-  console.log(location.state.date);
-
   const [getDriverDebtClientsTotalDebt, { data: totalDebt }] =
     useLazyGetDriverDebtClientsTotalDebtQuery();
 
@@ -38,11 +36,30 @@ export const DebtsDetails = () => {
   const [isOpen, setIsOpen] = useState('');
 
   const today = new Date().toISOString().split('T')[0];
-  const [date, setDate] = useState({
-    startDate:
-      location.state.date.startDate.toISOString().split('T')[0] || today,
-    endDate: location.state.date.endDate.toISOString().split('T')[0] || today,
-  });
+
+  // Safely handle location.state.date with null checks
+  const getInitialDate = () => {
+    if (location.state?.date) {
+      try {
+        return {
+          startDate: location.state.date.startDate
+            ? new Date(location.state.date.startDate)
+                .toISOString()
+                .split('T')[0]
+            : today,
+          endDate: location.state.date.endDate
+            ? new Date(location.state.date.endDate).toISOString().split('T')[0]
+            : today,
+        };
+      } catch (error) {
+        console.warn('Date parsing error:', error);
+        return { startDate: today, endDate: today };
+      }
+    }
+    return { startDate: today, endDate: today };
+  };
+
+  const [date, setDate] = useState(getInitialDate());
 
   const tabs = [
     { label: 'Zakaslar', value: 'zakaslar' },
@@ -63,7 +80,7 @@ export const DebtsDetails = () => {
     }
   }, [activeTab, id, date]);
 
-  const todayBalance = location.state.totalDebt;
+  const todayBalance = location.state?.totalDebt || 0;
 
   return (
     <div>
@@ -128,7 +145,7 @@ export const DebtsDetails = () => {
                     </div>
                     <div className='grid grid-cols-5 w-28 text-sm font-semibold items-center'>
                       <span className='text-green-700 col-span-2 text-end'>
-                        {item.totalAmount}
+                        {item.paidAmount}
                       </span>
                       <span className='text-red-700 col-span-2 text-end'>
                         {item?.debtAmount}
@@ -148,7 +165,16 @@ export const DebtsDetails = () => {
                       {item?.orders?.map((element) => (
                         <div className='space-y-1'>
                           <div className='font-semibold'>
-                            {element?.createdAt?.slice(11, 16)}
+                            {element?.createdAt
+                              ? new Date(element.createdAt).toLocaleTimeString(
+                                  'en-GB',
+                                  {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false,
+                                  }
+                                )
+                              : '--:--'}
                             <span className='ml-2 font-normal'>
                               {element?.acceptedDriver?.fullName}
                             </span>
@@ -214,10 +240,26 @@ export const DebtsDetails = () => {
                   </h2>
                   <div className='flex items-center gap-x-3'>
                     <h2 className="text-blue-950 text-base font-semibold font-['Inter']">
-                      {item?.createdAt?.slice(0, 10)}
+                      {item?.createdAt
+                        ? new Date(item.createdAt)
+                            .toLocaleDateString('en-GB', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                            })
+                            .split('/')
+                            .reverse()
+                            .join('-')
+                        : '--/--/----'}
                     </h2>
                     <h2 className="text-blue-950 text-base font-semibold font-['Inter']">
-                      {item?.createdAt?.slice(11, 16)}
+                      {item?.createdAt
+                        ? new Date(item.createdAt).toLocaleTimeString('en-GB', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                          })
+                        : '--:--'}
                     </h2>
                   </div>
                 </div>

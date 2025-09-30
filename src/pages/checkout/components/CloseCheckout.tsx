@@ -1,6 +1,5 @@
-import { useGetAllUsersQuery } from '@/app/api';
+import { useGetAllUsersQuery, useMeQuery } from '@/app/api';
 import { useCloseCashMutation } from '@/app/api/checkout';
-import { RootState } from '@/app/store';
 import { SelectUser } from '@/components';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +13,6 @@ import { useHandleRequest } from '@/hooks';
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast, { Toaster } from 'react-hot-toast';
-import { useSelector } from 'react-redux';
 
 export const CloseCheckout = () => {
   const { data: getUsers, isLoading: getUsersLoading} = useGetAllUsersQuery({roles:[
@@ -22,10 +20,7 @@ export const CloseCheckout = () => {
     ]});
   const [open, setOpen] = useState(false);
   const [closeCash , {isLoading}] = useCloseCashMutation();
-
-  const { balance, id:bakerRoomId } = useSelector(
-    (state: RootState) => state.checkout
-  );
+  const { data: me } = useMeQuery();
 
   const {
     control,
@@ -46,7 +41,7 @@ export const CloseCheckout = () => {
     if (isNaN(data.amount)) {
       throw new Error("Summa to'g'ri formatda emas.");
     }
-    const sentData = {bakerRoomId,...data}
+    const sentData = {bakerRoomId : me?._id,...data}
     sentData.amount = Number(data.amount) 
     await handleRequest({
       request : () => closeCash(sentData),
@@ -84,7 +79,7 @@ export const CloseCheckout = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <SheetHeader className='border-2 border-[#FFCC15] rounded-[12px] p-[15px]'>
               <SheetTitle className='text-white font-[600] text-left'>
-                Umumiy balans: {Number(balance).toLocaleString('ru-RU')}
+                Umumiy balans: {Number(me?.balance).toLocaleString('ru-RU')}
 
               </SheetTitle>
               <label
