@@ -10,6 +10,7 @@ import { ArrowLeft } from "@/icons";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RiLoader2Fill } from "react-icons/ri";
+import { socket } from "@/utils";
 
 export const Chat = () => {
   const { id } = useParams();
@@ -43,6 +44,21 @@ export const Chat = () => {
 
   const dates: { [x: string]: true | undefined } = {};
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Socket ulanishini faqat chat sahifasida yoqish
+  useEffect(() => {
+    // Chat sahifasiga kirganda socket ulanadi
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    // Chat sahifasidan chiqqanda socket uziladi
+    return () => {
+      if (socket.connected) {
+        socket.disconnect();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (messagesEndRef.current) {
