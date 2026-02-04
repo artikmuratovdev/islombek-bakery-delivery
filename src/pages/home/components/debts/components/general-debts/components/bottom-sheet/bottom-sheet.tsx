@@ -8,12 +8,19 @@ import { Label } from "@/components/ui/label";
 import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { useHandleRequest } from "@/hooks";
+import toast from "react-hot-toast";
 
 interface FormValues {
   amount: string;
 }
 
-export const DollarBottom = ({ setOpen, debt }: { setOpen: any, debt: number }) => {
+export const DollarBottom = ({
+  setOpen,
+  debt,
+}: {
+  setOpen: any;
+  debt: number;
+}) => {
   const { id } = useParams();
   const [createDriverDebtClientDebtPayment] =
     useCreateDriverDebtClientDebtPaymentMutation();
@@ -48,7 +55,11 @@ export const DollarBottom = ({ setOpen, debt }: { setOpen: any, debt: number }) 
         return response;
       },
       onSuccess: () => {
+        toast.success("To'lov muvaffaqiyatli qo'shildi");
         setOpen(false);
+      },
+      onError: () => {
+        toast.error("To'lov qo'shishda xatolik yuz berdi");
       },
     });
   };

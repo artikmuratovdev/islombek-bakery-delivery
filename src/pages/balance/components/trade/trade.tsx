@@ -5,6 +5,7 @@ import {
 } from "@/app/api/dastavchik-savdo-api";
 import { Button } from "@/components";
 import { UZBTime } from "@/components/common/uzb-time";
+import toast from "react-hot-toast";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -64,7 +65,7 @@ export const Trade = () => {
     let result = "";
     for (let i = 0; i < length; i++) {
       result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
+        Math.floor(Math.random() * characters.length),
       );
     }
     return result;
@@ -74,11 +75,15 @@ export const Trade = () => {
     await handleRequest({
       request: () => deleteDriverSavdo({ id: deleteId as string }).unwrap(),
       onSuccess: () => {
+        toast.success("Savdo muvaffaqiyatli o'chirildi!");
         setDeleteOpen(false);
         getDriverSavdoAllSavdo({
           endDate: new Date().toISOString().split("T")[0],
           startDate: new Date().toISOString().split("T")[0],
         });
+      },
+      onError: () => {
+        toast.error("Savdoni o'chirishda xatolik yuz berdi!");
       },
     });
   };
@@ -135,15 +140,15 @@ export const Trade = () => {
                   item?.approval === "PENDING"
                     ? "bg-yellow-400"
                     : item?.approval === "REJECTED"
-                    ? "bg-red-600"
-                    : "bg-white"
+                      ? "bg-red-600"
+                      : "bg-white"
                 } 
                 ${
                   item?.approval === "PENDING"
                     ? "outline-yellow-700"
                     : item?.approval === "REJECTED"
-                    ? "outline-red-700"
-                    : "outline-gray-300"
+                      ? "outline-red-700"
+                      : "outline-gray-300"
                 }
               `}
             >
