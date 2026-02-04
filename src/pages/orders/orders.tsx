@@ -14,13 +14,12 @@ export const Orders = () => {
 
   useEffect(() => {
     setActiveTab(location.state || "activeOrder");
-  },[location.state])
+  }, [location.state]);
 
   const tabs = [
-    { label: 'Faol zakazlar', value: 'activeOrder' },
-    { label: 'Oldingi zakazlar', value: 'preOrder' },
+    { label: "Faol zakazlar", value: "activeOrder" },
+    { label: "Oldindan zakazlar", value: "preOrder" },
   ];
-  
 
   return (
     <div className="min-h-screen flex justify-center">
@@ -34,16 +33,14 @@ export const Orders = () => {
             >
               <ArrowLeft className="text-2xl" />
             </Button>
-            <h3 className="text-white text-2xl font-semibold">
-              Zakazlar
-            </h3>
+            <h3 className="text-white text-2xl font-semibold">Zakazlar</h3>
             <button onClick={() => navigate("/notifications")}>
               <Notifications className="text-[#FFCC15] w-6 h-6" />
             </button>
           </div>
         </div>
         <div className="mt-[95px] p-5">
-          <Tabs tabs={tabs}  activeTab={activeTab} onTabChange={setActiveTab} />
+          <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
           {activeTab === "activeOrder" && <ActiveOrder />}
           {activeTab === "preOrder" && <OldOrder />}
         </div>

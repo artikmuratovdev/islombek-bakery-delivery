@@ -12,6 +12,7 @@ import {
 import { useHandleRequest } from "@/hooks";
 import { useCreateComplaintMutation, useGetAllUsersQuery } from "@/app/api";
 import { Role } from "@/constants";
+import toast from "react-hot-toast";
 
 export const SentMessage = ({ setOpen }: any) => {
   const form = useForm();
@@ -31,7 +32,6 @@ export const SentMessage = ({ setOpen }: any) => {
     ],
   });
 
-
   const onSubmit = (data: PropsComp) => {
     handkeRequest({
       request: async () => {
@@ -42,7 +42,11 @@ export const SentMessage = ({ setOpen }: any) => {
         return response;
       },
       onSuccess: () => {
+        toast.success("Shikoyat muvaffaqiyatli yuborildi");
         setOpen(false);
+      },
+      onError: () => {
+        toast.error("Shikoyat yuborishda xatolik yuz berdi");
       },
     });
   };

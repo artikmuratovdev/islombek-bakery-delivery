@@ -12,6 +12,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components";
 import { useHandleRequest } from "@/hooks";
 import { useUpdatePasswordMutation } from "@/app/api/profileApi";
+import toast from "react-hot-toast";
 
 export const EditPasswordForm = () => {
   const [open, setOpen] = useState(false);
@@ -39,8 +40,14 @@ export const EditPasswordForm = () => {
         }).unwrap();
       },
       onSuccess: () => {
+        toast.success("Parol muvaffaqiyatli o'zgartirildi ✅");
         reset();
         setOpen(false);
+      },
+      onError: (error: { data?: { message?: string } }) => {
+        toast.error(
+          error?.data?.message || "Parolni o'zgartirishda xatolik yuz berdi ❌",
+        );
       },
     });
   };

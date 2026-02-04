@@ -33,15 +33,21 @@ export const BakeryDough = () => {
 
   async function handleUpdateDough() {
     if (id && doughs && doughs.length > 0) {
-      const updateDoughs = doughs.filter((item) => item.amount > 0);
-      const res = await updateDough({ id, doughs: updateDoughs });
+      try {
+        const updateDoughs = doughs.filter((item) => item.amount > 0);
+        const res = await updateDough({ id, doughs: updateDoughs });
 
-      if ("data" in res && "message" in res.data!) {
-        toast.success(res.data.message as string);
+        if ("data" in res && "message" in res.data!) {
+          toast.success(res.data.message as string);
+        } else if ("error" in res) {
+          toast.error("Xamir ma'lumotlarini yangilashda xatolik yuz berdi");
+        }
+      } catch (error) {
+        toast.error("Xamir ma'lumotlarini yangilashda xatolik yuz berdi");
       }
     }
   }
-  
+
   return (
     <div>
       <Toaster />
@@ -91,8 +97,8 @@ export const BakeryDough = () => {
                                       ? item.amount - 1
                                       : item.amount,
                                 }
-                              : item
-                          )
+                              : item,
+                          ),
                         )
                       }
                     >
@@ -113,8 +119,8 @@ export const BakeryDough = () => {
                                     ...item,
                                     amount: Number(e.target.value),
                                   }
-                                : item
-                            )
+                                : item,
+                            ),
                           )
                         }
                         onKeyDown={(e) =>
@@ -149,8 +155,8 @@ export const BakeryDough = () => {
                                   ...item,
                                   amount: item.amount + 1,
                                 }
-                              : item
-                          )
+                              : item,
+                          ),
                         )
                       }
                     >

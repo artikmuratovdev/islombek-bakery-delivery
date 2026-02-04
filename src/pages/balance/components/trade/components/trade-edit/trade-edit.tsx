@@ -5,6 +5,7 @@ import {
   useUbdateDriverSavdoMutation,
 } from "@/app/api/dastavchik-savdo-api";
 import { ArrowLeft, Notifications, Plus } from "@/icons";
+import toast from "react-hot-toast";
 import { Minus } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -33,7 +34,7 @@ export const TradeEdit = () => {
           breadPrice: bread.breadPrice,
           breadSoldPrice: bread.breadSoldPrice,
           amount: bread.amount,
-        }))
+        })),
       );
     }
   }, [savdo]);
@@ -46,7 +47,7 @@ export const TradeEdit = () => {
 
   const handleAmountChange = (
     index: number,
-    type: "increment" | "decrement"
+    type: "increment" | "decrement",
   ) => {
     const updated = [...breads];
     if (type === "increment") {
@@ -74,8 +75,11 @@ export const TradeEdit = () => {
         id: id as string,
         body: payload,
       }).unwrap();
+      toast.success("Savdo muvaffaqiyatli yangilandi!");
+      navigate(-1);
     } catch (error) {
       console.error("Update error:", error);
+      toast.error("Savdoni yangilashda xatolik yuz berdi!");
     }
   };
 

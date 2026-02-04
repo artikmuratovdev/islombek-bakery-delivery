@@ -13,6 +13,7 @@ import { Reply } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export const MySalaries = () => {
   const navigate = useNavigate();
@@ -64,8 +65,12 @@ export const MySalaries = () => {
         }).unwrap();
         return response;
       },
-      onSuccess: () => {
+      onSuccess: (data) => {
+        toast.success(data.message || \"Muvaffaqiyatli amalga oshirildi ✅\");
         setOpen(false);
+      },
+      onError: (error: { data?: { message?: string } }) => {
+        toast.error(error?.data?.message || \"Xatolik yuz berdi ❌\");
       },
     });
   };
