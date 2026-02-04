@@ -30,11 +30,6 @@ export const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
   const handleRequest = useHandleRequest();
-  const token = useStorage.getTokens()?.accessToken;
-
-  if (token) {
-    navigate("/dashboard");
-  }
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     await handleRequest({
@@ -49,11 +44,15 @@ export const LoginForm: React.FC = () => {
           });
 
           toast.success(" Tizimga muvaffaqiyatli kirdingiz!", {
-            duration: 3000,
+            duration: 2000,
             position: "top-right",
           });
 
-          setTimeout(() => navigate("/dashboard"), 1200);
+          // Navigate immediately with replace to prevent back button issues
+          setTimeout(() => {
+            navigate("/dashboard", { replace: true });
+            window.location.reload();
+          }, 500);
         } else {
           toast.error("Sizda huquq yo‘q!", {
             duration: 3000,
@@ -88,7 +87,9 @@ export const LoginForm: React.FC = () => {
                 {...field}
                 type="text"
                 placeholder="Username..."
-                className={(errors.username ? "border-red-500" : "") + " bg-white"}
+                className={
+                  (errors.username ? "border-red-500" : "") + " bg-white"
+                }
               />
               {errors.username && (
                 <p className="text-red-500 text-left text-sm">
@@ -111,7 +112,9 @@ export const LoginForm: React.FC = () => {
                 {...field}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password..."
-                className={(errors.username ? "border-red-500" : "") + " bg-white"}
+                className={
+                  (errors.username ? "border-red-500" : "") + " bg-white"
+                }
               />
               <button
                 type="button"
