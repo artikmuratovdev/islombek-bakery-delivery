@@ -8,7 +8,13 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { Map as LeafletMapInstance } from "leaflet";
-import { Driver } from "../order-map";
+
+interface Driver {
+  user: { _id: string };
+  lat: number;
+  lng: number;
+  rot?: number;
+}
 
 interface Props {
   drivers?: Driver[];
@@ -102,7 +108,7 @@ function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
         setRotation((prev) => pos.coords.heading || prev);
       },
       (err) => console.error("Geolocation error:", err),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 },
     );
     return () => navigator.geolocation.clearWatch(watcher);
   }, [drivers, setLocation, rotation]);
@@ -137,26 +143,23 @@ function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
     };
   }, []);
 
-  const renderDriverMarker = useCallback(
-    (driver: Driver) => {
-      return (
-        <Marker
-          key={driver.user._id}
-          position={[driver.lat, driver.lng]}
-          icon={L.divIcon({
-            html: `<img src="/car.png" style="transform:rotate(${driver.rot}deg);width:60px;height:60px;object-fit:contain;" />`,
-            iconSize: [60, 60],
-            iconAnchor: [30, 60],
-            popupAnchor: [0, -60],
-            className: "transparent-marker",
-          })}
-        >
-          <Popup>ID: {driver.user._id || "N/A"}</Popup>
-        </Marker>
-      );
-    },
-    []
-  );
+  const renderDriverMarker = useCallback((driver: Driver) => {
+    return (
+      <Marker
+        key={driver.user._id}
+        position={[driver.lat, driver.lng]}
+        icon={L.divIcon({
+          html: `<img src="/car.png" style="transform:rotate(${driver.rot}deg);width:60px;height:60px;object-fit:contain;" />`,
+          iconSize: [60, 60],
+          iconAnchor: [30, 60],
+          popupAnchor: [0, -60],
+          className: "transparent-marker",
+        })}
+      >
+        <Popup>ID: {driver.user._id || "N/A"}</Popup>
+      </Marker>
+    );
+  }, []);
 
   return (
     <div style={{ position: "relative", width: "100%", height: "50vh" }}>
@@ -165,7 +168,11 @@ function LeafletMap({ drivers, setLocation, setSelectLocation }: Props) {
         zoom={16}
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom
-        whenReady={(map) => (mapRef.current = map.target)}
+        ref={(map) => {
+          if (map) {
+            mapRef.current = map;
+          }
+        }}
       >
         <TileLayer
           attribution="&copy; Google Maps"
