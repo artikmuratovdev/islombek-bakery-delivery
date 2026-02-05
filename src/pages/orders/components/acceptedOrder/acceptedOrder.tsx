@@ -5,12 +5,11 @@ import BreadList from "@/components/form/BreadLists/BreadList";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
-import { Toaster } from "@/components/ui/toaster";
 import { useHandleRequest } from "@/hooks";
 import { ArrowLeft, Notifications } from "@/icons";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
 type FormData = {
@@ -60,54 +59,23 @@ export const AcceptedOrder = () => {
   }, [order, reset]);
 
   const handleMainSubmit = async (data: FormData) => {
-    if (isDebt) {
-      onDebtSubmit(data);
-    } else {
-      console.log({ ...data, breadsInfo: breads });
-      await handleRequest({
-        request: async () => {
-          const response = await submitOrder({
-            id: id as string,
-            body: {
-              paidAmount: order?.debtAmount as number,
-              breadsInfo: breads,
-            },
-          });
-          return response;
-        },
-        onSuccess: (data) => {
-          toast.success(data.data.message);
-          navigate("/orders", { state: "activeOrder" });
-        },
-        onError: (error: { data?: { message?: string }; message?: string }) => {
-          const errorMessage =
-            error?.data?.message || error?.message || "Xatolik yuz berdi";
-          console.log("Error", errorMessage);
-          toast.error(errorMessage);
-        },
-      });
-    }
-  };
-
-  const onDebtSubmit = async (data: FormData) => {
-    console.log({ ...data, breadsInfo: breads });
+    const paidAmount = isDebt ? data.paidAmount : (order?.debtAmount as number);
 
     await handleRequest({
       request: async () => {
         const response = await submitOrder({
           id: id as string,
-          body: { paidAmount: data.paidAmount, breadsInfo: breads },
+          body: { paidAmount, breadsInfo: breads },
         });
         return response;
       },
       onSuccess: (data) => {
-        toast.success(data.data.message);
+        toast.success(data.data.message || "Muvaffaqiyatli saqlandi");
         navigate("/orders", { state: "activeOrder" });
       },
       onError: (error: { data?: { message?: string }; message?: string }) => {
         const errorMessage =
           error?.data?.message || error?.message || "Xatolik yuz berdi";
-        console.log("Error", errorMessage);
         toast.error(errorMessage);
       },
     });

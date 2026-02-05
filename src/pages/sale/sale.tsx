@@ -117,6 +117,7 @@ export const SalePage = () => {
       },
       onError: (err: unknown) => {
         const error = err as {
+          message?: string;
           data?: {
             message?: string;
             error?: { message?: string; msg?: string };
