@@ -151,7 +151,7 @@ export const DebtsDetails = () => {
                     </div>
                     <div className="grid grid-cols-5 w-30 text-sm font-semibold items-center gap-2">
                       <span className="text-green-700 col-span-2 text-end">
-                        {item.paidAmount}
+                        {item.totalAmount - item.realDebtAmount}
                       </span>
                       <span className="text-red-700 col-span-2 text-end">
                         {item?.realDebtAmount}
@@ -212,7 +212,7 @@ export const DebtsDetails = () => {
                         <div className="flex justify-between">
                           <span>To’landi</span>
                           <span className="text-green-400">
-                            {item?.paidAmount}
+                            {item.totalAmount - item.realDebtAmount}
                           </span>
                         </div>
                         <div className="flex justify-between">
