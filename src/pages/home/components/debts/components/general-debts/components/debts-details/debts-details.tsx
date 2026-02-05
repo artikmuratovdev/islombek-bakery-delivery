@@ -107,7 +107,12 @@ export const DebtsDetails = () => {
           <div>
             <h2 className="text-white text-xl font-semibold font-inter"></h2>
             <h2 className="text-white text-2xl font-semibold font-inter">
-              {todayBalance?.toLocaleString("ru-RU")}
+              {(
+                totalDebt?.reduce(
+                  (sum, item) => sum + (item.realDebtAmount || 0),
+                  0,
+                ) || 0
+              ).toLocaleString("ru-RU")}
             </h2>
           </div>
           <button onClick={() => navigate("/notifications")}>
