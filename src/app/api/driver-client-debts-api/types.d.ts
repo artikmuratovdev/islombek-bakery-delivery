@@ -64,7 +64,7 @@ export interface DriverDebtClientsTotalDebtResponse {
           amount: number;
           breadPrice: number;
           breadSoldPrice: number;
-        }
+        },
       ];
       isClient: boolean;
       isChangePrice: boolean;
@@ -79,13 +79,14 @@ export interface DriverDebtClientsTotalDebtResponse {
       };
       acceptedTimeDriver: string;
       deliveryTime: string;
-    }
+    },
   ];
   branch: string;
   status: number;
   paidAmount: number;
   totalAmount: number;
   debtAmount: number;
+  realDebtAmount: number;
   createdAt: string;
   updatedAt: string;
 }
