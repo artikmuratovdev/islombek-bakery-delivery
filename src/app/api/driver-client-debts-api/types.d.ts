@@ -33,6 +33,7 @@ export interface DriverDebtClientsTodayDebtsResponse {
   paidAmount: number;
   totalAmount: number;
   debtAmount: number;
+  realDebtAmount: number;
   createdAt: strin;
   updatedAt: strin;
 }
