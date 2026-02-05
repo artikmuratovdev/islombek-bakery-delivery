@@ -1,6 +1,7 @@
 import { useGetOneOrderQuery, useSubmitAnOrderMutation } from "@/app/api";
 import { breadInfo } from "@/app/api/orderApi/types";
 import { Button, Input } from "@/components";
+import { formatNumberWithSpaces } from "@/utils";
 import BreadList from "@/components/form/BreadLists/BreadList";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
@@ -241,18 +242,13 @@ export const AcceptedOrder = () => {
                   render={({ field }) => (
                     <>
                       <input
-                        type="number"
-                        value={(field.value ?? "")
-                          .toString()
-                          .replace(/^0+(?=\d)/, "")}
+                        type="text"
+                        value={formatNumberWithSpaces(field.value ?? 0)}
                         onChange={(e) => {
-                          const val = Number(e.target.value);
-                          field.onChange(isNaN(val) ? 0 : Number(val));
+                          const val = Number(e.target.value.replace(/\s/g, ""));
+                          field.onChange(isNaN(val) ? 0 : val);
                         }}
-                        className="w-full p-1 border border-[#FFCC15] rounded-lg bg-white
-                        [&::-webkit-inner-spin-button]:appearance-none 
-                        [&::-webkit-outer-spin-button]:appearance-none 
-                        [appearance:textfield]"
+                        className="w-full p-1 border border-[#FFCC15] rounded-lg bg-white"
                       />
                       {errors.paidAmount && (
                         <span className="text-red-500">

@@ -2,6 +2,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { Button, Input } from "@/components";
 import { Label } from "@/components/ui/label";
+import { formatNumberWithSpaces } from "@/utils";
 
 export const PaymentDrawer = ({
   setOpen,
@@ -50,10 +51,14 @@ export const PaymentDrawer = ({
               render={({ field }) => (
                 <>
                   <Input
-                    type="number"
+                    type="text"
                     id="amount"
                     placeholder="Pul miqdorini kiriting"
-                    {...field}
+                    value={formatNumberWithSpaces(field.value ?? 0)}
+                    onChange={(e) => {
+                      const val = Number(e.target.value.replace(/\s/g, ""));
+                      field.onChange(isNaN(val) ? 0 : val);
+                    }}
                     className="bg-white text-[#1b2b56] font-semibold rounded-lg"
                   />
                   {errors.amount && (

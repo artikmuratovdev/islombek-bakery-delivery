@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Button, Input } from "@/components";
 import { Label } from "@/components/ui/label";
+import { formatNumberWithSpaces } from "@/utils";
 
 export const PaymentDrawer = () => {
   const [amount, setAmount] = useState(0);
   const [paymentType, setPaymentType] = useState("cash");
-  const [debt, setDebt] = useState("");
+  const [debt, setDebt] = useState(0);
 
   // Statik narx
   const breadPrice = 3000;
@@ -26,11 +27,14 @@ export const PaymentDrawer = () => {
               Soni
             </Label>
             <Input
-              type="number"
+              type="text"
               id="soni"
               placeholder="Miqdorini kiriting"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              value={formatNumberWithSpaces(amount)}
+              onChange={(e) => {
+                const val = Number(e.target.value.replace(/\s/g, ""));
+                setAmount(isNaN(val) ? 0 : val);
+              }}
               className="bg-white text-[#1b2b56] font-semibold rounded-lg w-full"
             />
 
@@ -98,11 +102,14 @@ export const PaymentDrawer = () => {
                     Qarz miqdori:
                   </Label>
                   <Input
-                    type="number"
+                    type="text"
                     id="qarzMiqdori"
                     placeholder="Qarz miqdori"
-                    value={debt}
-                    onChange={(e) => setDebt(e.target.value)}
+                    value={formatNumberWithSpaces(debt)}
+                    onChange={(e) => {
+                      const val = Number(e.target.value.replace(/\s/g, ""));
+                      setDebt(isNaN(val) ? 0 : val);
+                    }}
                     className="bg-white text-[#1b2b56] font-semibold rounded-lg w-full mt-2"
                   />
                 </div>

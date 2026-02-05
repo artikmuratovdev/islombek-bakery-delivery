@@ -1,6 +1,7 @@
 import { Button } from "@/components";
 import { Controller, useForm } from "react-hook-form";
 import { Props } from "./types";
+import { formatNumberWithSpaces } from "@/utils";
 
 export const PastriesSheet = ({ count, setCount, isLoading }: Props) => {
   const { control, setValue, getValues, handleSubmit } = useForm({
@@ -47,11 +48,12 @@ export const PastriesSheet = ({ count, setCount, isLoading }: Props) => {
             render={({ field }) => (
               <input
                 {...field}
-                type="number"
+                type="text"
+                value={formatNumberWithSpaces(field.value ?? 0)}
                 className="h-12 w-[100%] p-3 bg-white border text-center border-[#a8a8a8] justify-center items-center gap-2.5 inline-flex"
                 onChange={(e) => {
-                  const value = Number(e.target.value);
-                  if (value >= 0) {
+                  const value = Number(e.target.value.replace(/\s/g, ""));
+                  if (value >= 0 && !isNaN(value)) {
                     field.onChange(value);
                   }
                 }}

@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { formatNumberWithSpaces } from "@/utils";
 
 export const MySalaries = () => {
   const navigate = useNavigate();
@@ -253,11 +254,12 @@ export const MySalaries = () => {
                   <>
                     <Input
                       {...field}
-                      type="number"
-                      value={(field.value ?? 0).toString()}
-                      onChange={({ target: { value } }) =>
-                        field.onChange(Number(value) || 0)
-                      }
+                      type="text"
+                      value={formatNumberWithSpaces(field.value ?? 0)}
+                      onChange={(e) => {
+                        const val = Number(e.target.value.replace(/\s/g, ""));
+                        field.onChange(isNaN(val) ? 0 : val);
+                      }}
                       placeholder="Berilgan pul"
                       className="mt-2 bg-white rounded-lg"
                     />
