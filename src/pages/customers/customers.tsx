@@ -14,7 +14,7 @@ export const Customers = () => {
   const handleSubmit = (data: {
     _id: string;
     fullName: string;
-    phone: string;
+    phone?: string;
   }) => {
     navigate("customer-details/" + data._id, {
       state: { fullName: data.fullName, phone: data.phone },
