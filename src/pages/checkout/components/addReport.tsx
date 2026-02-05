@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useGetAllUsersQuery } from "@/app/api";
 import { useCreateExpensesMutation } from "@/app/api/checkout";
 import { SelectUser } from "@/components";
@@ -28,7 +27,12 @@ export const AddReport = () => {
     reset,
     setValue,
     watch,
-  } = useForm({
+  } = useForm<{
+    sum: string;
+    cost: "for_salary" | "for_work";
+    reason: string;
+    accept: string;
+  }>({
     defaultValues: {
       sum: "",
       cost: "for_salary",
@@ -41,7 +45,19 @@ export const AddReport = () => {
 
   const [open, setOpen] = useState(false);
 
-  const onSubmit = async (data: any) => {
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      reset();
+    }
+  };
+
+  const onSubmit = async (data: {
+    sum: string;
+    cost: "for_salary" | "for_work";
+    reason: string;
+    accept: string;
+  }) => {
     const submittedData = {
       expense_type: data.cost,
       amount: Number(data.sum.replace(/\s/g, "")),
@@ -57,7 +73,7 @@ export const AddReport = () => {
         toast.success(data.data.message);
         reset();
       },
-      onError: (error: any) => {
+      onError: (error: { message: string }) => {
         toast.error(error.message);
       },
     });
@@ -69,7 +85,7 @@ export const AddReport = () => {
 
   return (
     <div>
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetTrigger>
           <div className="rounded-full p-[18px] bg-[#FFCC15] fixed bottom-[30px] right-[30px] z-30">
             <FaPlus size={15} className="cursor-pointer text-[#1C2C57]" />
