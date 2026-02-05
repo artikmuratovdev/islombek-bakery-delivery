@@ -8,6 +8,7 @@ import { ArrowLeft, Notifications, Plus } from "@/icons";
 import toast from "react-hot-toast";
 import { Minus } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { formatNumberWithSpaces } from "@/utils";
 
 export const TradeEdit = () => {
   const navigate = useNavigate();
@@ -150,11 +151,12 @@ export const TradeEdit = () => {
                   <div className="flex gap-x-2 items-center">
                     {savdo?.isClient ? (
                       <input
-                        type="number"
-                        value={bread.breadSoldPrice}
-                        onChange={(e) =>
-                          handlePriceChange(index, e.target.value)
-                        }
+                        type="text"
+                        value={formatNumberWithSpaces(bread.breadSoldPrice)}
+                        onChange={(e) => {
+                          const val = Number(e.target.value.replace(/\s/g, ""));
+                          handlePriceChange(index, isNaN(val) ? "0" : val.toString());
+                        }}
                         className="w-20 border border-yellow-400 rounded px-1 text-blue-950 font-bold"
                       />
                     ) : (

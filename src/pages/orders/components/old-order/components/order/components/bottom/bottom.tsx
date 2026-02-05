@@ -4,6 +4,7 @@ import { Button, Input } from '@/components';
 import BreadList from '@/components/form/BreadLists/BreadList';
 import { Label } from '@/components/ui/label';
 import { useHandleRequest } from '@/hooks';
+import { formatNumberWithSpaces } from '@/utils';
 import { useState } from 'react'
 import toast from 'react-hot-toast';
 
@@ -58,13 +59,14 @@ export const Bottom = ({ breads, setBreads, id ,debt,closeBottom}: Props) => {
           Olingan pul
         </Label>
         <Input
-          className='bg-white border border-yellow-400 appearance-none 
-          [&::-webkit-inner-spin-button]:appearance-none 
-          [&::-webkit-outer-spin-button]:appearance-none'
-          type='number'
+          className='bg-white border border-yellow-400'
+          type='text'
           placeholder='Pulni kiriting'
-          value={(paidAmount ?? '').toString().replace(/^0+(?=\d)/, '')}
-          onChange={(e) => setPaidAmount(Number(e.target.value))}
+          value={formatNumberWithSpaces(paidAmount)}
+          onChange={(e) => {
+            const val = Number(e.target.value.replace(/\s/g, ''));
+            setPaidAmount(isNaN(val) ? 0 : val);
+          }}
         />
       </div>
       <div className='mt-3 flex justify-end'>

@@ -1,16 +1,16 @@
 import { useGetOneOrderQuery, useSubmitAnOrderMutation } from "@/app/api";
 import { breadInfo } from "@/app/api/orderApi/types";
 import { Button, Input } from "@/components";
+import { formatNumberWithSpaces } from "@/utils";
 import BreadList from "@/components/form/BreadLists/BreadList";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
-import { Toaster } from "@/components/ui/toaster";
 import { useHandleRequest } from "@/hooks";
 import { ArrowLeft, Notifications } from "@/icons";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
 type FormData = {
@@ -60,54 +60,23 @@ export const AcceptedOrder = () => {
   }, [order, reset]);
 
   const handleMainSubmit = async (data: FormData) => {
-    if (isDebt) {
-      onDebtSubmit(data);
-    } else {
-      console.log({ ...data, breadsInfo: breads });
-      await handleRequest({
-        request: async () => {
-          const response = await submitOrder({
-            id: id as string,
-            body: {
-              paidAmount: order?.debtAmount as number,
-              breadsInfo: breads,
-            },
-          });
-          return response;
-        },
-        onSuccess: (data) => {
-          toast.success(data.data.message);
-          navigate("/orders", { state: "activeOrder" });
-        },
-        onError: (error: { data?: { message?: string }; message?: string }) => {
-          const errorMessage =
-            error?.data?.message || error?.message || "Xatolik yuz berdi";
-          console.log("Error", errorMessage);
-          toast.error(errorMessage);
-        },
-      });
-    }
-  };
-
-  const onDebtSubmit = async (data: FormData) => {
-    console.log({ ...data, breadsInfo: breads });
+    const paidAmount = isDebt ? data.paidAmount : (order?.debtAmount as number);
 
     await handleRequest({
       request: async () => {
         const response = await submitOrder({
           id: id as string,
-          body: { paidAmount: data.paidAmount, breadsInfo: breads },
+          body: { paidAmount, breadsInfo: breads },
         });
         return response;
       },
       onSuccess: (data) => {
-        toast.success(data.data.message);
+        toast.success(data.data.message || "Muvaffaqiyatli saqlandi");
         navigate("/orders", { state: "activeOrder" });
       },
       onError: (error: { data?: { message?: string }; message?: string }) => {
         const errorMessage =
           error?.data?.message || error?.message || "Xatolik yuz berdi";
-        console.log("Error", errorMessage);
         toast.error(errorMessage);
       },
     });
@@ -273,18 +242,13 @@ export const AcceptedOrder = () => {
                   render={({ field }) => (
                     <>
                       <input
-                        type="number"
-                        value={(field.value ?? "")
-                          .toString()
-                          .replace(/^0+(?=\d)/, "")}
+                        type="text"
+                        value={formatNumberWithSpaces(field.value ?? 0)}
                         onChange={(e) => {
-                          const val = Number(e.target.value);
-                          field.onChange(isNaN(val) ? 0 : Number(val));
+                          const val = Number(e.target.value.replace(/\s/g, ""));
+                          field.onChange(isNaN(val) ? 0 : val);
                         }}
-                        className="w-full p-1 border border-[#FFCC15] rounded-lg bg-white
-                        [&::-webkit-inner-spin-button]:appearance-none 
-                        [&::-webkit-outer-spin-button]:appearance-none 
-                        [appearance:textfield]"
+                        className="w-full p-1 border border-[#FFCC15] rounded-lg bg-white"
                       />
                       {errors.paidAmount && (
                         <span className="text-red-500">

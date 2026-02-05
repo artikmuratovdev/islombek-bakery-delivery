@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { TextArea } from "@/components/common";
+import { formatNumberWithSpaces } from "@/utils";
 
 export const CloseDrawer = ({ setOpen }: any) => {
   const form = useForm<any>();
@@ -94,7 +95,12 @@ export const CloseDrawer = ({ setOpen }: any) => {
                   render={({ field }) => (
                     <Input
                       {...field}
-                      type="number"
+                      type="text"
+                      value={formatNumberWithSpaces(field.value ?? 0)}
+                      onChange={(e) => {
+                        const val = Number(e.target.value.replace(/\s/g, ""));
+                        field.onChange(isNaN(val) ? 0 : val);
+                      }}
                       className="w-1/2 py-2 bg-white rounded-l-lg text-lg flex items-center font-semibold pl-[21px] h-12"
                     />
                   )}

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Input } from "@/components";
 import { Label } from "@/components/ui/label";
+import { formatNumberWithSpaces } from "@/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Controller, useForm } from "react-hook-form";
 
@@ -46,11 +47,15 @@ export const EditSaleSheet = ({
               rules={{ required: "Sonini Kiriting" }}
               render={({ field }) => (
                 <Input
-                  type="number"
+                  type="text"
                   id="amount"
                   placeholder="Soni"
                   className="bg-white text-[#1b2b56] font-semibold rounded-lg w-full"
-                  {...field}
+                  value={formatNumberWithSpaces(field.value ?? 0)}
+                  onChange={(e) => {
+                    const val = Number(e.target.value.replace(/\s/g, ""));
+                    field.onChange(isNaN(val) ? 0 : val);
+                  }}
                 />
               )}
             />
@@ -97,11 +102,15 @@ export const EditSaleSheet = ({
                   rules={{ required: "Olingan pulni kiriting" }}
                   render={({ field }) => (
                     <Input
-                      type="number"
+                      type="text"
                       id="debt"
                       placeholder="Olingan pul"
                       className="bg-white text-[#1b2b56] font-semibold rounded-lg w-full mt-2"
-                      {...field}
+                      value={formatNumberWithSpaces(field.value ?? 0)}
+                      onChange={(e) => {
+                        const val = Number(e.target.value.replace(/\s/g, ""));
+                        field.onChange(isNaN(val) ? 0 : val);
+                      }}
                     />
                   )}
                 />

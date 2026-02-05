@@ -9,6 +9,7 @@ import { Edit } from '@/icons';
 import { Minus, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { breadInfo } from '@/app/api/orderApi/types';
+import { formatNumberWithSpaces } from '@/utils';
 
 type Props = {
   bread: breadInfo;
@@ -126,21 +127,19 @@ const BreadPrices = forwardRef(function BreadPrices(
       <h3 className='text-blue-950 font-semibold col-span-2'>{bread.title}</h3>
 
       <div className='text-blue-950 font-semibold flex gap-2 justify-center'>
-        {!priceVisible && <p>{price}</p>}
+        {!priceVisible && <p>{formatNumberWithSpaces(price)}</p>}
 
         <input
           ref={priceInputRef}
-          type='number'
-          value={(price ?? '').toString().replace(/^0+(?=\d)/, '')}
+          type='text'
+          value={formatNumberWithSpaces(price ?? 0)}
           onChange={(e) => {
-            const val = Number(e.target.value);
+            const val = Number(e.target.value.replace(/\s/g, ''));
             setPrice(isNaN(val) ? 0 : val);
           }}
           className={`max-w-[80px] ${
             priceVisible ? 'block' : 'hidden'
-          } border border-[#FFCC15] transition-all duration-200 appearance-none 
-          [&::-webkit-inner-spin-button]:appearance-none 
-          [&::-webkit-outer-spin-button]:appearance-none`}
+          } border border-[#FFCC15] transition-all duration-200`}
         />
 
         {!priceHide && (
@@ -160,22 +159,16 @@ const BreadPrices = forwardRef(function BreadPrices(
         {!hideAmount ? (
           <input
           ref={countInputRef}
-          type='number'
-          value={(count ?? '').toString().replace(/^0+(?=\d)/, '')}
+          type='text'
+          value={formatNumberWithSpaces(count ?? 0)}
           onChange={(e) => {
-            const value = Number(e.target.value);
+            const value = Number(e.target.value.replace(/\s/g, ''));
             setCount(isNaN(value) ? 0 : Math.max(value, 0));
           }}
-          className='w-10 text-center border border-[#FFCC15] rounded bg-white
-            [&::-webkit-inner-spin-button]:appearance-none 
-            [&::-webkit-outer-spin-button]:appearance-none 
-            [appearance:textfield]'
+          className='w-10 text-center border border-[#FFCC15] rounded bg-white'
         />
         ) : (
-          <p className='w-10 text-center border border-[#FFCC15] rounded bg-white
-          [&::-webkit-inner-spin-button]:appearance-none 
-          [&::-webkit-outer-spin-button]:appearance-none 
-          [appearance:textfield]'>{count}</p>
+          <p className='w-10 text-center border border-[#FFCC15] rounded bg-white'>{formatNumberWithSpaces(count)}</p>
         )}
         {!hideAmount && (
           <Plus
