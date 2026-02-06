@@ -14,7 +14,7 @@ export const TradeEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: savdo } = useGetDriverSavdoQuery({ id: id as string });
-  const [update] = useUbdateDriverSavdoMutation();
+  const [update, { isLoading }] = useUbdateDriverSavdoMutation();
 
   const [breads, setBreads] = useState<
     {
@@ -155,7 +155,10 @@ export const TradeEdit = () => {
                         value={formatNumberWithSpaces(bread.breadSoldPrice)}
                         onChange={(e) => {
                           const val = Number(e.target.value.replace(/\s/g, ""));
-                          handlePriceChange(index, isNaN(val) ? "0" : val.toString());
+                          handlePriceChange(
+                            index,
+                            isNaN(val) ? "0" : val.toString(),
+                          );
                         }}
                         className="w-20 border border-yellow-400 rounded px-1 text-blue-950 font-bold"
                       />
@@ -197,9 +200,10 @@ export const TradeEdit = () => {
             <div className="flex justify-end mt-4">
               <button
                 onClick={onSubmit}
-                className="text-blue-950 text-sm font-bold py-2 px-6 bg-yellow-400 rounded-lg"
+                disabled={isLoading}
+                className="text-blue-950 text-sm font-bold py-2 px-6 bg-yellow-400 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Saqlash
+                {isLoading ? "Yuborilmoqda..." : "Saqlash"}
               </button>
             </div>
           </div>

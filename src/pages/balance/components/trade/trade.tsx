@@ -41,7 +41,8 @@ export const Trade = () => {
   const [getDriverSavdoAllSavdo, { data: savdo, isLoading, isFetching }] =
     useLazyGetDriverSavdoAllSavdoQuery();
 
-  const [deleteDriverSavdo] = useDeleteDriverSavdoMutation();
+  const [deleteDriverSavdo, { isLoading: isDeleting }] =
+    useDeleteDriverSavdoMutation();
 
   const handleRequest = useHandleRequest();
 
@@ -256,10 +257,10 @@ export const Trade = () => {
                   ? "opacity-50 cursor-not-allowed"
                   : ""
               }`}
-              disabled={inputValue !== verificationCode}
+              disabled={inputValue !== verificationCode || isDeleting}
               onClick={handleDelete}
             >
-              O'chirish
+              {isDeleting ? "O'chirilmoqda..." : "O'chirish"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

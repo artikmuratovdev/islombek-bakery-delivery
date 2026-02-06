@@ -25,7 +25,7 @@ export const AcceptedOrder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: order } = useGetOneOrderQuery(id as string);
-  const [submitOrder] = useSubmitAnOrderMutation();
+  const [submitOrder, { isLoading }] = useSubmitAnOrderMutation();
   const handleRequest = useHandleRequest();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
@@ -226,8 +226,12 @@ export const AcceptedOrder = () => {
             />
           )}
 
-          <Button className="w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] ml-auto">
-            Saqlash
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] ml-auto disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Yuklanmoqda..." : "Saqlash"}
           </Button>
         </div>
 
@@ -274,8 +278,12 @@ export const AcceptedOrder = () => {
                 <span className="text-white">
                   Qarz: {order?.debtAmount.toLocaleString("ru-RU")}
                 </span>
-                <Button type="submit" className="text-blue-950 bg-yellow-500">
-                  Yuborish
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="text-blue-950 bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? "Yuborilmoqda..." : "Yuborish"}
                 </Button>
               </div>
             </form>

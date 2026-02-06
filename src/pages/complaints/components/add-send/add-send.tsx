@@ -110,7 +110,8 @@ export const SentMessage = ({ setOpen }: any) => {
         <div className="flex justify-end">
           <Button
             type="submit"
-            className=" bg-[#ffcb15] rounded-lg text-[#1b2b56] text-base font-semibold font-inter hover:bg-[#ffcb15] mt-[7px]"
+            disabled={isLoading}
+            className=" bg-[#ffcb15] rounded-lg text-[#1b2b56] text-base font-semibold font-inter hover:bg-[#ffcb15] mt-[7px] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Yuborilmoqda..." : "Yuborish"}
           </Button>

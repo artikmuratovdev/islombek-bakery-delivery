@@ -30,7 +30,7 @@ export const SalePage = () => {
   const navigate = useNavigate();
   const { data: breadPrice } = useGetBreadPricesQuery();
   const { data: clients } = useGetClientsQuery();
-  const [addActive] = useCreateActiveOrderMutation();
+  const [addActive, { isLoading }] = useCreateActiveOrderMutation();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
   const [open, setOpen] = useState(false);
@@ -283,10 +283,11 @@ export const SalePage = () => {
                   {!isDebt && (
                     <Button
                       type="button"
-                      className="bg-[#FFCC15] text-blue-950 text-sm font-bold px-6 py-1 ml-auto"
+                      disabled={isLoading}
+                      className="bg-[#FFCC15] text-blue-950 text-sm font-bold px-6 py-1 ml-auto disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleSubmit((data) => onSubmit(data, "add"))}
                     >
-                      Qo'shish
+                      {isLoading ? "Yuborilmoqda..." : "Qo'shish"}
                     </Button>
                   )}
                 </div>
@@ -377,10 +378,11 @@ export const SalePage = () => {
                   {isDebt && (
                     <Button
                       type="button"
-                      className="text-blue-950 bg-yellow-500"
+                      disabled={isLoading}
+                      className="text-blue-950 bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleSubmit((data) => onSubmit(data, "submit"))}
                     >
-                      Yuborish
+                      {isLoading ? "Yuborilmoqda..." : "Yuborish"}
                     </Button>
                   )}
                 </div>

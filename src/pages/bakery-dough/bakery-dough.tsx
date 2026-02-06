@@ -20,7 +20,7 @@ export const BakeryDough = () => {
   const { id = "" } = useParams();
   const { data: bakery } = useGetBakeryQuery({ id });
   const { data: dough } = useGetBakeryDoughInfoQuery({ id });
-  const [updateDough] = useUpdateBakeryDoughMutation();
+  const [updateDough, { isLoading }] = useUpdateBakeryDoughMutation();
 
   useEffect(() => {
     if (dough) {
@@ -167,11 +167,11 @@ export const BakeryDough = () => {
               ))}
               <div className="mt-8 flex justify-end">
                 <Button
-                  disabled={isDisabled}
-                  className="w-36 h-7 p-3 bg-[#CDC7C7] rounded-lg text-[#1B2B56] inline-flex justify-center items-center gap-1 hover:bg-[#CDC7C7]"
+                  disabled={isDisabled || isLoading}
+                  className="w-36 h-7 p-3 bg-[#CDC7C7] rounded-lg text-[#1B2B56] inline-flex justify-center items-center gap-1 hover:bg-[#CDC7C7] disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handleUpdateDough}
                 >
-                  Davom etish
+                  {isLoading ? "Yuborilmoqda..." : "Davom etish"}
                 </Button>
               </div>
             </>

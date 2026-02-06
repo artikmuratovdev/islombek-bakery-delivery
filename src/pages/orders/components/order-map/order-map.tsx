@@ -14,7 +14,7 @@ export const OrderMap = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data } = useGetOneOrderQuery(id as string, { skip: !id });
-  const [acceptOrder] = useAcceptOrderMutation();
+  const [acceptOrder, { isLoading }] = useAcceptOrderMutation();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const handleRequest = useHandleRequest();
 
@@ -108,9 +108,10 @@ export const OrderMap = () => {
           <div className="flex items-end flex-col-reverse">
             <Button
               onClick={acceptOrderData}
-              className="w-40 h-8 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-center items-center gap-3 text-[#1B2B56] hover:bg-yellow-400 mt-5"
+              disabled={isLoading}
+              className="w-40 h-8 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-center items-center gap-3 text-[#1B2B56] hover:bg-yellow-400 mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Qabul qilish
+              {isLoading ? "Yuborilmoqda..." : "Qabul qilish"}
             </Button>
           </div>
         </div>
