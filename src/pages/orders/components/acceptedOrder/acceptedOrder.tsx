@@ -42,11 +42,16 @@ export const AcceptedOrder = () => {
 
   useEffect(() => {
     if (order) {
+      // Mijoz bo'lmagan holatni tekshirish
+      const clientName =
+        typeof order.client === "string"
+          ? order.client
+          : order.isClient && order.client?.fullName
+            ? order.client.fullName
+            : "Boshqa";
+
       reset({
-        client:
-          typeof order.client === "string"
-            ? order.client
-            : order.client.fullName,
+        client: clientName,
         phone: order.phone,
         address: order.address,
       });
@@ -60,7 +65,11 @@ export const AcceptedOrder = () => {
   }, [order, reset]);
 
   const handleMainSubmit = async (data: FormData) => {
-    const paidAmount = isDebt ? data.paidAmount : (order?.debtAmount as number);
+    // Mijoz bo'lmagan odamga qarz bermaydi, to'liq to'lov
+    const paidAmount =
+      order?.isClient && isDebt
+        ? data.paidAmount
+        : (order?.debtAmount as number);
 
     await handleRequest({
       request: async () => {
@@ -193,7 +202,8 @@ export const AcceptedOrder = () => {
           )}
         </div>
         <div className="flex justify-between mb-5">
-          {order?.client !== "Boshqa" && (
+          {/* Faqat mijoz bo'lgan odamlarga qarzga berish imkoniyati */}
+          {order?.isClient && (
             <Controller
               name="isDebt"
               control={control}
