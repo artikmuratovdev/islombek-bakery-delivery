@@ -7,12 +7,12 @@ export const getTimes = (date: Date | string, currentTime: number) => {
   const past = new Date(date).getTime();
   const diffMs = currentTime - past;
 
-  const minutes = Math.floor(diffMs / 60000);
+  const hours = Math.floor(diffMs / 3600000);
+  const minutes = Math.floor((diffMs % 3600000) / 60000);
   const seconds = Math.floor((diffMs % 60000) / 1000);
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-    2,
-    "0",
-  )}`;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(
+    seconds,
+  ).padStart(2, "0")}`;
 };
 
 export const ActiveOrder = () => {
