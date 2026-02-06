@@ -226,6 +226,12 @@ export const DebtsDetails = () => {
                             {item?.realDebtAmount}
                           </span>
                         </div>
+                        <div className="flex justify-between">
+                          <span>Boshlang'ich qarz</span>
+                          <span className="text-red-400 line-through">
+                            {item?.debtAmount}
+                          </span>
+                        </div>
                       </div>
                     </CardContent>
                   )}
