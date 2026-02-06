@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components";
 import { useState } from "react";
+import { formatNumberWithSpaces } from "@/utils";
 
 // 🔹 Static demo users
 const demoUsers = [
@@ -47,7 +48,7 @@ export const CostsDrawer = ({
     }
 
     alert(
-      `Xarajat qo'shildi:\nFoydalanuvchi: ${selectedUser.fullName}\nSumma: ${sum}\nSabab: ${selectedReason}`
+      `Xarajat qo'shildi:\nFoydalanuvchi: ${selectedUser.fullName}\nSumma: ${sum}\nSabab: ${selectedReason}`,
     );
     reset();
     setOpen(false);
@@ -70,6 +71,11 @@ export const CostsDrawer = ({
                 <input
                   {...field}
                   type="text"
+                  value={formatNumberWithSpaces(field.value || 0)}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    field.onChange(val);
+                  }}
                   className={`border outline-none p-1 rounded-[8px] w-full ${
                     errors.sum ? "border-red-500" : "border-[#FFCC15]"
                   }`}

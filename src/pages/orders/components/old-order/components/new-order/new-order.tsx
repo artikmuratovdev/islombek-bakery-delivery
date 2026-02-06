@@ -242,11 +242,9 @@ export const NewOrder = () => {
                   placeholder="Olingan pul miqdorini kiriting"
                   id="paidAmount"
                   type="text"
-                  value={(field.value ?? "")
-                    .toString()
-                    .replace(/^0+(?=\d)/, "")}
+                  value={(field.value ?? 0).toLocaleString("ru-RU")}
                   onChange={(e) => {
-                    const val = Number(e.target.value);
+                    const val = Number(e.target.value.replace(/\D/g, ""));
                     setValue("paidAmount", isNaN(val) ? 0 : val);
                   }}
                   className="w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2"

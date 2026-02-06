@@ -46,16 +46,16 @@ export const TradeDetails = () => {
               {bread.title}
             </h2>
             <h2 className="text-blue-950 text-sm font-bold font-['Inter']">
-              {bread.breadSoldPrice}
+              {bread.breadSoldPrice?.toLocaleString("ru-RU")}
             </h2>
             <h2 className="text-blue-950 text-sm font-bold font-['Inter']">
-              {bread.amount}
+              {bread.amount?.toLocaleString("ru-RU")}
             </h2>
           </div>
         ))}
 
         <h1 className="text-white text-[22px] font-semibold leading-none">
-          Umumiy summa: {savdo?.totalAmount}
+          Umumiy summa: {savdo?.totalAmount?.toLocaleString("ru-RU")}
         </h1>
         <h2 className="text-yellow-400 text-2xl font-semibold font-['Inter'] leading-none">
           {savdo?.createdAt.slice(0, 10)} {savdo?.createdAt.slice(11, 16)}
@@ -73,10 +73,10 @@ export const TradeDetails = () => {
             >
               <div className="flex flex-col gap-y-1">
                 <h3 className="text-green-700 text-base font-semibold">
-                  {payment?.amount}
+                  {payment?.amount?.toLocaleString("ru-RU")}
                 </h3>
                 <h3 className="text-red-700 text-base font-semibold">
-                  {payment?.totalAmount}
+                  {payment?.totalAmount?.toLocaleString("ru-RU")}
                 </h3>
               </div>
               <div className="flex gap-x-1 items-center">

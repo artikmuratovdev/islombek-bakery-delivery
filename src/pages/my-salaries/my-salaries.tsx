@@ -196,7 +196,7 @@ export const MySalaries = () => {
                           >
                             <div className="flex flex-col gap-y-1">
                               <h4 className="text-blue-950 text-base font-semibold">
-                                {item.amount}
+                                {item.amount?.toLocaleString("ru-RU")}
                               </h4>
                               <h4
                                 className={`text-${
@@ -205,7 +205,7 @@ export const MySalaries = () => {
                                     : "green"
                                 }-600 text-base font-semibold`}
                               >
-                                {item.totalAmount}
+                                {item.totalAmount?.toLocaleString("ru-RU")}
                               </h4>
                             </div>
                             <div className="flex gap-x-3">
