@@ -76,12 +76,12 @@ export const PastriesSheet = ({ count, setCount, isLoading }: Props) => {
       </div>
       <div className="flex justify-end">
         <Button
-          className="w-1/3 mt-4 bg-[#ffcb15] text-[#1b2b56]"
+          className="w-1/3 mt-4 bg-[#ffcb15] text-[#1b2b56] disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           disabled={isLoading}
           onClick={handleSubmit(onSubmit)}
         >
-          {isLoading ? "..." : "Kiritish"}
+          {isLoading ? "Yuborilmoqda..." : "Kiritish"}
         </Button>
       </div>
     </div>

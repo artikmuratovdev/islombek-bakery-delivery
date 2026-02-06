@@ -40,7 +40,7 @@ export const AddReport = () => {
       accept: "",
     },
   });
-  const [createExpense] = useCreateExpensesMutation();
+  const [createExpense, { isLoading }] = useCreateExpensesMutation();
   const handleRequest = useHandleRequest();
 
   const [open, setOpen] = useState(false);
@@ -247,9 +247,10 @@ export const AddReport = () => {
                 <Button
                   variant={"yellow"}
                   type="submit"
-                  className="text-[16px] font-[600] mt-5 px-8"
+                  disabled={isLoading}
+                  className="text-[16px] font-[600] mt-5 px-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  saqlash
+                  {isLoading ? "Yuborilmoqda..." : "Saqlash"}
                 </Button>
               </div>
             </form>

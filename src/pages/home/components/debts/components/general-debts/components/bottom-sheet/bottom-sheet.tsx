@@ -22,7 +22,7 @@ export const DollarBottom = ({
   debt: number;
 }) => {
   const { id } = useParams();
-  const [createDriverDebtClientDebtPayment] =
+  const [createDriverDebtClientDebtPayment, { isLoading }] =
     useCreateDriverDebtClientDebtPaymentMutation();
 
   // const { data: payments } = useGetDriverDebtClientDebtPaymentsQuery({
@@ -92,9 +92,10 @@ export const DollarBottom = ({
         <div className="mt-5 flex justify-end">
           <Button
             type="submit"
-            className="w-28 h-8 pl-7 pr-9 pt-1.5 pb-4 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-start items-start gap-3 text-[#1B2B56] hover:bg-yellow-400"
+            disabled={isLoading}
+            className="w-28 h-8 pl-7 pr-9 pt-1.5 pb-4 bg-yellow-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 inline-flex flex-col justify-start items-start gap-3 text-[#1B2B56] hover:bg-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Kiritish
+            {isLoading ? "Yuborilmoqda..." : "Kiritish"}
           </Button>
         </div>
       </div>

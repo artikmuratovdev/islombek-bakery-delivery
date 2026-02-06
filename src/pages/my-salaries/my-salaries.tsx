@@ -36,7 +36,8 @@ export const MySalaries = () => {
     },
   });
 
-  const [ubdateStaffProfileReturn] = useUbdateStaffProfileReturnMutation();
+  const [ubdateStaffProfileReturn, { isLoading }] =
+    useUbdateStaffProfileReturnMutation();
   const [getStaffProfileReceivedMoney, { data: receivedMoney }] =
     useLazyGetStaffProfileReceivedMoneyQuery();
   const [getStaffProfileCalculatedMoney, { data: calculatedMoney }] =
@@ -276,7 +277,13 @@ export const MySalaries = () => {
               </h3>
 
               <div className="flex justify-end mt-5">
-                <Button className="bg-yellow-500">Yuborish</Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? "Yuborilmoqda..." : "Yuborish"}
+                </Button>
               </div>
             </form>
           </div>

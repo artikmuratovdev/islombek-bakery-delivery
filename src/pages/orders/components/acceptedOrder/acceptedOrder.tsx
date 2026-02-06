@@ -25,7 +25,7 @@ export const AcceptedOrder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: order } = useGetOneOrderQuery(id as string);
-  const [submitOrder] = useSubmitAnOrderMutation();
+  const [submitOrder, { isLoading }] = useSubmitAnOrderMutation();
   const handleRequest = useHandleRequest();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
@@ -42,11 +42,16 @@ export const AcceptedOrder = () => {
 
   useEffect(() => {
     if (order) {
+      // Mijoz bo'lmagan holatni tekshirish
+      const clientName =
+        typeof order.client === "string"
+          ? order.client
+          : order.isClient && order.client?.fullName
+            ? order.client.fullName
+            : "Boshqa";
+
       reset({
-        client:
-          typeof order.client === "string"
-            ? order.client
-            : order.client.fullName,
+        client: clientName,
         phone: order.phone,
         address: order.address,
       });
@@ -60,7 +65,11 @@ export const AcceptedOrder = () => {
   }, [order, reset]);
 
   const handleMainSubmit = async (data: FormData) => {
-    const paidAmount = isDebt ? data.paidAmount : (order?.debtAmount as number);
+    // Mijoz bo'lmagan odamga qarz bermaydi, to'liq to'lov
+    const paidAmount =
+      order?.isClient && isDebt
+        ? data.paidAmount
+        : (order?.debtAmount as number);
 
     await handleRequest({
       request: async () => {
@@ -193,7 +202,8 @@ export const AcceptedOrder = () => {
           )}
         </div>
         <div className="flex justify-between mb-5">
-          {order?.client !== "Boshqa" && (
+          {/* Faqat mijoz bo'lgan odamlarga qarzga berish imkoniyati */}
+          {order?.isClient && (
             <Controller
               name="isDebt"
               control={control}
@@ -216,8 +226,12 @@ export const AcceptedOrder = () => {
             />
           )}
 
-          <Button className="w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] ml-auto">
-            Saqlash
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] ml-auto disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Yuklanmoqda..." : "Saqlash"}
           </Button>
         </div>
 
@@ -264,8 +278,12 @@ export const AcceptedOrder = () => {
                 <span className="text-white">
                   Qarz: {order?.debtAmount.toLocaleString("ru-RU")}
                 </span>
-                <Button type="submit" className="text-blue-950 bg-yellow-500">
-                  Yuborish
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="text-blue-950 bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? "Yuborilmoqda..." : "Yuborish"}
                 </Button>
               </div>
             </form>
