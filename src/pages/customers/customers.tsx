@@ -64,7 +64,7 @@ export const Customers = () => {
             >
               <h1
                 className={
-                  (client.hasOrder ? "text-red-700" : "text-green-700") +
+                  (client.hasOrder ? "text-green-700" : "text-red-700") +
                   "  text-base font-bold leading-tight"
                 }
               >
