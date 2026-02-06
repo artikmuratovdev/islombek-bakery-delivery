@@ -18,6 +18,11 @@ export const BakeryBread = () => {
     [key: string]: boolean;
   }>({});
 
+  // doughType va amount ni saqlash (barcha action lar uchun umumiy)
+  const [savedAmounts, setSavedAmounts] = useState<{
+    [doughType: string]: number;
+  }>({});
+
   const { id = "" } = useParams();
   const { data: bakery } = useGetBakeryQuery({ id });
   const { data: bread, refetch } = useGetBakeryBreadQuery({ id, action });
@@ -25,13 +30,22 @@ export const BakeryBread = () => {
 
   useEffect(() => {
     if (bread) {
-      setBreads(bread);
+      // Serverdan kelgan ma'lumotni saqlangan qiymatlar bilan birlashtirish
+      const updatedBreads = bread.map((item) => {
+        const savedAmount = savedAmounts[item.doughType];
+        if (savedAmount !== undefined) {
+          return { ...item, amount: savedAmount };
+        }
+        return item;
+      });
+      setBreads(updatedBreads);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bread]);
 
   useEffect(() => {
     refetch();
-  }, [action]);
+  }, [action, refetch]);
 
   const isDisabled =
     bread && breads ? breads.every((item) => item.amount === 0) : true;
@@ -47,7 +61,7 @@ export const BakeryBread = () => {
         } else if ("error" in res) {
           toast.error("Non ma'lumotlarini yangilashda xatolik yuz berdi");
         }
-      } catch (error) {
+      } catch {
         toast.error("Non ma'lumotlarini yangilashda xatolik yuz berdi");
       }
     }
@@ -92,9 +106,9 @@ export const BakeryBread = () => {
                     <div className="flex items-center gap-3 flex-1">
                       <button
                         className="w-8 h-8 flex justify-center items-center bg-[#1C2C57] rounded-full text-[#FFCC15] transition"
-                        onClick={() =>
-                          setBreads((prev) =>
-                            prev?.map((item) =>
+                        onClick={() => {
+                          setBreads((prev) => {
+                            const updated = prev?.map((item) =>
                               item.doughType === breadItem.doughType
                                 ? {
                                     ...item,
@@ -104,9 +118,20 @@ export const BakeryBread = () => {
                                         : item.amount,
                                   }
                                 : item,
-                            ),
-                          )
-                        }
+                            );
+                            if (updated) {
+                              const newAmounts: { [key: string]: number } = {};
+                              updated.forEach((item) => {
+                                newAmounts[item.doughType] = item.amount;
+                              });
+                              setSavedAmounts((prev) => ({
+                                ...prev,
+                                ...newAmounts,
+                              }));
+                            }
+                            return updated;
+                          });
+                        }}
                       >
                         -
                       </button>
@@ -116,20 +141,33 @@ export const BakeryBread = () => {
                           autoFocus
                           value={breadItem.amount}
                           className="w-10 px-2 outline-none border text-center"
-                          onChange={(e) =>
-                            Number(e.target.value) <=
-                              breadItem.limitBreadCount &&
-                            setBreads((prev) =>
-                              prev?.map((item) =>
-                                item.doughType === breadItem.doughType
-                                  ? {
-                                      ...item,
-                                      amount: Number(e.target.value),
-                                    }
-                                  : item,
-                              ),
-                            )
-                          }
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            if (value <= breadItem.limitBreadCount) {
+                              setBreads((prev) => {
+                                const updated = prev?.map((item) =>
+                                  item.doughType === breadItem.doughType
+                                    ? {
+                                        ...item,
+                                        amount: value,
+                                      }
+                                    : item,
+                                );
+                                if (updated) {
+                                  const newAmounts: { [key: string]: number } =
+                                    {};
+                                  updated.forEach((item) => {
+                                    newAmounts[item.doughType] = item.amount;
+                                  });
+                                  setSavedAmounts((prev) => ({
+                                    ...prev,
+                                    ...newAmounts,
+                                  }));
+                                }
+                                return updated;
+                              });
+                            }
+                          }}
                           onKeyDown={(e) =>
                             e.key === "Enter" &&
                             setIsBreadInputChange((prev) => ({
@@ -153,9 +191,9 @@ export const BakeryBread = () => {
                       )}
                       <button
                         className="w-8 h-8 flex justify-center items-center bg-[#1C2C57] rounded-full text-[#FFCC15] transition"
-                        onClick={() =>
-                          setBreads((prev) =>
-                            prev?.map((item) =>
+                        onClick={() => {
+                          setBreads((prev) => {
+                            const updated = prev?.map((item) =>
                               item.doughType === breadItem.doughType &&
                               item.amount < item.limitBreadCount
                                 ? {
@@ -163,9 +201,20 @@ export const BakeryBread = () => {
                                     amount: item.amount + 1,
                                   }
                                 : item,
-                            ),
-                          )
-                        }
+                            );
+                            if (updated) {
+                              const newAmounts: { [key: string]: number } = {};
+                              updated.forEach((item) => {
+                                newAmounts[item.doughType] = item.amount;
+                              });
+                              setSavedAmounts((prev) => ({
+                                ...prev,
+                                ...newAmounts,
+                              }));
+                            }
+                            return updated;
+                          });
+                        }}
                       >
                         <Plus className="w-4 h-4" />
                       </button>
