@@ -3,13 +3,32 @@ import { Input } from "@/components";
 import { setNumber } from "@/hooks/setNumber";
 import { ArrowLeft, Notifications } from "@/icons";
 import { XCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Customers = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  const { data } = useGetCustomersQuery({ client: search });
+  const { data, refetch } = useGetCustomersQuery({ client: search });
+
+  // Sahifaga qaytib kelganda ma'lumotlarni yangilash
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  // Brauzer tab'i aktiv bo'lganda yangilash
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        refetch();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [refetch]);
 
   const handleSubmit = (data: {
     _id: string;
