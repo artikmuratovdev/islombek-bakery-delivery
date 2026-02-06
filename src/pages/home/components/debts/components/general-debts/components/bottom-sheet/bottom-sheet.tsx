@@ -76,7 +76,13 @@ export const DollarBottom = ({
           render={({ field }) => (
             <Input
               {...field}
+              type="text"
               placeholder="Summa kiriting"
+              value={(field.value ?? 0).toLocaleString()}
+              onChange={(e) => {
+                const val = Number(e.target.value.replace(/\D/g, ""));
+                field.onChange(isNaN(val) ? 0 : val);
+              }}
               className="bg-white border border-yellow-400"
             />
           )}

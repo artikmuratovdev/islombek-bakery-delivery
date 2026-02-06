@@ -11,11 +11,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import toast from "react-hot-toast";
 
+interface Expense {
+  _id: string;
+  reason: { content: string };
+  amount: number;
+  user: { _id: string; fullName: string };
+}
+
 export const Costs = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState<any>(null);
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
 
   // 🔹 Static user
   const user = { _id: "u1", fullName: "Ali Valiyev" };
@@ -33,13 +40,13 @@ export const Costs = () => {
   ];
 
   const expenseFilter = expenses.filter((expense) =>
-    [expense?.user?._id].includes(user._id)
+    [expense?.user?._id].includes(user._id),
   );
 
   const totalExpenses =
     expenseFilter?.reduce((acc, expense) => acc + expense.amount, 0) || 0;
 
-  const handleDeleteExpense = (expense: any) => {
+  const handleDeleteExpense = (expense: Expense) => {
     toast.success(`Xarajat muvaffaqiyatli o'chirildi: ${expense.amount}`, {
       duration: 2000,
     });
@@ -85,7 +92,9 @@ export const Costs = () => {
                 {expense?.reason?.content || expense?.user?.fullName}
               </p>
               <div className="flex gap-x-5 items-center">
-                <p className="text-[#1b2b56]">{expense?.amount}</p>
+                <p className="text-[#1b2b56]">
+                  {expense?.amount.toLocaleString("ru-RU")}
+                </p>
                 {expense.user._id === user._id && (
                   <DropdownMenu>
                     <DropdownMenuTrigger className="cursor-pointer">

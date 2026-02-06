@@ -162,7 +162,7 @@ export const Trade = () => {
                   }
                 `}
               >
-                {item?.totalAmount}
+                {item?.totalAmount?.toLocaleString("ru-RU")}
               </h2>
               <h2
                 className={`text-sm font-bold

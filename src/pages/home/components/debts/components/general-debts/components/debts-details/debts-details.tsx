@@ -156,10 +156,10 @@ export const DebtsDetails = () => {
                     </div>
                     <div className="grid grid-cols-5 w-30 text-sm font-semibold items-center gap-2">
                       <span className="text-green-700 col-span-2 text-end">
-                        {item.totalAmount - item.realDebtAmount}
+                        {(item.totalAmount - item.realDebtAmount).toLocaleString('ru-RU')}
                       </span>
                       <span className="text-red-700 col-span-2 text-end">
-                        {item?.realDebtAmount}
+                        {item?.realDebtAmount?.toLocaleString('ru-RU')}
                       </span>
                       <span className="ml-auto">
                         {isOpen === item._id ? (
@@ -212,24 +212,24 @@ export const DebtsDetails = () => {
                       <div className="pt-1 space-y-1 text-sm">
                         <div className="flex justify-between font-semibold">
                           <span>Summa</span>
-                          <span>{item.totalAmount}</span>
+                          <span>{item.totalAmount?.toLocaleString('ru-RU')}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>To’landi</span>
                           <span className="text-green-400">
-                            {item.totalAmount - item.realDebtAmount}
+                            {(item.totalAmount - item.realDebtAmount)?.toLocaleString('ru-RU')}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Qoldi</span>
                           <span className="text-red-400">
-                            {item?.realDebtAmount}
+                            {item?.realDebtAmount?.toLocaleString('ru-RU')}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Boshlang'ich qarz</span>
                           <span className="text-red-400 line-through">
-                            {item?.debtAmount}
+                            {item?.debtAmount?.toLocaleString('ru-RU')}
                           </span>
                         </div>
                       </div>
@@ -249,10 +249,10 @@ export const DebtsDetails = () => {
                   className="w-full h-11 relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 flex justify-between items-center px-2"
                 >
                   <h2 className="text-green-700 text-base font-semibold font-['Inter']">
-                    {item?.paidAmount}
+                    {item?.paidAmount?.toLocaleString('ru-RU')}
                     <br />
                     <span className="text-red-700 text-base font-semibold font-['Inter']">
-                      {item?.debt}
+                      {item?.debt?.toLocaleString('ru-RU')}
                     </span>
                   </h2>
                   <div className="flex items-center gap-x-3">

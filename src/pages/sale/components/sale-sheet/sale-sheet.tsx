@@ -10,9 +10,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
+import { formatNumberWithSpaces } from "@/utils";
 
 export const SaleSheet = () => {
   const [paymentType, setPaymentType] = useState("cash");
+  const [amount, setAmount] = useState(0);
+  const [debt, setDebt] = useState(0);
 
   // Statik mijozlar
   const customers = [
@@ -34,9 +37,14 @@ export const SaleSheet = () => {
               Soni
             </Label>
             <Input
-              type="number"
+              type="text"
               id="amount"
               placeholder="Soni"
+              value={formatNumberWithSpaces(amount)}
+              onChange={(e) => {
+                const val = Number(e.target.value.replace(/\s/g, ""));
+                setAmount(isNaN(val) ? 0 : val);
+              }}
               className="bg-white text-[#1b2b56] font-semibold rounded-lg w-full"
             />
 
@@ -95,9 +103,14 @@ export const SaleSheet = () => {
                   Olingan pul
                 </Label>
                 <Input
-                  type="number"
+                  type="text"
                   id="debt"
                   placeholder="Olingan pul"
+                  value={formatNumberWithSpaces(debt)}
+                  onChange={(e) => {
+                    const val = Number(e.target.value.replace(/\s/g, ""));
+                    setDebt(isNaN(val) ? 0 : val);
+                  }}
                   className="bg-white text-[#1b2b56] font-semibold rounded-lg w-full mt-2"
                 />
               </div>
