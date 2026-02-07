@@ -22,16 +22,7 @@ const TileLayerControl = ({
   useEffect(() => {
     map.setView(
       clientsMap?.length
-        ? [
-            +(
-              clientsMap.reduce((a, b) => a + b.location.lat, 0) /
-              clientsMap.length
-            ).toFixed(6),
-            +(
-              clientsMap.reduce((a, b) => a + b.location.lng, 0) /
-              clientsMap.length
-            ).toFixed(6),
-          ]
+        ? [clientsMap[0].location.lat, clientsMap[0].location.lng]
         : position,
       map.getZoom(),
     );
@@ -74,16 +65,7 @@ export function LeafletMap() {
 
   const [position, setPosition] = useState<[number, number]>(
     clientsMap?.length
-      ? [
-          +(
-            clientsMap.reduce((a, b) => a + b.location.lat, 0) /
-            clientsMap.length
-          ).toFixed(6),
-          +(
-            clientsMap.reduce((a, b) => a + b.location.lng, 0) /
-            clientsMap.length
-          ).toFixed(6),
-        ]
+      ? [clientsMap[0].location.lat, clientsMap[0].location.lng]
       : [37.240232, 67.286938],
   );
   const [rotation, setRotation] = useState(0);
