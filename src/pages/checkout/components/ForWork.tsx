@@ -52,8 +52,8 @@ export const ForWork = ({ items }: { items: GetExpensesResponse[] }) => {
       onSuccess: (data) => {
         toast.success(data.data.message || "Xabar o'chirish uchun yuborildi");
       },
-      onError: (error: any) => {
-        toast.error(error.message || "Xatolik yuz berdi");
+      onError: (error: unknown) => {
+        toast.error((error as Error).message || "Xatolik yuz berdi");
       },
     });
   };
@@ -109,7 +109,10 @@ export const ForWork = ({ items }: { items: GetExpensesResponse[] }) => {
                     )}
                     <div className="flex items-center gap-2 p-2 pr-16">
                       <RiDeleteBin5Line size={25} className="text-[#C71A1A]" />
-                      <Delete_Modal onDelete={() => deleteDatas(item._id)}>
+                      <Delete_Modal
+                        onDelete={() => deleteDatas(item._id)}
+                        isLoading={isLoading}
+                      >
                         O'chirish
                       </Delete_Modal>
                     </div>
