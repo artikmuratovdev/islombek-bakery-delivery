@@ -104,7 +104,10 @@ export const Salary = ({ items }: { items: GetExpensesResponse[] }) => {
                   )}
                   <div className="flex items-center gap-2 p-2 pr-16">
                     <RiDeleteBin5Line size={25} className="text-[#C71A1A]" />
-                    <Delete_Modal onDelete={() => deleteDatas(item._id)}>
+                    <Delete_Modal
+                      onDelete={() => deleteDatas(item._id)}
+                      isLoading={isLoading}
+                    >
                       O'chirish
                     </Delete_Modal>
                   </div>

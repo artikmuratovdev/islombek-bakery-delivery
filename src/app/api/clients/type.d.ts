@@ -1,7 +1,8 @@
 export interface GetClientsMapResponse {
   _id: string;
   phone: string;
-  address: {
+  address: string;
+  location: {
     lat: number;
     lng: number;
   };
